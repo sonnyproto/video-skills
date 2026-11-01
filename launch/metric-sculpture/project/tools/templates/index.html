@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }</script>
+    <style>
+      @font-face { font-family: Inter; src: url(assets/fonts/inter-latin-300-normal.woff2); font-weight: 300; }
+      @font-face { font-family: Inter; src: url(assets/fonts/inter-latin-500-normal.woff2); font-weight: 500; }
+      @font-face { font-family: Geist; src: url(assets/fonts/Geist-normal.woff2); font-weight: 100 900; }
+      @font-face { font-family: GeistMono; src: url(assets/fonts/GeistMono-normal.woff2); font-weight: 100 900; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: {{palette.sweep}}; }
+      #root { position: relative; width: 100%; height: 100%; }
+      #studio { position: absolute; inset: 0; color: #1c1d20; }
+      #gl { position: absolute; inset: 0; width: 1920px; height: 1080px; display: block; }
+      /* readings, pinned to the plates by the same projection as the camera */
+      .rd { position: absolute; left: 0; top: 0; opacity: 0; }
+      .rd .dot { position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 50%; background: #1c1d20; }
+      .rd .ld { position: absolute; left: 0; top: -0.7px; height: 1.4px; background: #1c1d20; transform-origin: 0 50%; }
+      .rd .pl { position: absolute; top: -58px; padding: 16px 22px 18px; background: rgba(242,237,228,.86); white-space: nowrap; }
+      .rd .k { display: flex; align-items: center; gap: 10px; font: 500 20px GeistMono; letter-spacing: .1em; color: rgba(28,29,32,.6); }
+      .rd .sw { width: 16px; height: 16px; }
+      .rd .v { font: 300 58px/1.05 Inter; letter-spacing: -.02em; font-variant-numeric: tabular-nums; margin-top: 6px; }
+      .rd .u { font: 500 20px GeistMono; color: rgba(28,29,32,.6); margin-top: 2px; }
+      #rule { position: absolute; left: 0; top: 0; opacity: 0; font: 500 22px GeistMono; letter-spacing: .08em; color: rgba(28,29,32,.75);
+        padding: 10px 16px; background: rgba(242,237,228,.86); white-space: nowrap; }
+      #verdict { position: absolute; left: 150px; top: 110px; opacity: 0; padding: 18px 30px 24px; background: rgba(242,237,228,.9); }
+      #verdict b { display: block; font: 300 170px/1 Inter; letter-spacing: -.04em; color: {{palette.accent}}; }
+      #verdict span { display: block; font: 500 30px Geist; margin-top: 6px; }
+      #verdict i { display: block; height: 4px; background: {{palette.accent}}; margin-top: 14px; transform-origin: 0 50%; }
+      #src { position: absolute; right: 150px; bottom: 70px; opacity: 0; font: 400 20px GeistMono; color: rgba(28,29,32,.6); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="21.6" data-width="1920" data-height="1080">
+      <div id="studio" class="clip" data-start="7.4" data-duration="14.2" data-track-index="1" data-track-kind="graphics" style="z-index:1">
+        <canvas id="gl" width="1920" height="1080"></canvas>
+        <div id="rule">{{metric.rule}}</div>
+        <div class="rd" id="rdA"><i class="ld"></i><i class="dot"></i><div class="pl" style="right:60px">
+          <div class="k"><i class="sw" style="background:{{palette.before_plate}}"></i>{{metric.before_label}}</div><div class="v">{{before_fmt}}</div><div class="u">{{metric.per}}</div></div></div>
+        <div class="rd" id="rdB"><i class="ld"></i><i class="dot"></i><div class="pl" style="left:60px">
+          <div class="k"><i class="sw" style="background:{{palette.after_plate}}"></i>{{metric.after_label}}</div><div class="v" id="cnt">0</div><div class="u">{{metric.per}}</div></div></div>
+        <div id="verdict"><b>{{metric.verdict}}</b><span>{{metric.verdict_line}}</span><i id="vrule"></i></div>
+        <div id="src">{{metric.source}}</div>
+      </div>
+      <div id="h-screen" class="clip" data-composition-id="screen" data-composition-src="compositions/screen.html"
+        data-start="0" data-duration="8" data-track-index="2" data-track-kind="graphics" data-width="1920" data-height="1080" style="z-index:2"></div>
+      <div id="h-lockup" class="clip" data-composition-id="lockup" data-composition-src="compositions/lockup.html"
+        data-start="15.8" data-duration="5.8" data-track-index="3" data-track-kind="graphics" data-width="1920" data-height="1080" style="z-index:3"></div>
+      <div id="h-captions" class="clip" data-composition-id="captions" data-composition-src="compositions/captions.html"
+        data-start="0" data-duration="15.6" data-track-index="4" data-track-kind="captions" data-width="1920" data-height="1080" style="z-index:9"></div>
+
+      <audio id="vo0" src="assets/audio/vo0.mp3" data-start="0.4" data-duration="{{voice.durations.0}}" data-track-index="5" data-volume="1"></audio>
+      <audio id="vo1" src="assets/audio/vo1.mp3" data-start="4.9" data-duration="{{voice.durations.1}}" data-track-index="5" data-volume="1"></audio>
+      <audio id="vo2" src="assets/audio/vo2.mp3" data-start="7.9" data-duration="{{voice.durations.2}}" data-track-index="5" data-volume="1"></audio>
+      <audio id="vo3" src="assets/audio/vo3.mp3" data-start="11.12" data-duration="{{voice.durations.3}}" data-track-index="5" data-volume="1"></audio>
+      <audio id="vo4" src="assets/audio/vo4.mp3" data-start="15.6" data-duration="{{voice.durations.4}}" data-track-index="5" data-volume="1"></audio>
+      <audio id="music" src="{{music.src}}" data-start="0" data-duration="{{music.duration}}" data-track-index="6" data-volume="{{music.volume}}"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="21.6" data-track-index="7" data-volume="0.8"></audio>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    </script>
+
+    <script type="module">
+      import * as THREE from "three";
+      import { RoomEnvironment } from "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/environments/RoomEnvironment.js";
+
+      window.__hf = window.__hf || {};
+      window.__hf.buildReady = window.__hf.buildReady || {};
+      let resolveReady; window.__hf.buildReady.studio = new Promise((r) => (resolveReady = r));
+
+      // ---- data and schedule (one module drives every figure) ----
+      const F = __FILM__;
+      const UNIT = F.metric.unit, N = Math.round(F.metric.after / UNIT), N0 = Math.round(F.metric.before / UNIT), H = 0.05, GAP = 0.008, BASE_TOP = 0.22;
+      const XL = -1.55, XR = 1.35;
+      const T_LEFT = 9.45, FEED0 = 11.4, FEED = 3.3, POW = 0.62;
+      const T = Array.from({ length: N }, (_, i) => FEED0 + FEED * Math.pow(i / (N - 1), POW));
+      const yOf = (i) => BASE_TOP + i * (H + GAP) + H / 2;
+      const KE = Math.max(4.6, yOf(N - 1) + H) / (BASE_TOP + 99 * (H + GAP) + H * 1.5);  // end shot framed for 100 plates; never closer than ~75 plates, or the lockup covers the tower
+      const landed = (t) => T.filter((x) => x <= t).length;
+      const nCont = (t) => t <= FEED0 ? 0 : Math.min(N, 1 + (N - 1) * Math.pow(Math.min(1, (t - FEED0) / FEED), 1 / POW));
+
+      function mulberry32(a) { return function () { a |= 0; a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+      const rnd = mulberry32(20261031);
+      const J = Array.from({ length: N }, () => ({ x: (rnd() - 0.5) * 0.024, z: (rnd() - 0.5) * 0.024, yaw: (rnd() - 0.5) * 0.04, v: 1 + (rnd() - 0.5) * 0.14, spin: (rnd() < 0.5 ? -1 : 1) * (0.18 + rnd() * 0.12) }));
+
+      // ---- renderer and set ----
+      const canvas = document.getElementById("gl");
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+      renderer.setPixelRatio(1.5);
+      renderer.setSize(1920, 1080, false);
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.0;
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+      const SWEEP = new THREE.Color(F.palette.sweep);
+      const scene = new THREE.Scene();
+      scene.background = SWEEP;
+      scene.fog = new THREE.Fog(SWEEP, 16, 34);
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+      scene.environmentIntensity = 0.5;
+
+      const camera = new THREE.PerspectiveCamera(30, 1920 / 1080, 0.1, 100);
+
+      const floor = new THREE.Mesh(new THREE.PlaneGeometry(120, 120), new THREE.MeshStandardMaterial({ color: SWEEP, roughness: 1 }));
+      floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+
+      const key = new THREE.DirectionalLight("#ffe2c4", 2.6);
+      key.position.set(-6.5, 4.6, 5.5); key.castShadow = true;
+      key.shadow.mapSize.set(2048, 2048);
+      Object.assign(key.shadow.camera, { left: -8, right: 8, top: 9, bottom: -3, near: 0.5, far: 30 });
+      key.shadow.bias = -0.0004; key.shadow.normalBias = 0.02;
+      scene.add(key);
+      const rim = new THREE.DirectionalLight("#cfe4ff", 1.2); rim.position.set(4, 5, -6); scene.add(rim);
+      scene.add(new THREE.HemisphereLight("#fff6ea", "#b9b0a2", 0.35));
+
+      await document.fonts.load("500 30px GeistMono");
+
+      // walnut base with inlaid brass labels and footprints
+      function walnut(w, h, labels) {
+        const c = document.createElement("canvas"); c.width = w; c.height = h; const g = c.getContext("2d");
+        g.fillStyle = "#5b3b27"; g.fillRect(0, 0, w, h);
+        const r = mulberry32(7);
+        for (let i = 0; i < 520; i++) {
+          const y0 = r() * h, a = 0.03 + r() * 0.09, amp = 2 + r() * 10, f = 0.002 + r() * 0.006, ph = r() * 6;
+          g.strokeStyle = r() < 0.5 ? `rgba(30,16,8,${a})` : `rgba(140,96,62,${a})`; g.lineWidth = 0.6 + r() * 2.4;
+          g.beginPath(); for (let x = 0; x <= w; x += 16) g.lineTo(x, y0 + Math.sin(x * f + ph) * amp + Math.sin(x * f * 3.1 + ph) * amp * 0.3); g.stroke();
+        }
+        if (labels) {
+          g.strokeStyle = "rgba(210,176,122,.75)"; g.lineWidth = 3;
+          for (const [x0, label] of labels) {
+            const cx = ((x0 + 3.2) / 6.4) * w, cy = (1.5 / 3.0) * h, pw = (1.86 / 6.4) * w, ph2 = (1.26 / 3.0) * h;
+            g.strokeRect(cx - pw / 2, cy - ph2 / 2 - 40, pw, ph2);
+            g.fillStyle = "rgba(210,176,122,.9)"; g.font = "500 44px GeistMono"; g.textAlign = "center";
+            g.fillText(label, cx, cy + ph2 / 2 + 30);
+          }
+        }
+        const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8; return tex;
+      }
+      const topTex = walnut(2048, 960, [[XL, F.metric.before_label], [XR, F.metric.after_label]]);
+      const sideTex = walnut(1024, 64, null);
+      const side = new THREE.MeshStandardMaterial({ map: sideTex, roughness: 0.55, color: "#9a8070" });
+      const top = new THREE.MeshStandardMaterial({ map: topTex, roughness: 0.5 });
+      const base = new THREE.Mesh(new THREE.BoxGeometry(6.4, 0.22, 3.0), [side, side, top, side, side, side]);
+      base.position.y = 0.11; base.castShadow = true; base.receiveShadow = true; scene.add(base);
+
+      // plates. The base inlay puts each footprint 40 px (about 0.125) behind centre.
+      const ZC = -0.125;
+      const plateGeo = new THREE.BoxGeometry(1.8, H, 1.2);
+      const alu = new THREE.MeshStandardMaterial({ color: F.palette.before_plate, metalness: 0.9, roughness: 0.42 });
+      const acr = new THREE.MeshPhysicalMaterial({ color: F.palette.after_plate, roughness: 0.28, metalness: 0, clearcoat: 0.6, clearcoatRoughness: 0.2 });
+      const brass = new THREE.MeshStandardMaterial({ color: F.palette.tenth_plate, metalness: 0.9, roughness: 0.4 });
+      const lefts = Array.from({ length: N0 }, () => { const m = new THREE.Mesh(plateGeo, alu); m.castShadow = m.receiveShadow = true; scene.add(m); return m; });
+      const isBrass = (i) => (i + 1) % 10 === 0;
+      const acrIdx = [], brIdx = [];
+      for (let i = 0; i < N; i++) (isBrass(i) ? brIdx : acrIdx).push(i);
+      const imA = new THREE.InstancedMesh(plateGeo, acr, acrIdx.length);
+      const imB = new THREE.InstancedMesh(plateGeo, brass, brIdx.length);
+      for (const im of [imA, imB]) { im.frustumCulled = false; im.castShadow = im.receiveShadow = true; im.instanceMatrix.setUsage(THREE.DynamicDrawUsage); scene.add(im); }
+      acrIdx.forEach((i, k) => imA.setColorAt(k, new THREE.Color("#ffffff").multiplyScalar(J[i].v)));
+      brIdx.forEach((i, k) => imB.setColorAt(k, new THREE.Color("#ffffff").multiplyScalar(J[i].v)));
+
+      const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler(), p = new THREE.Vector3(), s1 = new THREE.Vector3(1, 1, 1), s0 = new THREE.Vector3(0, 0, 0);
+      const easeOutQuint = (x) => 1 - Math.pow(1 - x, 5);
+      function placeRight(t) {
+        const put = (im, k, i) => {
+          const dt = t - T[i], D = 0.2;
+          if (dt < -D) { m4.compose(p.set(0, -50, 0), q.identity(), s0); im.setMatrixAt(k, m4); return; }
+          const u = dt >= 0 ? 1 : easeOutQuint(1 + dt / D);
+          e.set(0, J[i].yaw + J[i].spin * (1 - u), 0); q.setFromEuler(e);
+          p.set(XR + J[i].x, yOf(i) + 0.6 * (1 - u), ZC + J[i].z);
+          m4.compose(p, q, s1); im.setMatrixAt(k, m4);
+        };
+        acrIdx.forEach((i, k) => put(imA, k, i)); brIdx.forEach((i, k) => put(imB, k, i));
+        imA.instanceMatrix.needsUpdate = imB.instanceMatrix.needsUpdate = true;
+      }
+      function placeLeft(t) {
+        const D = 0.34, dt = t - T_LEFT;
+        let y = yOf(0);
+        if (dt < -D) y = -50;
+        else if (dt < 0) { const u = 1 + dt / D; y += 1.2 * (1 - u * u); }
+        else y += 0.035 * Math.exp(-11 * dt) * Math.abs(Math.sin(16 * dt));
+        lefts.forEach((m, i) => { m.position.set(XL, y + i * (H + GAP), ZC); m.rotation.y = 0.012; });
+      }
+
+      // ---- camera: keys with a smooth blend; the crane follows the top during the feed ----
+      const V = (x, y, z) => new THREE.Vector3(x, y, z);
+      const sm = (x) => x * x * (3 - 2 * x);
+      const io = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+      function shot(t) {
+        const topY = yOf(Math.max(0, nCont(t) - 1)) + H;
+        const K = [
+          [7.4, V(-6.2, 1.5, 5.2), V(-3.2, 0.4, 0)],
+          [8.1, V(-3.0, 1.15, 3.9), V(-1.45, 0.35, ZC)],
+          [10.6, V(-2.55, 0.95, 3.25), V(-1.5, 0.32, ZC)],
+          [11.4, V(-0.9, 1.6, 6.0), V(0.4, 0.7, 0)],
+          [14.7, V(-1.3, topY * 0.72 + 1.2, 7.0 + topY * 0.55), V(0.9, topY * 0.72 + 0.25, 0)],
+          [16.0, V(-5.6, 5.6 * KE, 15.6 * KE), V(-2.5, 3.05 * KE, 0)],
+          [21.6, V(-6.7, 5.25 * KE, 14.9 * KE), V(-2.85, 3.0 * KE, 0)],
+        ];
+        if (t >= 11.4 && t <= 14.7) {
+          // crane: blend in from the 11.4 key over 0.5 s, then ride the top
+          const a = sm(Math.min(1, (t - 11.4) / 0.6));
+          const pos = V(-1.3, topY * 0.72 + 1.2, 7.0 + topY * 0.55), tg = V(0.9, topY * 0.72 + 0.25, 0);
+          return [K[3][1].clone().lerp(pos, a), K[3][2].clone().lerp(tg, a)];
+        }
+        let i = 0; while (i < K.length - 2 && t > K[i + 1][0]) i++;
+        const [t0, p0, g0] = K[i], [t1, p1, g1] = K[i + 1];
+        const u = Math.max(0, Math.min(1, (t - t0) / (t1 - t0)));
+        const w = i === 0 ? 1 - Math.pow(1 - u, 3) : io(u);
+        return [p0.clone().lerp(p1, w), g0.clone().lerp(g1, w)];
+      }
+
+      // ---- screen-space type pinned to world points ----
+      const W = 1920, Hh = 1080;
+      const proj = (v) => { const c = v.clone().project(camera); return [(c.x + 1) / 2 * W, (1 - c.y) / 2 * Hh]; };
+      const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+      const el = (id) => document.getElementById(id);
+      const fade = (t, a, d) => clamp((t - a) / (d || 0.35), 0, 1);
+      function pin(id, world, dx, t, a, out, xmin, ymax) {
+        const [x, y] = proj(world); const o = fade(t, a) * (out ? 1 - fade(t, out) : 1);
+        const n = el(id); n.style.opacity = o;
+        const X = clamp(x, xmin || 200, 1720), Y = clamp(y - 16 * (1 - fade(t, a)), 140, ymax || 900);
+        n.style.transform = `translate(${X}px, ${Y}px)`;
+        const ld = n.querySelector(".ld"); ld.style.width = Math.abs(dx) * fade(t, a, 0.5) + "px"; ld.style.transform = dx < 0 ? "scaleX(-1)" : "none";
+      }
+
+      function renderAt(t) {
+        placeLeft(t); placeRight(t);
+        const [pos, tg] = shot(t);
+        camera.position.copy(pos); camera.lookAt(tg);
+        camera.updateMatrixWorld();
+        renderer.render(scene, camera);
+
+        // rule label at the front edge of the left footprint
+        const [rx, ry] = proj(V(XL, BASE_TOP, 1.15));
+        const r = el("rule"); r.style.opacity = fade(t, 8.35) * (1 - fade(t, 11.0)); r.style.transform = `translate(${clamp(rx - 210, 150, 1400)}px, ${clamp(ry + 20, 140, 930)}px)`;
+        pin("rdA", V(XL - 0.9, yOf(N0 - 1) + 0.03, ZC), -60, t, 9.6, 15.0, 420, 740);
+        const n = landed(t);
+        pin("rdB", V(XR + 0.9, yOf(Math.max(0, n - 1)) + H, ZC), 60, t, 11.45, 15.0);
+        el("cnt").textContent = (n * UNIT).toLocaleString("en-US");
+        const v = el("verdict"); v.style.opacity = fade(t, 15.0, 0.25); v.style.transform = `translateY(${16 * (1 - fade(t, 15.0, 0.3))}px)`;
+        el("vrule").style.transform = `scaleX(${io(fade(t, 15.1, 0.7))})`;
+        el("src").style.opacity = fade(t, 9.6);
+      }
+
+      window.addEventListener("hf-seek", (ev) => renderAt(ev.detail.time));
+      renderAt(7.4);
+      resolveReady();
+    </script>
+  </body>
+</html>

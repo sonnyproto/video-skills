@@ -126,5 +126,47 @@
     "poster": "launch/feature-roster/result/poster.jpg",
     "preview": "launch/feature-roster/result/preview.gif",
     "video": "launch/feature-roster/result/result.mp4"
+  },
+  {
+    "id": "metric-sculpture",
+    "title": "Metric sculpture",
+    "summary": "A 21.6 s narrated launch film that proves one real growth number: the product's own app redrawn as a living screencast where a pixel mascot acts out the work (result, rewind, the request, a 60-day time-lapse), then one whip into a 3D studio where the number is built from falling plates, a hit on the verdict and the logo lockup.",
+    "category": "launch",
+    "method": "screencast-to-data-sculpture",
+    "duration_s": 21.6,
+    "ratio": "16:9",
+    "events_per_10s": 6.9,
+    "still_share": 0.58,
+    "shots": 1,
+    "needs": {
+      "from_product": [
+        "one true metric with a before, an after and a period, and its source",
+        "the real app (screenshots or a demo account) to redraw 1:1: labels, layout, colours",
+        "logo and square mark",
+        "agent or feature names, roles and portraits (2-5)",
+        "one line of what it does and a call to action"
+      ],
+      "generated": [
+        "a new pixel mascot (film.json)",
+        "five voice lines (tools/voice.py)",
+        "one 21 s music track with the hit at 15.0 (tools/music.md)",
+        "foley (tools/sfx.py, no key)"
+      ]
+    },
+    "fits": [
+      "a growth result: views, signups, revenue, leads, saved hours",
+      "AI agents or assistants that did the work from one request",
+      "case-study posts and 'we did X in N days' launches on X, LinkedIn, YouTube"
+    ],
+    "avoid": [
+      "no real number, or one that cannot be sourced",
+      "ratios above 150x at one plate size, or a before of more than 5 plates",
+      "products with no app to show",
+      "vertical-first feeds (16:9 only so far)"
+    ],
+    "path": "launch/metric-sculpture",
+    "poster": "launch/metric-sculpture/result/poster.jpg",
+    "preview": "launch/metric-sculpture/result/preview.gif",
+    "video": "launch/metric-sculpture/result/result.mp4"
   }
 ]

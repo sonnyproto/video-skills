@@ -1,0 +1,26 @@
+<template id="lockup-template">
+  <div id="root" data-composition-id="lockup" data-width="1920" data-height="1080" data-duration="5.8">
+    <style>
+      @font-face { font-family: Geist; src: url(assets/fonts/Geist-normal.woff2); font-weight: 100 900; }
+      #root { position: relative; width: 1920px; height: 1080px; }
+      #plate { position: absolute; left: 150px; top: 560px; padding: 40px 48px 44px; background: rgba(242,237,228,.92); }
+      #logo { display: block; height: 78px; }
+      #l1 { font: 500 48px Geist; color: #1c1d20; margin-top: 30px; letter-spacing: -.01em; }
+      #l2 { font: 500 48px Geist; color: #2d5c44; margin-top: 4px; letter-spacing: -.01em; }
+    </style>
+    <div id="plate"><img id="logo" src="assets/img/votrix-logo.png" alt="Votrix AI"><div id="l1">Gets you found on Google and in ChatGPT.</div><div id="l2">Free to start.</div></div>
+    <script>
+      (function () {
+        const R = document.querySelector('[data-composition-id="lockup"]');
+        const $ = (s) => R.querySelector(s);
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo($("#plate"), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4, ease: "expo.out" }, 0.0);
+        tl.fromTo($("#logo"), { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.1);
+        tl.fromTo($("#l1"), { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4, ease: "expo.out" }, 1.55);
+        tl.fromTo($("#l2"), { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4, ease: "expo.out" }, 4.43);
+        window.__timelines = window.__timelines || {};
+        window.__timelines["lockup"] = tl;
+      })();
+    </script>
+  </div>
+</template>

@@ -1,0 +1,198 @@
+{
+  "_note": "Everything that is the product. Timing, eases, camera and the SFX grid live in tools/templates and tools/build.py.",
+  "brand": {
+    "name": "Votrix AI",
+    "logo": "assets/img/votrix-logo.png",
+    "mark": "assets/img/logo-mark.png",
+    "workspace_initials": "VA"
+  },
+  "metric": {
+    "name": "Monthly views",
+    "unit": 2000,
+    "before": 2000,
+    "after": 200000,
+    "days": 60,
+    "per": "views / month",
+    "after_label": "TODAY",
+    "rule": "1 PLATE = 2,000 VIEWS / MONTH",
+    "verdict": "100×",
+    "verdict_line": "in 60 days, with Votrix SEO",
+    "zero_label": "Marketers hired",
+    "source": "Source: Votrix AI's own monthly views",
+    "before_label": "60 DAYS AGO",
+    "before_tile": "60 days ago"
+  },
+  "app": {
+    "_note": "Labels copied from the product's real app; never invent one.",
+    "nav": [
+      "New task",
+      "Scheduled",
+      "Integrations"
+    ],
+    "team_label": "YOUR TEAM",
+    "agents": [
+      {
+        "id": "riya",
+        "name": "Riya",
+        "role": "SEO & GEO",
+        "img": "assets/img/p-riya.jpg"
+      },
+      {
+        "id": "rebecca",
+        "name": "Rebecca",
+        "role": "Social media",
+        "img": "assets/img/p-rebecca.jpg"
+      },
+      {
+        "id": "victor",
+        "name": "Victor",
+        "role": "Lead generation",
+        "img": "assets/img/p-victor.jpg"
+      },
+      {
+        "id": "maya",
+        "name": "Maya",
+        "role": "Website builder",
+        "img": "assets/img/maya.jpg"
+      }
+    ],
+    "hero_agent": "riya",
+    "report_title": "Monthly report",
+    "new_title": "New task",
+    "finished": "finished this task",
+    "card_title": "Visibility report",
+    "card_tag": "LIVE",
+    "done": "Done",
+    "working": "Working",
+    "placeholder": "Ask your team anything…",
+    "hint": "@ mention an agent · attach files",
+    "request": "@Riya get us more views",
+    "task_title": "Get us more views",
+    "rows": [
+      "SEO fixes shipped",
+      "Checked answers in ChatGPT & Perplexity",
+      "Fixed titles, schema & local listings"
+    ]
+  },
+  "palette": {
+    "wall": [
+      "#1f3d31",
+      "#142a20"
+    ],
+    "sidebar": "#efe9df",
+    "main": "#f8f5ef",
+    "line": "#e3dccf",
+    "ink": "#1b2620",
+    "muted": "#7a837d",
+    "brand": "#24493a",
+    "active": "#dcefe3",
+    "accent": "#2d5c44",
+    "sweep": "#d8d0c3",
+    "before_plate": "#c8ccd1",
+    "after_plate": "#9fd8b4",
+    "tenth_plate": "#d2b07a"
+  },
+  "mascot": {
+    "_note": "A new character per film, in a colour no UI uses. 14 x 12 grid; O body, W wing, E eye, K beak, L legs.",
+    "colors": {
+      "O": "#f26b3a",
+      "W": "#c94f25",
+      "E": "#1a1a1a",
+      "K": "#f5c04a",
+      "L": "#1a1a1a"
+    },
+    "poses": {
+      "stand": [
+        "......OOO.....",
+        ".....OOOOO....",
+        ".....OOEOOKK..",
+        ".....OOOOOK...",
+        "...W.OOOOO....",
+        "..WWOOOOOOO...",
+        ".WWWOOOOOOOO..",
+        "..WWOOOOOOOO..",
+        "....OOOOOOO...",
+        ".....OOOOO....",
+        "......L..L....",
+        ".....LL.LL...."
+      ],
+      "tuck": [
+        "......OOO.....",
+        ".WW..OOOOO....",
+        "WWWW.OOEOOKK..",
+        ".WWWWOOOOOK...",
+        "..WWOOOOOO....",
+        "...OOOOOOOO...",
+        "...OOOOOOOOO..",
+        "...OOOOOOOOO..",
+        "....OOOOOOO...",
+        ".....OLOOL....",
+        "..............",
+        ".............."
+      ],
+      "cheer": [
+        "WW....OOO...WW",
+        "WWW..OOOOO.WWW",
+        ".WWW.OOEOOKKW.",
+        "..WWWOOOOOKW..",
+        "...WWOOOOOW...",
+        "....OOOOOOO...",
+        "....OOOOOOOO..",
+        "....OOOOOOOO..",
+        "....OOOOOOO...",
+        ".....OOOOO....",
+        "......L..L....",
+        ".....LL.LL...."
+      ]
+    }
+  },
+  "captions": [
+    [
+      "Our views just went up a hundred times.",
+      "a"
+    ],
+    [
+      "And we never hired a marketer.",
+      "a"
+    ],
+    [
+      "We used Votrix SEO.",
+      "a"
+    ],
+    [
+      "Sixty days ago: two thousand views a month.",
+      "b"
+    ],
+    [
+      "Today: two hundred thousand.",
+      "b"
+    ]
+  ],
+  "lockup": [
+    "Gets you found on Google and in ChatGPT.",
+    "Free to start."
+  ],
+  "voice": {
+    "_note": "Five lines, one file each, placed at fixed slots (see references/RECIPE.md). tools/voice.py writes them.",
+    "voice": "Brian",
+    "lines": [
+      "Our views just went up a hundred times. And we never hired a marketer.",
+      "We used Votrix SEO.",
+      "Sixty days ago: two thousand views a month.",
+      "Today: two hundred thousand.",
+      "Votrix SEO. Gets you found on Google and in ChatGPT. Free to start."
+    ],
+    "durations": [
+      4.0,
+      2.1,
+      3.1,
+      2.1,
+      5.74
+    ]
+  },
+  "music": {
+    "src": "assets/audio/music.mp3",
+    "duration": 20.95,
+    "volume": 0.3
+  }
+}

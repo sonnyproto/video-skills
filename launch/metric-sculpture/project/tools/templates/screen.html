@@ -1,0 +1,290 @@
+<template id="screen-template">
+  <div id="root" data-composition-id="screen" data-width="1920" data-height="1080" data-duration="8">
+    <style>
+      @font-face { font-family: Geist; src: url(assets/fonts/Geist-normal.woff2); font-weight: 100 900; }
+      @font-face { font-family: GeistMono; src: url(assets/fonts/GeistMono-normal.woff2); font-weight: 100 900; }
+      @font-face { font-family: Newsreader; src: url(assets/fonts/Newsreader-normal.woff2); font-weight: 200 800; }
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; font-family: Geist, sans-serif; color: {{palette.ink}}; }
+      #blur { position: absolute; inset: 0; }
+      #wall { position: absolute; inset: 0; background: radial-gradient(120% 90% at 40% 30%, {{palette.wall.0}}, {{palette.wall.1}}); }
+      #cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+      #win { position: absolute; left: 240px; top: 110px; width: 1440px; height: 860px; border-radius: 22px; overflow: hidden;
+        background: {{palette.main}}; box-shadow: 0 60px 120px rgba(0,0,0,.45), 0 0 0 1px rgba(0,0,0,.06); }
+      /* sidebar */
+      #side { position: absolute; left: 0; top: 0; bottom: 0; width: 280px; background: {{palette.sidebar}}; border-right: 1px solid {{palette.line}}; }
+      .dots { position: absolute; left: 26px; top: 24px; display: flex; gap: 9px; }
+      .dots i { width: 14px; height: 14px; border-radius: 50%; display: block; }
+      #brand { position: absolute; left: 26px; top: 66px; display: flex; align-items: center; gap: 12px;
+        font: 400 31px Newsreader, serif; letter-spacing: -.01em; }
+      #brand img { width: 34px; height: 29px; display: block; }
+      .nav { position: absolute; left: 30px; font: 400 19px Geist; color: #3a443e; display: flex; align-items: center; gap: 14px; }
+      .nav svg { width: 18px; height: 18px; stroke: #5c665f; fill: none; stroke-width: 1.6; }
+      .lab { position: absolute; left: 30px; top: 296px; font: 500 14px GeistMono; letter-spacing: .12em; color: #8b938d; }
+      .agent { position: absolute; left: 14px; width: 252px; height: 62px; border-radius: 12px; display: flex; align-items: center; gap: 13px; padding-left: 14px; }
+      .agent img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+      .agent b { display: block; font: 500 18px Geist; }
+      .agent span { display: block; font: 400 14px Geist; color: {{palette.muted}}; margin-top: 1px; }
+      .agent .st { position: absolute; right: 16px; top: 26px; width: 10px; height: 10px; border-radius: 50%; background: #d3cdc2; }
+      .agent .on { position: absolute; inset: 0; border-radius: 12px; background: {{palette.active}}; z-index: -1; }
+      #ws { position: absolute; left: 26px; bottom: 26px; display: flex; align-items: center; gap: 12px; font: 400 18px Geist; color: #3a443e; }
+      #ws i { width: 36px; height: 36px; border-radius: 50%; background: #c9b99a; color: #3b3326; font: 600 13px Geist; font-style: normal;
+        display: flex; align-items: center; justify-content: center; }
+      /* main */
+      #main { position: absolute; left: 280px; top: 0; right: 0; bottom: 0; }
+      #head { position: absolute; left: 0; right: 0; top: 0; height: 70px; border-bottom: 1px solid {{palette.line}}; background: {{palette.main}}; z-index: 5; }
+      .ttl { position: absolute; left: 32px; top: 23px; font: 500 20px Geist; }
+      .pill { position: absolute; right: 26px; top: 19px; height: 32px; padding: 0 14px; border-radius: 16px; border: 1px solid #cfc8bb;
+        font: 400 15px GeistMono; display: flex; align-items: center; gap: 8px; color: #33403a; background: #fff; }
+      .pill i { width: 7px; height: 7px; border-radius: 50%; background: {{palette.brand}}; }
+      #report { position: absolute; left: 50px; top: 104px; width: 1060px; }
+      .by { display: flex; align-items: center; gap: 12px; font: 400 18px Geist; color: {{palette.muted}}; }
+      .by img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
+      .by b { color: {{palette.ink}}; font-weight: 500; }
+      #card { margin-top: 22px; background: #fff; border: 1px solid #e6e0d4; border-radius: 18px; padding: 24px 26px 26px; }
+      .ch { display: flex; justify-content: space-between; font: 500 20px Geist; }
+      .ch span { font: 500 14px GeistMono; letter-spacing: .12em; color: {{palette.brand}}; }
+      .tiles { display: flex; gap: 18px; margin-top: 20px; }
+      .tile { flex: 1; height: 190px; border-radius: 14px; background: #f4f0e8; padding: 20px 22px; position: relative; }
+      .tile p { font: 400 16px Geist; color: {{palette.muted}}; }
+      .tile .n { position: absolute; left: 22px; bottom: 22px; font: 400 76px/1 Newsreader; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+      .tile .d { position: absolute; left: 22px; bottom: 26px; font: 500 22px Geist; color: {{palette.brand}}; }
+      .tile .d.r { left: auto; right: 22px; top: 20px; bottom: auto; }
+      #thread { position: absolute; left: 0; right: 0; top: 70px; height: 626px; overflow: hidden; }
+      #bubble { position: absolute; right: 40px; top: 100px; z-index: 4; background: {{palette.brand}}; color: #fff; font: 400 20px Geist; padding: 16px 22px; border-radius: 16px 16px 4px 16px; }
+      #rows { position: absolute; left: 50px; top: 104px; width: 1000px; }
+      .row { height: 58px; display: flex; align-items: center; gap: 14px; font: 400 19px Geist; }
+      .row img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+      .row .ck { width: 24px; height: 24px; border-radius: 50%; background: {{palette.brand}}; display: flex; align-items: center; justify-content: center; }
+      .row .ck svg { width: 13px; height: 13px; stroke: #fff; stroke-width: 2.6; fill: none; }
+      .row em { font-style: normal; color: {{palette.muted}}; }
+      #input { position: absolute; left: 22px; right: 22px; bottom: 22px; height: 128px; background: #fff; border: 1px solid #e0d9cc; border-radius: 18px; }
+      #ph { position: absolute; left: 24px; top: 24px; font: 400 20px Geist; color: #9aa19b; }
+      #typed { position: absolute; left: 24px; top: 24px; font: 400 20px Geist; color: {{palette.ink}}; white-space: pre; }
+      #caret { position: absolute; top: 24px; width: 2px; height: 26px; background: {{palette.ink}}; }
+      #hint { position: absolute; left: 24px; bottom: 20px; font: 400 15px Geist; color: #9aa19b; }
+      #send { position: absolute; right: 18px; bottom: 16px; width: 42px; height: 42px; border-radius: 50%; background: {{palette.brand}};
+        display: flex; align-items: center; justify-content: center; }
+      #send svg { width: 18px; height: 18px; stroke: #fff; stroke-width: 2.2; fill: none; }
+      /* actors */
+      #bird { position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 20; }
+      #sq { position: absolute; left: -35px; top: -60px; width: 70px; height: 60px; transform-origin: 50% 100%; }
+      #sq svg { width: 70px; height: 60px; display: block; shape-rendering: crispEdges; }
+      .dust { position: absolute; width: 5px; height: 5px; background: #e8dfcf; z-index: 19; }
+      #cursor { position: absolute; left: 0; top: 0; width: 30px; height: 30px; z-index: 30; }
+      /* hud */
+      .tag { position: absolute; left: 50%; top: 40px; height: 54px; margin-left: -150px; width: 300px; border-radius: 27px;
+        background: rgba(20,30,25,.8); color: #fff; font: 500 22px GeistMono; display: flex; align-items: center; justify-content: center; gap: 12px; }
+      #key { position: absolute; right: 80px; bottom: 56px; height: 64px; padding: 0 24px; border-radius: 14px; background: rgba(20,30,25,.8);
+        color: #fff; font: 500 26px GeistMono; display: flex; align-items: center; }
+    </style>
+
+    <div id="blur"><div id="wall"></div><div id="cam"><div id="win">
+      <div id="side">
+        <div class="dots"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
+        <div id="brand"><img id="mark" src="{{brand.mark}}" alt=""><span>{{brand.name}}</span></div>
+        <div class="nav" style="top:146px"><svg viewBox="0 0 18 18"><path d="M9 3v12M3 9h12"/></svg>{{app.nav.0}}</div>
+        <div class="nav" style="top:188px"><svg viewBox="0 0 18 18"><rect x="2.5" y="3.5" width="13" height="12" rx="2"/><path d="M2.5 7.5h13M6 2v3M12 2v3"/></svg>{{app.nav.1}}</div>
+        <div class="nav" style="top:230px"><svg viewBox="0 0 18 18"><path d="M7.5 10.5l3-3M6 8.5L4.5 10a2.5 2.5 0 003.5 3.5L9.5 12M12 9.5l1.5-1.5A2.5 2.5 0 0010 4.5L8.5 6"/></svg>{{app.nav.2}}</div>
+        <div class="lab">{{app.team_label}}</div>
+        {{@agents}}
+        <div id="ws"><i>{{brand.workspace_initials}}</i>{{brand.name}}</div>
+      </div>
+      <div id="main">
+        <div id="head">
+          <div class="ttl" id="t1">{{app.report_title}}</div><div class="ttl" id="t2">{{app.new_title}}</div><div class="ttl" id="t3">{{app.task_title}}</div>
+          <div class="pill" id="p1"><i></i>{{app.done}}</div><div class="pill" id="p2"><i></i>{{app.working}}</div>
+        </div>
+        <div id="report">
+          <div class="by"><img src="{{hero.img}}" alt=""><b>{{hero.name}}</b> {{app.finished}}</div>
+          <div id="card">
+            <div class="ch">{{app.card_title}}<span>{{app.card_tag}}</span></div>
+            <div class="tiles">
+              <div class="tile" id="tile1"><p>{{metric.name}}</p><div class="n" id="views">0</div><div class="d r" id="x100">×{{ratio}}</div></div>
+              <div class="tile" id="tile2"><p>{{metric.before_tile}}</p><div class="n">{{before_fmt}}</div></div>
+              <div class="tile" id="tile3"><p>{{metric.zero_label}}</p><div class="n" id="zero">0</div></div>
+            </div>
+          </div>
+        </div>
+        <div id="bubble">{{app.request}}</div>
+        <div id="thread">
+          <div id="rows"></div>
+        </div>
+        <div id="input">
+          <div id="ph">{{app.placeholder}}</div><div id="typed"></div><div id="caret"></div>
+          <div id="hint">{{app.hint}}</div>
+          <div id="send"><svg viewBox="0 0 18 18"><path d="M9 15V3M4 8l5-5 5 5"/></svg></div>
+        </div>
+      </div>
+      <div id="bird"><div id="sq"><svg id="sprite" viewBox="0 0 14 12"></svg></div></div>
+      <div class="dust" id="d0"></div><div class="dust" id="d1"></div><div class="dust" id="d2"></div><div class="dust" id="d3"></div>
+      <svg id="cursor" viewBox="0 0 30 30"><path d="M5 3l18 11-8 1.6 4.6 8.4-3.4 1.8-4.6-8.4L5 23z" fill="#111" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    </div></div></div>
+    <div class="tag" id="rew">◀◀ {{metric.before_tile}}</div>
+    <div class="tag" id="ff">▶▶ <span id="day">Day 1</span></div>
+    <div id="key">⏎ Return</div>
+
+    <script>
+      (function () {
+        const R = document.querySelector('[data-composition-id="screen"]');
+        const $ = (s) => R.querySelector(s);
+        const tl = gsap.timeline({ paused: true });
+
+        // the mascot: an original pixel crane-bird. O body, W wing, E eye, K beak, L legs
+        const F = __FILM__;
+        const POSES = F.mascot.poses; 
+        const COL = F.mascot.colors;
+        const svg = $("#sprite");
+        for (const [name, rows] of Object.entries(POSES)) {
+          let g = '<g class="pose" id="pose-' + name + '">';
+          rows.forEach((r, y) => [...r].forEach((c, x) => { if (COL[c]) g += '<rect x="' + x + '" y="' + y + '" width="1.02" height="1.02" fill="' + COL[c] + '"' + (c === "E" ? ' class="eye"' : "") + "/>"; }));
+          svg.insertAdjacentHTML("beforeend", g + "</g>");
+        }
+        const pose = (name, at) => ["stand", "tuck", "cheer"].forEach((p) => tl.set($("#pose-" + p), { opacity: p === name ? 1 : 0 }, at));
+
+        // the thread rows of the time-lapse
+        const ROWS = F.app.rows.map((what) => [F.hero.img, F.hero.name, what]);
+        let html = "";
+        for (let i = 0; i < 10; i++) {
+          const [img, who, what] = ROWS[i % ROWS.length];
+          html += '<div class="row" id="row' + i + '"><img src="' + img + '" alt=""><span class="ck"><svg viewBox="0 0 13 13"><path d="M2.5 6.8l2.6 2.6 5.4-5.6"/></svg></span><b style="font-weight:500">' + who + '</b><em>' + what + "</em></div>";
+        }
+        $("#rows").innerHTML = html;
+
+        document.fonts.ready.then(() => {
+          // measure top edges in window coordinates, before any transform
+          const W = $("#win").getBoundingClientRect();
+          const box = (el) => { const r = el.getBoundingClientRect(); return { x: r.left - W.left, y: r.top - W.top, w: r.width, h: r.height }; };
+          const mark = box($("#mark")), t1 = box($("#tile1")), t3 = box($("#tile3")), inp = box($("#input")), bub = box($("#bubble"));
+          const rowBox = (i) => box($("#row" + i));
+          const snap = (v) => Math.round(v / 2.5) * 2.5;
+
+          // camera: put window point (x, y) at the frame centre at scale s, never past the desktop edges
+          const camAt = (x, y, s) => {
+            const tx = Math.min(0, Math.max(1920 - 1920 * s, 960 - (240 + x) * s));
+            const ty = Math.min(0, Math.max(1080 - 1080 * s, 540 - (110 + y) * s));
+            return { x: tx, y: ty, scale: s };
+          };
+          const cam = (at, dur, x, y, s, ease) => tl.to($("#cam"), { ...camAt(x, y, s), duration: dur, ease: ease || "power2.inOut" }, at);
+
+          // the mascot's moves: foot point (x, y) in window coordinates
+          let bx = mark.x + mark.w / 2, by = mark.y + mark.h;
+          const jump = (at, x, y, h, d) => {
+            d = d || 0.42; h = h || 90;
+            const top = Math.min(by, y) - h;
+            tl.to($("#sq"), { scaleY: 0.78, scaleX: 1.16, duration: 0.09, ease: "power2.out" }, at);
+            tl.to($("#sq"), { scaleY: 1.2, scaleX: 0.86, duration: 0.08, ease: "power2.out" }, at + 0.09);
+            pose("tuck", at + 0.1);
+            tl.to($("#sq"), { scaleY: 1, scaleX: 1, duration: d * 0.5, ease: "power1.out" }, at + 0.17);
+            tl.to($("#bird"), { x: x, duration: d, ease: "none", modifiers: { x: (v) => snap(parseFloat(v)) + "px" } }, at + 0.1);
+            tl.to($("#bird"), { y: top, duration: d * 0.5, ease: "power2.out", modifiers: { y: (v) => snap(parseFloat(v)) + "px" } }, at + 0.1);
+            tl.to($("#bird"), { y: y, duration: d * 0.5, ease: "power2.in", modifiers: { y: (v) => snap(parseFloat(v)) + "px" } }, at + 0.1 + d * 0.5);
+            const land = at + 0.1 + d;
+            pose("stand", land);
+            tl.fromTo($("#sq"), { scaleY: 0.72, scaleX: 1.22 }, { scaleY: 1, scaleX: 1, duration: 0.45, ease: "elastic.out(1.1,0.45)" }, land);
+            [-1, -0.4, 0.4, 1].forEach((k, i) => {
+              tl.fromTo($("#d" + i), { x: x - 2 + k * 18, y: y - 6, opacity: 1 }, { x: x - 2 + k * 46, y: y - 16 - (i % 2) * 8, opacity: 0, duration: 0.35, ease: "power2.out" }, land);
+            });
+            bx = x; by = y;
+            return land;
+          };
+          const blink = (at) => { tl.set(R.querySelectorAll(".eye"), { opacity: 0 }, at); tl.set(R.querySelectorAll(".eye"), { opacity: 1 }, at + 0.1); };
+
+          // initial states
+          tl.set($("#cam"), { x: 0, y: 0, scale: 1 }, 0);
+          tl.set($("#bird"), { x: bx, y: by, opacity: 0 }, 0);
+          pose("stand", 0);
+          tl.set(R.querySelectorAll(".dust"), { opacity: 0 }, 0);
+          tl.set(["#t2", "#t3", "#p2", "#rew", "#ff", "#key", "#bubble", "#typed", "#caret"].map($), { opacity: 0 }, 0);
+          tl.set(R.querySelectorAll(".agent .on"), { opacity: 0 }, 0);
+          tl.set($("#cursor"), { x: 1300, y: 900, opacity: 0 }, 0);
+          tl.set(R.querySelectorAll(".row"), { opacity: 0 }, 0);
+
+          // 0.0–4.4 the report
+          tl.fromTo($("#win"), { y: 30, scale: 0.97 }, { y: 0, scale: 1, duration: 0.6, ease: "expo.out" }, 0);
+          tl.fromTo($("#card"), { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out" }, 0.15);
+          tl.set($("#tile3"), { opacity: 0 }, 0);
+          const cnt = { v: 0 };
+          tl.to(cnt, { v: F.metric.after, duration: 1.25, ease: "power2.out", onUpdate: () => { $("#views").textContent = (Math.round(cnt.v / F.metric.unit) * F.metric.unit).toLocaleString("en-US"); } }, 0.4);
+          tl.set($("#views"), { textContent: "0" }, 0);
+          tl.fromTo($("#x100"), { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, 1.65);
+          cam(0.2, 1.4, t1.x + t1.w * 0.9, t1.y + 40, 1.45);
+          // born from the logo mark
+          tl.to($("#bird"), { opacity: 1, duration: 0.01 }, 0.55);
+          tl.fromTo($("#sq"), { scaleY: 0.2, scaleX: 0.5 }, { scaleY: 1, scaleX: 1, duration: 0.25, ease: "back.out(3)" }, 0.55);
+          jump(1.0, t1.x + t1.w * 0.72, t1.y, 150, 0.5);       // lands ~1.6 on "hundred"
+          blink(2.2);
+          cam(2.45, 0.9, t3.x + t3.w * 0.3, t3.y + 60, 1.3);
+          tl.to($("#tile3"), { opacity: 1, duration: 0.35, ease: "expo.out" }, 2.7);
+          tl.fromTo($("#zero"), { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2.2)" }, 3.25);
+          jump(2.95, t3.x + t3.w * 0.7, t3.y, 110, 0.44);
+          pose("cheer", 3.75); pose("stand", 4.15);
+
+          // 4.4–6.4 rewind and the request
+          tl.to($("#rew"), { opacity: 1, duration: 0.2 }, 4.4);
+          tl.to($("#report"), { opacity: 0, filter: "blur(8px)", duration: 0.25, ease: "power2.in" }, 4.45);
+          tl.to(["#t1", "#p1"].map($), { opacity: 0, duration: 0.15 }, 4.5);
+          tl.to($("#t2"), { opacity: 1, duration: 0.15 }, 4.6);
+          tl.to($("#bird"), { opacity: 0, duration: 0.12 }, 4.5);
+          cam(4.45, 0.7, inp.x + 300, inp.y + 40, 1.5);
+          tl.to($("#cursor"), { opacity: 1, duration: 0.1 }, 4.5);
+          tl.to($("#cursor"), { x: inp.x + 230, y: inp.y + 46, duration: 0.42, ease: "power2.inOut" }, 4.5);
+          tl.to($("#cursor"), { scale: 0.85, duration: 0.06, yoyo: true, repeat: 1 }, 4.92);
+          tl.to($("#ph"), { opacity: 0, duration: 0.05 }, 5.0);
+          tl.to(["#typed", "#caret"].map($), { opacity: 1, duration: 0.01 }, 5.0);
+          tl.to($("#rew"), { opacity: 0, duration: 0.2 }, 5.1);
+          const text = F.app.request;
+          const ctx = document.createElement("canvas").getContext("2d"); ctx.font = "400 20px Geist";
+          for (let i = 0; i <= text.length; i++) {
+            const at = 5.02 + i * 0.039;
+            tl.set($("#typed"), { textContent: text.slice(0, i) }, at);
+            tl.set($("#caret"), { left: 24 + ctx.measureText(text.slice(0, i)).width + 2 }, at);
+          }
+          tl.to($("#cursor"), { opacity: 0, duration: 0.2 }, 5.4);
+          // Return
+          tl.fromTo($("#key"), { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.15 }, 5.95);
+          tl.to($("#key"), { opacity: 0, duration: 0.2 }, 6.5);
+          tl.fromTo($("#send"), { scale: 1 }, { scale: 0.86, duration: 0.07, yoyo: true, repeat: 1 }, 6.0);
+          tl.set(["#typed", "#caret"].map($), { opacity: 0 }, 6.02);
+          tl.set($("#ph"), { opacity: 1 }, 6.02);
+          // the bubble flies from the input into the thread; the mascot rides it
+          const fromY = inp.y - bub.y + 10;
+          tl.set($("#bubble"), { opacity: 1 }, 6.02);
+          tl.fromTo($("#bubble"), { y: fromY, scale: 0.9 }, { y: 0, scale: 1, duration: 0.38, ease: "power3.out" }, 6.02);
+          tl.set($("#bird"), { x: snap(bub.x + bub.w * 0.5), y: snap(bub.y + fromY) }, 5.98);
+          tl.to($("#bird"), { opacity: 1, duration: 0.01 }, 6.0);
+          tl.fromTo($("#sq"), { scaleY: 0.3 }, { scaleY: 1, duration: 0.2, ease: "back.out(3)" }, 6.0);
+          tl.to($("#bird"), { y: bub.y, duration: 0.38, ease: "power3.out", modifiers: { y: (v) => snap(parseFloat(v)) + "px" } }, 6.02);
+          by = bub.y; bx = bub.x + bub.w * 0.5;
+          tl.to(["#t2"].map($), { opacity: 0, duration: 0.12 }, 6.05);
+          tl.to(["#t3", "#p2"].map($), { opacity: 1, duration: 0.15 }, 6.1);
+          cam(6.0, 0.6, 860, 230, 1.2);
+          tl.to($("#on-" + F.hero.id), { opacity: 1, duration: 0.2 }, 6.3);
+          tl.to($("#st-" + F.hero.id), { backgroundColor: "#2f9e62", duration: 0.2 }, 6.3);
+
+          // 6.4–7.6 time-lapse: 60 days
+          tl.fromTo($("#ff"), { opacity: 0 }, { opacity: 1, duration: 0.15 }, 6.4);
+          const day = { v: 1 };
+          tl.to(day, { v: F.metric.days, duration: 1.1, ease: "power1.in", onUpdate: () => { $("#day").textContent = "Day " + Math.round(day.v); } }, 6.45);
+          tl.set($("#day"), { textContent: "Day 1" }, 0);
+          for (let i = 0; i < 10; i++) {
+            tl.fromTo($("#row" + i), { opacity: 0, x: -14 }, { opacity: 1, x: 0, duration: 0.14, ease: "expo.out" }, 6.45 + i * 0.11);
+          }
+          tl.to($("#rows"), { y: -230, duration: 0.8, ease: "power1.in" }, 6.85);
+          tl.to($("#bubble"), { y: -230, duration: 0.8, ease: "power1.in" }, 6.85);
+          const r1 = rowBox(1), r2 = rowBox(2);
+          jump(6.5, r1.x + 330, r1.y, 70, 0.3);
+          tl.to($("#bird"), { y: "-=230", duration: 0.8, ease: "power1.in", modifiers: { y: (v) => snap(parseFloat(v)) + "px" } }, 6.85);
+          tl.to($("#bird"), { x: r2.x + 620, duration: 0.6, ease: "none", modifiers: { x: (v) => snap(parseFloat(v)) + "px" } }, 6.95);
+          // 7.5 whip left
+          tl.to($("#cam"), { x: "-=2300", duration: 0.42, ease: "power3.in" }, 7.48);
+          tl.to($("#blur"), { filter: "blur(18px)", duration: 0.3, ease: "power2.in" }, 7.55);
+          tl.to(["#ff"].map($), { opacity: 0, duration: 0.15 }, 7.5);
+          tl.to($("#blur"), { opacity: 0, duration: 0.25, ease: "power1.in" }, 7.65);
+
+          window.__timelines = window.__timelines || {};
+          window.__timelines["screen"] = tl;
+        });
+      })();
+    </script>
+  </div>
+</template>

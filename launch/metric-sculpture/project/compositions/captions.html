@@ -1,0 +1,31 @@
+<template id="captions-template">
+  <div id="root" data-composition-id="captions" data-width="1920" data-height="1080" data-duration="15.6">
+    <style>
+      @font-face { font-family: Geist; src: url(assets/fonts/Geist-normal.woff2); font-weight: 100 900; }
+      #root { position: relative; width: 1920px; height: 1080px; }
+      .cap { position: absolute; opacity: 0; white-space: nowrap; }
+      .a { left: 50%; bottom: 64px; transform: translateX(-50%); padding: 14px 28px; border-radius: 30px; background: rgba(20,30,25,.8);
+        color: #fff; font: 500 36px Geist; }
+      .b { left: 150px; bottom: 150px; padding: 12px 22px 14px; background: linear-gradient(90deg, rgba(242,237,228,.92) 70%, rgba(242,237,228,0));
+        border-left: 2px solid #1c1d20; color: #1c1d20; font: 500 36px Geist; padding-right: 80px; }
+    </style>
+    <div class="cap a" id="c0">Our views just went up a hundred times.</div>
+    <div class="cap a" id="c1">And we never hired a marketer.</div>
+    <div class="cap a" id="c2">We used Votrix SEO.</div>
+    <div class="cap b" id="c3">Sixty days ago: two thousand views a month.</div>
+    <div class="cap b" id="c4">Today: two hundred thousand.</div>
+    <script>
+      (function () {
+        const R = document.querySelector('[data-composition-id="captions"]');
+        const tl = gsap.timeline({ paused: true });
+        [["c0", 0.42, 2.6], ["c1", 2.68, 4.45], ["c2", 4.95, 6.85], ["c3", 8.1, 10.95], ["c4", 11.28, 13.3]].forEach(([id, a, b]) => {
+          const el = R.querySelector("#" + id);
+          tl.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.12 }, a);
+          tl.to(el, { opacity: 0, duration: 0.12 }, b);
+        });
+        window.__timelines = window.__timelines || {};
+        window.__timelines["captions"] = tl;
+      })();
+    </script>
+  </div>
+</template>

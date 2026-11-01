@@ -1,0 +1,153 @@
+{
+  "id": "metric-sculpture",
+  "title": "Metric sculpture",
+  "summary": "A 21.6 s narrated launch film that proves one real growth number: the product's own app redrawn as a living screencast where a pixel mascot acts out the work (result, rewind, the request, a 60-day time-lapse), then one whip into a 3D studio where the number is built from falling plates, a hit on the verdict and the logo lockup.",
+  "version": "1.0.0",
+  "requires": {
+    "renderer": "hyperframes@0.8.191",
+    "skills": [
+      "hyperframes",
+      "hyperframes-cli"
+    ],
+    "bins": [
+      "node>=20",
+      "ffmpeg",
+      "python3"
+    ],
+    "optional": {
+      "FAL_KEY (ElevenLabs via fal)": "new voice lines (tools/voice.py) and new music (tools/music.md)"
+    }
+  },
+  "layers": {
+    "floor": "references/floor.md",
+    "category": "launch",
+    "method": "screencast-to-data-sculpture",
+    "moves": [
+      "living-screencast",
+      "count-up",
+      "mascot-born",
+      "mascot-jump",
+      "rewind-tag",
+      "typed-request",
+      "bubble-ride",
+      "time-lapse",
+      "whip",
+      "plate-drop",
+      "plate-feed",
+      "crane",
+      "pinned-reading",
+      "verdict",
+      "pull-back",
+      "lockup"
+    ],
+    "craft": [
+      "the result is the first sentence and the first picture",
+      "the proof shown twice: as work, then as countable quantity",
+      "numbers count by plates landed, never by time",
+      "the feed accelerates; toks get closer, the mallet climbs every tenth plate",
+      "a beat of silence at 14.7, one hit at 15.0",
+      "the metric's source on screen",
+      "-14 LUFS, true peak under -1 dBTP"
+    ],
+    "style": {
+      "ground": "app on a dark green desktop, then a warm sweep studio (#d8d0c3)",
+      "type": "the app's own fonts in the screencast; Inter 300 numbers, Geist labels, Geist Mono units in the studio",
+      "accent": "one brand accent, only on the verdict and the last line",
+      "banned": [
+        "invented UI or features",
+        "screenshots pasted in place of the redrawn app",
+        "a hand cursor",
+        "dark void, glow or bloom in the studio",
+        "numbers that count by time",
+        "a KPI grid as the hero",
+        "links or domains on screen"
+      ],
+      "motion": "UI expo.out 0.45 s; camera power2.inOut; mascot squash-and-stretch jumps; plates fall with gravity and quintic landings"
+    },
+    "tool": {
+      "renderer": "hyperframes@0.8.191",
+      "runtimes": [
+        "GSAP 3.14.2",
+        "Three.js 0.170"
+      ],
+      "generators": [
+        "ElevenLabs TTS (Brian) via fal, five lines",
+        "ElevenLabs Music via fal, 21 s",
+        "tools/sfx.py, synthesized foley"
+      ]
+    }
+  },
+  "spec": {
+    "duration_s": 21.6,
+    "ratio": "16:9",
+    "size": [
+      1920,
+      1080
+    ],
+    "fps": 30,
+    "bpm": 112,
+    "hit_s": 15.0,
+    "plates": "20-150 (example: 100)",
+    "loudness_lufs": -14
+  },
+  "reference": {
+    "name": "Our own 'Votrix AI 100×' film (2026-10-30); grammar from lemo-opuscar's Living Screencast and Data Physicalization styles",
+    "metrics": {
+      "events_per_10s": 6.9,
+      "still_share": 0.58,
+      "lufs": -14.2,
+      "shots": 1
+    },
+    "see": "references/REFERENCE.md"
+  },
+  "result": {
+    "video": "result/result.mp4",
+    "poster": "result/poster.jpg",
+    "sheet": "result/sheet.jpg",
+    "preview": "result/preview.gif",
+    "metrics": "result/metrics.json",
+    "example_product": "Votrix AI"
+  },
+  "needs": {
+    "from_product": [
+      "one true metric with a before, an after and a period, and its source",
+      "the real app (screenshots or a demo account) to redraw 1:1: labels, layout, colours",
+      "logo and square mark",
+      "agent or feature names, roles and portraits (2-5)",
+      "one line of what it does and a call to action"
+    ],
+    "generated": [
+      "a new pixel mascot (film.json)",
+      "five voice lines (tools/voice.py)",
+      "one 21 s music track with the hit at 15.0 (tools/music.md)",
+      "foley (tools/sfx.py, no key)"
+    ]
+  },
+  "fits": [
+    "a growth result: views, signups, revenue, leads, saved hours",
+    "AI agents or assistants that did the work from one request",
+    "case-study posts and 'we did X in N days' launches on X, LinkedIn, YouTube"
+  ],
+  "avoid": [
+    "no real number, or one that cannot be sourced",
+    "ratios above 150x at one plate size, or a before of more than 5 plates",
+    "products with no app to show",
+    "vertical-first feeds (16:9 only so far)"
+  ],
+  "combines_with": [
+    "launch/feature-roster (the roster before, this as the proof)"
+  ],
+  "conflicts_with": [],
+  "cost": {
+    "stock_clips": 0,
+    "music_tracks": 1,
+    "voice_lines": 5,
+    "render_minutes": 4
+  },
+  "licence": {
+    "code": "MIT",
+    "result_and_generated_media": "CC BY 4.0",
+    "example_product_assets": "Votrix AI logo, mark and agent portraits belong to Votrix AI and are not covered by CC BY (project/assets/THIRD_PARTY.md)",
+    "fonts": "Geist, Geist Mono, Newsreader, Inter: SIL Open Font License 1.1"
+  }
+}
