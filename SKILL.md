@@ -21,6 +21,9 @@ Open `<category>/<id>/SKILL.md` and follow it. Its first step is `bash scripts/s
 the tools and installs the HyperFrames skills if they are missing. The entry is complete on its own: it runs its example, swaps the product through
 `film.json`, regenerates any media and renders.
 
+An entry pins the recipe and the quality bar, not the look. For a one-off film, choose the style per film (three
+stills, the person picks); for a recurring series, keep one. See `spec/ENTRY.md` "What an entry pins".
+
 ## Combining entries
 
 Read `spec/ENTRY.md` "The seven layers". One method per stretch of film; moves and craft from other entries can be added

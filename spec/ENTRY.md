@@ -45,6 +45,22 @@ Each `taste.json` places the entry on the same seven layers. A layer answers one
 When two rules collide, check the layers first: rules on different layers do not conflict. On the same layer,
 the order is floor > category > method > moves > craft > style.
 
+## What an entry pins, and what it only suggests
+
+An entry is worth having for its recipe and its quality bar, not for its skin. Keep these when you reproduce it:
+`floor`, `category`, `method`, `craft` and the shape of `RECIPE.md` (how the film is built: pacing, how narration
+meets picture, how facts are sourced, the mix). Its `style` (fonts, palette roles beyond the brand, texture, grade,
+layout, motion feel) is one worked example, the default when nothing else is asked for.
+
+- **A one-off film picks its own style.** Before building, settle the film's one idea, then make one still in each of
+  three clearly different styles and let the person choose. Compare against the last few films made with the same
+  entry; if the new one would look like a re-skin of them, pick again. Borrow the idea of a reference, not its skin.
+- **A series locks one style.** For a recurring format (a weekly explainer for one client), sameness is the brand:
+  keep the entry's style or one chosen once, and reuse it.
+- **Components are borrowed, not built here.** The HyperFrames registry is the component layer. An entry adds a
+  component (a torn edge, a stamp, a receipt) only when its film needs one the registry lacks.
+
+
 ## Shared files: copied, not linked
 
 Each entry must work when it is installed on its own, so nothing in it points outside its folder (no `../../`, no symlinks).

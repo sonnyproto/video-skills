@@ -84,5 +84,10 @@ sources line is readable.
 
 ## What never changes
 
-The paper and b-roll treatment, the motion vocabulary and its sounds, captions on, the end card with sources, real
-photos only for real people, and no generated people in the b-roll.
+Captions on, the end card with sources, real photos only for real people, and no generated people in the b-roll.
+
+## What is only the default
+
+The paper and b-roll treatment, the fonts, the layout and the motion vocabulary are this film's style, set in
+`project/tools/build.py`. Keep them for a series; for a one-off film, pick a different collage look (newsprint,
+punk zine, constructivist, retro ad...) so it does not read as a re-skin of the last one. See `spec/ENTRY.md`.
