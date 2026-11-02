@@ -10,7 +10,7 @@
 
 ```bash
 npx skills add sonnyproto/video-skills                       # 整个库（agent 帮你挑条目）
-npx skills add sonnyproto/video-skills/launch/broll-wheel   # 只要这一支
+npx skills add sonnyproto/video-skills/films/launch/broll-wheel   # 只要这一支
 ```
 
 然后跟你的 agent 说：
@@ -29,7 +29,7 @@ video-skills 是前一种的开源平铺版：
 
 - **一个条目就是一支片。** 每条都带着它做出来的 `result.mp4`，用眼睛挑。
 - **可复现。** 每条都带完整工程，原样渲染就得到那支片；实拍素材附来源 ID，生成类素材附提示词，不需要任何 API key。
-- **格式完全一致。** 每条文件相同、`taste.json` 卡片相同，可以横向比较，agent 也能组合（见 [spec/ENTRY.md](spec/ENTRY.md)）。
+- **格式完全一致。** 每条文件相同、`taste.json` 卡片相同，可以横向比较，agent 也能组合（见 [spec/ENTRY.md](films/spec/ENTRY.md)）。
 - **产品集中在一个文件。** 换产品只改 `film.json` 和素材，不改生成器。
 
 ## 片库
@@ -37,10 +37,10 @@ video-skills 是前一种的开源平铺版：
 <!-- CATALOG -->
 | Preview | Entry | Category · method | Length | Events / 10 s |
 |---|---|---|---|---|
-| <img src="explainer/paper-collage/result/preview.gif" width="240"> | [**paper-collage**](explainer/paper-collage/) Paper collage | explainer · narrated-paper-collage | 43.8 s 16:9 + 9:16 | 9.8 |
-| <img src="launch/broll-wheel/result/preview.gif" width="240"> | [**broll-wheel**](launch/broll-wheel/) B-roll wheel launch | launch · broll-under-type | 90 s 16:9 | 8.7 |
-| <img src="launch/feature-roster/result/preview.gif" width="240"> | [**feature-roster**](launch/feature-roster/) Feature roster | launch · rebuilt-ui-roster | 26.7 s 16:9 + 9:16 | 3.0 |
-| <img src="launch/metric-sculpture/result/preview.gif" width="240"> | [**metric-sculpture**](launch/metric-sculpture/) Metric sculpture | launch · screencast-to-data-sculpture | 21.6 s 16:9 | 6.9 |
+| <img src="films/explainer/paper-collage/result/preview.gif" width="240"> | [**paper-collage**](films/explainer/paper-collage/) Paper collage | explainer · narrated-paper-collage | 43.8 s 16:9 + 9:16 | 9.8 |
+| <img src="films/launch/broll-wheel/result/preview.gif" width="240"> | [**broll-wheel**](films/launch/broll-wheel/) B-roll wheel launch | launch · broll-under-type | 90 s 16:9 | 8.7 |
+| <img src="films/launch/feature-roster/result/preview.gif" width="240"> | [**feature-roster**](films/launch/feature-roster/) Feature roster | launch · rebuilt-ui-roster | 26.7 s 16:9 + 9:16 | 3.0 |
+| <img src="films/launch/metric-sculpture/result/preview.gif" width="240"> | [**metric-sculpture**](films/launch/metric-sculpture/) Metric sculpture | launch · screencast-to-data-sculpture | 21.6 s 16:9 | 6.9 |
 <!-- /CATALOG -->
 
 ## 一个条目长什么样
@@ -69,18 +69,18 @@ video-skills 是前一种的开源平铺版：
 
 不同层之间不冲突；同层冲突时：底线 > 品类 > 做法 > 招式 > 手艺 > 风格。
 
-每个条目完全自足：我们自己的共享文件（底线、测量脚本）复制进每个条目；外部工具（HyperFrames、ffmpeg）只在 `taste.json` 的 `requires` 里声明；审美规则从不共享。详见 [spec/ENTRY.md](spec/ENTRY.md)。
+每个条目完全自足：我们自己的共享文件（底线、测量脚本）复制进每个条目；外部工具（HyperFrames、ffmpeg）只在 `taste.json` 的 `requires` 里声明；审美规则从不共享。详见 [spec/ENTRY.md](films/spec/ENTRY.md)。
 
 ## 工具
 
 | | |
 |---|---|
-| `tools/floor.md` | 共享底线规则（复制进每个条目的 `references/`） |
-| `launch/sourcing.md` | launch 赛道的素材规则：怎么找产品真实的截图、logo 和文案（复制进每个 launch 条目的 `references/`） |
-| `tools/validate.py` | 按格式检查每个条目，并确认条目里的共享文件副本和 `tools/` 一致 |
-| `tools/catalog.py` | 重建 `catalog.json` 和上面的片库表 |
-| `tools/analyze.py <video> <out>` | 剪辑点、镜头、联系表、LUFS、真峰值、BPM、卡拍比例 |
-| `tools/events.py <video> <out>` | 每 10 秒的画面变化事件数和静止占比 |
+| `films/tools/floor.md` | 共享底线规则（复制进每个条目的 `references/`） |
+| `films/launch/sourcing.md` | launch 赛道的素材规则：怎么找产品真实的截图、logo 和文案（复制进每个 launch 条目的 `references/`） |
+| `films/tools/validate.py` | 按格式检查每个条目，并确认条目里的共享文件副本和 `films/tools/` 一致 |
+| `films/tools/catalog.py` | 重建 `films/catalog.json` 和上面的片库表 |
+| `films/tools/analyze.py <video> <out>` | 剪辑点、镜头、联系表、LUFS、真峰值、BPM、卡拍比例 |
+| `films/tools/events.py <video> <out>` | 每 10 秒的画面变化事件数和静止占比 |
 
 ## 要求
 

@@ -57,8 +57,10 @@ layout, motion feel) is one worked example, the default when nothing else is ask
   entry; if the new one would look like a re-skin of them, pick again. Borrow the idea of a reference, not its skin.
 - **A series locks one style.** For a recurring format (a weekly explainer for one client), sameness is the brand:
   keep the entry's style or one chosen once, and reuse it.
-- **Components are borrowed, not built here.** The HyperFrames registry is the component layer. An entry adds a
-  component (a torn edge, a stamp, a receipt) only when its film needs one the registry lacks.
+- **Components are borrowed, not built here.** Single shots live in
+  [moves/](../../moves/) and the HyperFrames registry. An entry copies the moves it
+  uses into its `project/` (so it still renders on its own) and names them in `taste.json` `layers.moves`; a component
+  its film needs that neither has is built in the entry, then offered to `moves/`.
 
 
 ## Shared files: copied, not linked

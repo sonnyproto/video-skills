@@ -10,7 +10,7 @@
 
 ```bash
 npx skills add sonnyproto/video-skills                       # the whole library (the agent picks an entry)
-npx skills add sonnyproto/video-skills/launch/broll-wheel   # just one film
+npx skills add sonnyproto/video-skills/films/launch/broll-wheel   # just one film
 ```
 
 Then tell your agent:
@@ -31,7 +31,7 @@ video-skills is the flat version of the first, done in the open:
 - **One entry = one film.** Each comes with the `result.mp4` it produced, so you choose with your eyes.
 - **Reproducible.** Every entry ships a complete project that renders its film unchanged, plus the source IDs for stock footage and the prompts for any generated media. No API keys needed.
 - **Same format everywhere.** Every entry has the same files and the same `taste.json` card, so you can compare entries,
-  and agents can combine them ([spec/ENTRY.md](spec/ENTRY.md)).
+  and agents can combine them ([spec/ENTRY.md](films/spec/ENTRY.md)).
 - **Product in one file.** Swapping in your product means editing `film.json` and the assets, never the generator.
 
 ## Library
@@ -39,10 +39,10 @@ video-skills is the flat version of the first, done in the open:
 <!-- CATALOG -->
 | Preview | Entry | Category · method | Length | Events / 10 s |
 |---|---|---|---|---|
-| <img src="explainer/paper-collage/result/preview.gif" width="240"> | [**paper-collage**](explainer/paper-collage/) Paper collage | explainer · narrated-paper-collage | 43.8 s 16:9 + 9:16 | 9.8 |
-| <img src="launch/broll-wheel/result/preview.gif" width="240"> | [**broll-wheel**](launch/broll-wheel/) B-roll wheel launch | launch · broll-under-type | 90 s 16:9 | 8.7 |
-| <img src="launch/feature-roster/result/preview.gif" width="240"> | [**feature-roster**](launch/feature-roster/) Feature roster | launch · rebuilt-ui-roster | 26.7 s 16:9 + 9:16 | 3.0 |
-| <img src="launch/metric-sculpture/result/preview.gif" width="240"> | [**metric-sculpture**](launch/metric-sculpture/) Metric sculpture | launch · screencast-to-data-sculpture | 21.6 s 16:9 | 6.9 |
+| <img src="films/explainer/paper-collage/result/preview.gif" width="240"> | [**paper-collage**](films/explainer/paper-collage/) Paper collage | explainer · narrated-paper-collage | 43.8 s 16:9 + 9:16 | 9.8 |
+| <img src="films/launch/broll-wheel/result/preview.gif" width="240"> | [**broll-wheel**](films/launch/broll-wheel/) B-roll wheel launch | launch · broll-under-type | 90 s 16:9 | 8.7 |
+| <img src="films/launch/feature-roster/result/preview.gif" width="240"> | [**feature-roster**](films/launch/feature-roster/) Feature roster | launch · rebuilt-ui-roster | 26.7 s 16:9 + 9:16 | 3.0 |
+| <img src="films/launch/metric-sculpture/result/preview.gif" width="240"> | [**metric-sculpture**](films/launch/metric-sculpture/) Metric sculpture | launch · screencast-to-data-sculpture | 21.6 s 16:9 | 6.9 |
 <!-- /CATALOG -->
 
 ## How an entry is built
@@ -72,18 +72,26 @@ Every entry is placed on the same seven layers:
 Different layers never conflict. On the same layer: floor > category > method > moves > craft > style.
 
 Each entry is self-contained: our shared files (the floor rules, the measuring scripts) are copied into it, external tools
-(HyperFrames, ffmpeg) are declared in `taste.json` `requires`, and taste is never shared. See [spec/ENTRY.md](spec/ENTRY.md).
+(HyperFrames, ffmpeg) are declared in `taste.json` `requires`, and taste is never shared. See [spec/ENTRY.md](films/spec/ENTRY.md).
 
 ## Tools
 
 | | |
 |---|---|
-| `tools/floor.md` | the shared floor rules (copied into every entry's `references/`) |
-| `launch/sourcing.md` | how launch films collect the product's real screens, logo and copy (copied into every launch entry's `references/`) |
-| `tools/validate.py` | checks every entry against the format, and that its copies of the shared files match `tools/` |
-| `tools/catalog.py` | rebuilds `catalog.json` and the table above |
-| `tools/analyze.py <video> <out>` | cuts, shots, contact sheet, LUFS, true peak, BPM, cuts on the beat |
-| `tools/events.py <video> <out>` | visual change events per 10 s and still share |
+| `films/tools/floor.md` | the shared floor rules (copied into every entry's `references/`) |
+| `films/launch/sourcing.md` | how launch films collect the product's real screens, logo and copy (copied into every launch entry's `references/`) |
+| `films/tools/validate.py` | checks every entry against the format, and that its copies of the shared files match `films/tools/` |
+| `films/tools/catalog.py` | rebuilds `films/catalog.json` and the table above |
+| `films/tools/analyze.py <video> <out>` | cuts, shots, contact sheet, LUFS, true peak, BPM, cuts on the beat |
+| `films/tools/events.py <video> <out>` | visual change events per 10 s and still share |
+
+## Three shelves
+
+| Folder | What | Licence |
+|---|---|---|
+| [films/](films/) | whole films, one entry per film (the library above) | MIT; result films CC BY 4.0 |
+| [moves/](moves/) | single shots (a crash zoom, a price slam, a logo lockup), one folder per move, found by tags | Apache-2.0 |
+| [workflows/](workflows/) | how to make a film step by step, with a pass mark per step (voice then music, scene from references, porting) | MIT |
 
 ## Requirements
 
@@ -106,5 +114,5 @@ Ideas and rules borrowed, with thanks, from [HyperFrames](https://hyperframes.he
 The broll-wheel example is an unofficial spec film for Muse, Meta's personal AI agent. It is not affiliated with,
 endorsed or sponsored by Meta; Muse and its assets are Meta's and are not in this repo.
 
-Code: MIT. Result films and generated media: CC BY 4.0. Example product assets belong to their owners; each entry's
+Code: MIT, except `moves/`, which is Apache-2.0 (derived from video-shotcraft; see `moves/NOTICE`). Result films and generated media: CC BY 4.0. Example product assets belong to their owners; each entry's
 `taste.json` says what may be reused.

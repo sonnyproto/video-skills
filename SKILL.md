@@ -5,12 +5,12 @@ description: Pick and reproduce a reference film from the video-skills library. 
 
 # video-skills
 
-A library of films, one folder per category (`launch/`, `explainer/`, later `social/`...). Each entry under `<category>/<id>/` is one film you can reproduce almost exactly. Entries share one
-format (`spec/ENTRY.md`) and one card (`taste.json`), so they can be compared and combined.
+A library of films, one folder per category (`films/launch/`, `films/explainer/`, later `social/`...). Each entry under `<category>/<id>/` is one film you can reproduce almost exactly. Entries share one
+format (`films/spec/ENTRY.md`) and one card (`taste.json`), so they can be compared and combined.
 
 ## Choosing an entry
 
-1. Read `catalog.json` (one line per entry: id, category, method, length, ratio, what it needs, fits, avoid).
+1. Read `films/catalog.json` (one line per entry: id, category, method, length, ratio, what it needs, fits, avoid).
 2. Match on **category** first (launch, explainer, social cut...), then on **method** (how the picture is made) against what
    the product actually has: a method that needs real screens is wrong for a product with none.
 3. Offer the user one or two entries with their `result/poster.jpg` and one line each on why. If they named one, skip this.
@@ -22,9 +22,12 @@ the tools and installs the HyperFrames skills if they are missing. The entry is 
 `film.json`, regenerates any media and renders.
 
 An entry pins the recipe and the quality bar, not the look. For a one-off film, choose the style per film (three
-stills, the person picks); for a recurring series, keep one. See `spec/ENTRY.md` "What an entry pins".
+stills, the person picks); for a recurring series, keep one. See `films/spec/ENTRY.md` "What an entry pins".
 
 ## Combining entries
 
-Read `spec/ENTRY.md` "The seven layers". One method per stretch of film; moves and craft from other entries can be added
+Read `films/spec/ENTRY.md` "The seven layers". One method per stretch of film; moves and craft from other entries can be added
 when they obey that method. When rules collide, floor > category > method > moves > craft > style.
+
+Single shots to drop into a film are in `moves/` (found by tag: role, fits, energy); step-by-step processes with pass marks
+(voice before music, scene from references, porting) are in `workflows/`.

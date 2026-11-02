@@ -38,10 +38,10 @@
       "rumours or anything a source cannot back",
       "stories that need more than about 60 s"
     ],
-    "path": "explainer/paper-collage",
-    "poster": "explainer/paper-collage/result/poster.jpg",
-    "preview": "explainer/paper-collage/result/preview.gif",
-    "video": "explainer/paper-collage/result/result.mp4"
+    "path": "films/explainer/paper-collage",
+    "poster": "films/explainer/paper-collage/result/poster.jpg",
+    "preview": "films/explainer/paper-collage/result/preview.gif",
+    "video": "films/explainer/paper-collage/result/result.mp4"
   },
   {
     "id": "broll-wheel",
@@ -82,10 +82,10 @@
       "under 30 s (use a cut-down: open, one chapter, montage, end)",
       "brands that ban real-world imagery"
     ],
-    "path": "launch/broll-wheel",
-    "poster": "launch/broll-wheel/result/poster.jpg",
-    "preview": "launch/broll-wheel/result/preview.gif",
-    "video": "launch/broll-wheel/result/result.mp4"
+    "path": "films/launch/broll-wheel",
+    "poster": "films/launch/broll-wheel/result/poster.jpg",
+    "preview": "films/launch/broll-wheel/result/preview.gif",
+    "video": "films/launch/broll-wheel/result/result.mp4"
   },
   {
     "id": "feature-roster",
@@ -122,10 +122,10 @@
       "one-feature products (use a single-feature film instead)",
       "more than 6 members (the tab bar and the length stop working)"
     ],
-    "path": "launch/feature-roster",
-    "poster": "launch/feature-roster/result/poster.jpg",
-    "preview": "launch/feature-roster/result/preview.gif",
-    "video": "launch/feature-roster/result/result.mp4"
+    "path": "films/launch/feature-roster",
+    "poster": "films/launch/feature-roster/result/poster.jpg",
+    "preview": "films/launch/feature-roster/result/preview.gif",
+    "video": "films/launch/feature-roster/result/result.mp4"
   },
   {
     "id": "metric-sculpture",
@@ -164,9 +164,9 @@
       "products with no app to show",
       "vertical-first feeds (16:9 only so far)"
     ],
-    "path": "launch/metric-sculpture",
-    "poster": "launch/metric-sculpture/result/poster.jpg",
-    "preview": "launch/metric-sculpture/result/preview.gif",
-    "video": "launch/metric-sculpture/result/result.mp4"
+    "path": "films/launch/metric-sculpture",
+    "poster": "films/launch/metric-sculpture/result/poster.jpg",
+    "preview": "films/launch/metric-sculpture/result/preview.gif",
+    "video": "films/launch/metric-sculpture/result/result.mp4"
   }
 ]

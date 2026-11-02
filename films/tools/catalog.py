@@ -1,8 +1,9 @@
-"""Write catalog.json (one record per entry, from taste.json + metrics.json) and the table between the CATALOG markers in every README*.md."""
+"""Write films/catalog.json (one record per entry, from taste.json + metrics.json) and the table between the CATALOG markers in every README*.md at the repo root."""
 import json, re
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent  # films/
+REPO = ROOT.parent
 rows = []
 for e in sorted(p.parent for p in ROOT.glob("*/*/taste.json")):  # <category>/<id>/
     t = json.loads((e / "taste.json").read_text())
@@ -10,13 +11,13 @@ for e in sorted(p.parent for p in ROOT.glob("*/*/taste.json")):  # <category>/<i
     rows.append({"id": t["id"], "title": t["title"], "summary": t["summary"], "category": t["layers"]["category"],
                  "method": t["layers"]["method"], "duration_s": t["spec"]["duration_s"], "ratio": t["spec"]["ratio"],
                  "events_per_10s": m.get("events_per_10s"), "still_share": m.get("still_share"), "shots": m.get("shots"),
-                 "needs": t["needs"], "fits": t["fits"], "avoid": t["avoid"], "path": f"{e.parent.name}/{t['id']}", "poster": f"{e.parent.name}/{t['id']}/result/poster.jpg",
-                 "preview": f"{e.parent.name}/{t['id']}/result/preview.gif", "video": f"{e.parent.name}/{t['id']}/result/result.mp4"})
+                 "needs": t["needs"], "fits": t["fits"], "avoid": t["avoid"], "path": f"films/{e.parent.name}/{t['id']}", "poster": f"films/{e.parent.name}/{t['id']}/result/poster.jpg",
+                 "preview": f"films/{e.parent.name}/{t['id']}/result/preview.gif", "video": f"films/{e.parent.name}/{t['id']}/result/result.mp4"})
 (ROOT / "catalog.json").write_text(json.dumps(rows, ensure_ascii=False, indent=2) + "\n")
 
 table = "| Preview | Entry | Category · method | Length | Events / 10 s |\n|---|---|---|---|---|\n" + "".join(
     f"| <img src=\"{r['preview']}\" width=\"240\"> | [**{r['id']}**]({r['path']}/) {r['title']} | {r['category']} · {r['method']} | {r['duration_s']} s {' + '.join(r['ratio']) if isinstance(r['ratio'], list) else r['ratio']} | {r['events_per_10s']} |\n"
     for r in rows)
-for p in sorted(ROOT.glob("README*.md")):
+for p in sorted(REPO.glob("README*.md")):
     p.write_text(re.sub(r"(<!-- CATALOG -->\n).*?(<!-- /CATALOG -->)", lambda mm: mm.group(1) + table + mm.group(2), p.read_text(), flags=re.S))
 print(len(rows), "entries")

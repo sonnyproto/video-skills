@@ -1,0 +1,7 @@
+video-skills/moves
+
+Many moves in this folder are ports of shot recipes from video-shotcraft
+(https://github.com/Vincentwei1021/video-shotcraft), Copyright its contributors, licensed under Apache-2.0.
+Changes: rewritten from Remotion (React) to HyperFrames (HTML + GSAP); system fonts mapped to bundled fonts;
+film grain removed; the original author's brand mark, name and tagline replaced by neutral placeholders;
+copy and colours exposed as variables. Each move's move.json names the exact source file it was ported from.
