@@ -1,0 +1,252 @@
+<template id="parallax-sheets-template">
+  <div id="root" data-composition-id="parallax-sheets" data-width="1920" data-height="1080" data-duration="6">
+    <style>
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: #3f807a;
+        --sky: #8fbdb5; --ground: #3f807a; --accent: #d9482b; --cream: #f3e6c8; --ink: #1f2b2e; }
+      #cv { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+    </style>
+    <canvas id="cv" width="1920" height="1080" data-layout-allow-overflow></canvas>
+    <script>
+      // ── Paper kit (inlined so the move is one file) ──
+// Paper kit: hand-cut edges, paper fibre, baked sprites with a rim of light and a contact shadow, a printed
+// backdrop, grain, parallax sheets and the stop-motion clock. Everything is seeded and baked once; draw code reads
+// only t. Written from the recipes in klsoen/opus-js-animations references/styles.md (MIT).
+(function () {
+  const TAU = Math.PI * 2;
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const smooth = (x) => { x = clamp(x); return x * x * (3 - 2 * x); };
+  const ramp = (t, a, b, ease = smooth) => ease(clamp((t - a) / (b - a)));
+  const backOut = (s = 1.7) => (x) => { x = clamp(x) - 1; return 1 + x * x * ((s + 1) * x + s); };
+  const expOut = (x) => 1 - Math.exp(-4 * clamp(x));
+
+  const rng = (seed) => {
+    let a = seed >>> 0;
+    return () => {
+      a = (a + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  };
+  const hash = (a, b = 0) => rng((Math.imul(a | 0, 73856093) ^ Math.imul(b | 0, 19349663)) >>> 0)();
+  const canvas = (w, h) => { const c = document.createElement('canvas'); c.width = Math.ceil(w); c.height = Math.ceil(h); return [c, c.getContext('2d')]; };
+
+  const rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const css = (c, a = 1) => `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${a})`;
+  // Shades mix toward the ink (k < 0) or the paper (k > 0), never toward black or white.
+  const toner = (ink, paper) => (h, k) => {
+    const c = rgb(h), to = rgb(k < 0 ? ink : paper), a = Math.abs(k);
+    return css(c.map((v, i) => v + (to[i] - v) * a));
+  };
+
+  // Hand-cut edge: subdivide every ~step px and push each point along the edge normal by noise.
+  const cut = (pts, seed, step = 12, amp = 1.1) => {
+    const r = rng(seed), out = [];
+    pts.forEach(([x0, y0], i) => {
+      const [x1, y1] = pts[(i + 1) % pts.length], L = Math.hypot(x1 - x0, y1 - y0) || 1;
+      const n = Math.max(1, Math.round(L / step)), nx = -(y1 - y0) / L, ny = (x1 - x0) / L;
+      for (let k = 0; k < n; k++) { const u = k / n, d = (r() - 0.5) * 2 * amp; out.push([x0 + (x1 - x0) * u + nx * d, y0 + (y1 - y0) * u + ny * d]); }
+    });
+    return out;
+  };
+  const oval = (cx, cy, rx, ry, n = 40) => Array.from({ length: n }, (_, i) => [cx + Math.cos((i / n) * TAU) * rx, cy + Math.sin((i / n) * TAU) * ry]);
+  const box = (x, y, w, h) => [[x, y], [x + w, y], [x + w, y + h], [x, y + h]];
+  const trace = (g, pts) => { g.beginPath(); pts.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); g.closePath(); };
+
+  // Paper fibre: a tileable 512² tile of soft blotches and short fibres around mid grey, laid on with soft-light.
+  let FIBRE;
+  const fibre = () => {
+    if (FIBRE) return FIBRE;
+    const [c, g] = canvas(512, 512), r = rng(7);
+    g.fillStyle = '#808080'; g.fillRect(0, 0, 512, 512);
+    for (let i = 0; i < 700; i++) {
+      const x = r() * 512, y = r() * 512, s = 6 + r() * 28, v = r() < 0.5 ? 40 : 230;
+      for (const [dx, dy] of [[0, 0], [512, 0], [-512, 0], [0, 512], [0, -512]]) {
+        const gr = g.createRadialGradient(x + dx, y + dy, 0, x + dx, y + dy, s);
+        gr.addColorStop(0, `rgba(${v},${v},${v},0.07)`); gr.addColorStop(1, `rgba(${v},${v},${v},0)`);
+        g.fillStyle = gr; g.fillRect(x + dx - s, y + dy - s, s * 2, s * 2);
+      }
+    }
+    g.lineCap = 'round';
+    for (let i = 0; i < 1600; i++) {
+      const x = r() * 512, y = r() * 512, a = r() * Math.PI, l = 3 + r() * 10, v = r() < 0.5 ? 50 : 235;
+      g.strokeStyle = `rgba(${v},${v},${v},${0.1 + r() * 0.14})`; g.lineWidth = 0.5 + r() * 0.8;
+      g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke();
+    }
+    return (FIBRE = c);
+  };
+  const paperize = (g, w, h, amount = 0.5, seed = 0) => {
+    const [m, mg] = canvas(g.canvas.width, g.canvas.height); mg.drawImage(g.canvas, 0, 0);
+    g.save(); g.globalCompositeOperation = 'soft-light'; g.globalAlpha = amount;
+    const p = g.createPattern(fibre(), 'repeat'); g.translate(-(seed * 131) % 512, -(seed * 71) % 512);
+    g.fillStyle = p; g.fillRect(0, 0, w + 512, h + 512); g.restore();
+    g.save(); g.globalCompositeOperation = 'destination-in'; g.drawImage(m, 0, 0); g.restore();
+  };
+
+  // A sprite: draw(g) paints the piece into a w×h box. Baked once with fibre, an optional print texture, a rim of
+  // light (the silhouette minus itself shifted away from the light, kept only on the piece) and a blurred
+  // silhouette for the contact shadow.
+  const sprite = (w, h, draw, o = {}) => {
+    const pad = o.pad ?? 24, W = w + pad * 2, H = h + pad * 2, [c, g] = canvas(W, H);
+    g.translate(pad, pad); draw(g); g.setTransform(1, 0, 0, 1, 0, 0);
+    if (o.lines) {
+      g.save(); g.globalCompositeOperation = 'source-atop'; g.strokeStyle = o.lines; g.lineWidth = 1.2; const r = rng(o.seed ?? 1);
+      for (let y = 0; y < H; y += 6) { g.beginPath(); g.moveTo(0, y); for (let x = 0; x <= W; x += 40) g.lineTo(x, y + (r() - 0.5) * 1.4); g.stroke(); }
+      g.restore();
+    }
+    paperize(g, W, H, o.fibre ?? 0.55, o.seed ?? 0);
+    if (o.rim) {
+      const [rc, rg] = canvas(W, H), [lx, ly] = o.rim.dir, k = o.rim.width ?? 3;
+      rg.drawImage(c, 0, 0); rg.globalCompositeOperation = 'source-in'; rg.fillStyle = o.rim.color; rg.fillRect(0, 0, W, H);
+      rg.globalCompositeOperation = 'destination-out'; rg.drawImage(c, -lx * k, -ly * k);
+      g.save(); g.globalCompositeOperation = 'source-atop'; g.globalAlpha = o.rim.alpha ?? 0.9; g.drawImage(rc, 0, 0); g.restore();
+    }
+    let shadow = null;
+    if (o.shadow !== false) {
+      const b = o.blur ?? 10, [sc, sg] = canvas(W + b * 4, H + b * 4);
+      sg.filter = `blur(${b}px)`; sg.drawImage(c, b * 2, b * 2); sg.filter = 'none';
+      sg.globalCompositeOperation = 'source-in'; sg.fillStyle = o.shadowColor ?? '#000'; sg.fillRect(0, 0, sc.width, sc.height);
+      shadow = { c: sc, off: pad + b * 2 };
+    }
+    return { c, w, h, pad, shadow };
+  };
+  // Draw a sprite with its top-left at (x, y) in world space, pivoting at (px, py) inside it. The shadow is offset
+  // in world space before rotating, so the light keeps one direction.
+  const put = (g, sp, x, y, o = {}) => {
+    const px = o.px ?? sp.w / 2, py = o.py ?? sp.h / 2, s = o.scale ?? 1, sx = (o.sx ?? 1) * s, sy = (o.sy ?? 1) * s, a = o.rot ?? 0;
+    g.save(); g.globalAlpha = o.alpha ?? 1;
+    if (sp.shadow && o.shadow) {
+      const [dx, dy, sa] = o.shadow; g.save(); g.globalAlpha *= sa;
+      g.translate(x + px + dx, y + py + dy); g.rotate(a); g.scale(sx, sy); g.drawImage(sp.shadow.c, -px - sp.shadow.off, -py - sp.shadow.off); g.restore();
+    }
+    g.translate(x + px, y + py); g.rotate(a); g.scale(sx, sy); g.drawImage(sp.c, -px - sp.pad, -py - sp.pad);
+    g.restore();
+  };
+
+  // Printed backdrop: a vertical gradient, two scales of mottling, faint print lines, dust, and a warm key light
+  // falling to darker corners. Baked once per size.
+  const backdrop = (w, h, top, bottom, o = {}) => {
+    const [c, g] = canvas(w, h), r = rng(o.seed ?? 3);
+    const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, top); gr.addColorStop(1, bottom); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    for (const [n, s, a] of [[60, 260, 0.06], [500, 40, 0.05]]) for (let i = 0; i < n; i++) {
+      const x = r() * w, y = r() * h, rad = s * (0.5 + r()), v = r() < 0.5 ? 0 : 255, m = g.createRadialGradient(x, y, 0, x, y, rad);
+      m.addColorStop(0, `rgba(${v},${v},${v},${a})`); m.addColorStop(1, `rgba(${v},${v},${v},0)`); g.fillStyle = m; g.fillRect(x - rad, y - rad, rad * 2, rad * 2);
+    }
+    g.strokeStyle = 'rgba(0,0,0,0.035)'; g.lineWidth = 1; for (let y = 0; y < h; y += 5) { g.beginPath(); g.moveTo(0, y + r()); g.lineTo(w, y + r()); g.stroke(); }
+    g.fillStyle = 'rgba(0,0,0,0.25)'; for (let i = 0; i < 900; i++) g.fillRect(r() * w, r() * h, 1 + r(), 1 + r());
+    const k = g.createRadialGradient(w * (o.lx ?? 0.35), h * (o.ly ?? 0.25), 0, w * 0.5, h * 0.5, Math.hypot(w, h) * 0.62);
+    k.addColorStop(0, `rgba(255,236,200,${o.glow ?? 0.18})`); k.addColorStop(0.55, 'rgba(0,0,0,0)'); k.addColorStop(1, `rgba(0,0,0,${o.corners ?? 0.32})`);
+    g.fillStyle = k; g.fillRect(0, 0, w, h);
+    paperize(g, w, h, 0.45, 9);
+    return c;
+  };
+
+  // Grain: a tile of light and dark specks, offset once per pose.
+  let GRAIN;
+  const grain = (g, w, h, pose, alpha = 0.3) => {
+    if (!GRAIN) {
+      const [c, gg] = canvas(256, 256), r = rng(11);
+      for (let i = 0; i < 2200; i++) { gg.fillStyle = r() < 0.5 ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.45)'; gg.fillRect(r() * 256, r() * 256, 1, 1); }
+      GRAIN = c;
+    }
+    g.save(); g.globalAlpha = alpha; g.fillStyle = g.createPattern(GRAIN, 'repeat');
+    const ox = (pose * 97) % 256, oy = (pose * 57) % 256; g.translate(-ox, -oy); g.fillRect(0, 0, w + 256, h + 256); g.restore();
+  };
+
+  // The stop-motion clock: poses step at `rate` a second (divide the output fps evenly: 15 or 10 at 30 fps) while
+  // the camera moves every frame. Boil and exposure flicker are re-rolled per pose.
+  const clock = (rate = 15) => ({
+    rate,
+    pose: (t) => Math.floor(t * rate + 1e-6),
+    q: (t) => Math.floor(t * rate + 1e-6) / rate,
+    boil: (id, t, px = 1, rad = 0.003) => { const p = Math.floor(t * rate + 1e-6); return { dx: (hash(id, p) - 0.5) * 2 * px, dy: (hash(id + 991, p) - 0.5) * 2 * px, rot: (hash(id + 577, p) - 0.5) * 2 * rad }; },
+    flicker: (t, amt = 0.025) => 1 + (hash(4242, Math.floor(t * rate + 1e-6)) - 0.5) * 2 * amt,
+  });
+
+  // Parallax sheets: a sheet at depth p (sky ~0.1, the subject 1, foreground > 1) scales by zoom^p around a centre
+  // that moves p times as far as the camera, so a push-in slides the sheets past each other.
+  const sheet = (g, cam, p, w, h, draw) => {
+    const s = Math.pow(cam.zoom, p), cx = w / 2 + p * (cam.x ?? 0), cy = h / 2 + p * (cam.y ?? 0);
+    g.save(); g.translate(w / 2, h / 2); g.scale(s, s); g.translate(-cx, -cy); draw(g); g.restore();
+  };
+
+  window.PaperKit = { TAU, clamp, smooth, ramp, backOut, expOut, rng, hash, canvas, rgb, css, toner, cut, oval, box, trace, fibre, paperize, sprite, put, backdrop, grain, clock, sheet };
+})();
+
+      // Depth without 3D: six cut-paper sheets at depths 0.12 to 1.35 slide past each other on one push-in, while the
+      // walker on the subject sheet steps at 15 poses a second. After opus-js-animations styles.md §2.3 (MIT).
+      (function () {
+        const R = document.querySelector('[data-composition-id="parallax-sheets"]');
+        const cv = R.querySelector('#cv'), g = cv.getContext('2d'), W = 1920, H = 1080, DUR = 6;
+        // Colours are variables on #root; the defaults below hold when the styles have not been applied yet.
+        const K = PaperKit, V = (n, d) => getComputedStyle(R).getPropertyValue('--' + n).trim() || d;
+        const C = { sky: V('sky', '#8fbdb5'), ground: V('ground', '#3f807a'), accent: V('accent', '#d9482b'), cream: V('cream', '#f3e6c8'), ink: V('ink', '#1f2b2e') };
+        const tone = K.toner(C.ink, C.cream), clk = K.clock(15), LIGHT = [-0.6, -0.8], SH = [14, 10, 0.3];
+        const rim = { dir: LIGHT, color: C.cream, alpha: 0.55, width: 3 };
+
+        const sky = K.backdrop(2300, 1300, C.sky, tone(C.sky, -0.12), { lx: 0.3, ly: 0.2, glow: 0.22, corners: 0.2 });
+        const sun = K.sprite(220, 220, (s) => { s.fillStyle = C.cream; K.trace(s, K.cut(K.oval(110, 110, 105, 105, 60), 2)); s.fill(); }, { rim, seed: 2 });
+        const cloud = (seed) => K.sprite(360, 130, (s) => {
+          s.fillStyle = tone(C.cream, 0.0); const r = K.rng(seed);
+          for (let i = 0; i < 4; i++) { K.trace(s, K.cut(K.oval(70 + i * 70, 80 - r() * 20, 70 + r() * 20, 46 + r() * 16, 36), seed + i)); s.fill(); }
+        }, { rim, seed });
+        const clouds = [cloud(21), cloud(22), cloud(23)];
+        const band = (w, h, base, amp, seed, color) => K.sprite(w, h, (s) => {
+          const r = K.rng(seed), pts = [[0, h]];
+          for (let x = 0; x <= w; x += 60) pts.push([x, base - Math.sin(x / 330 + seed) * amp - r() * amp * 0.25]);
+          pts.push([w, h]); s.fillStyle = color; K.trace(s, K.cut(pts, seed)); s.fill();
+        }, { rim, seed });
+        const hills = band(2500, 420, 120, 70, 31, tone(C.ground, 0.18));
+        const house = (w, h, roof, seed, wall) => K.sprite(w, h + roof, (s) => {
+          s.fillStyle = wall; K.trace(s, K.cut(K.box(0, roof, w, h), seed)); s.fill();
+          s.fillStyle = seed === 62 ? C.accent : tone(C.ground, -0.45); K.trace(s, K.cut([[-12, roof + 4], [w / 2, 0], [w + 12, roof + 4]], seed + 1)); s.fill();
+          s.fillStyle = C.cream; const cols = Math.max(1, Math.floor(w / 70)), rows = Math.max(1, Math.floor(h / 90));
+          for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) { if ((i + j + seed) % 3 === 1) continue; K.trace(s, K.cut(K.box(18 + i * ((w - 36) / cols), roof + 26 + j * 88, 28, 40), seed + 9 + i * 7 + j)); s.fill(); }
+        }, { rim, seed, lines: 'rgba(0,0,0,0.06)' });
+        const far = Array.from({ length: 11 }, (_, i) => ({ sp: house(130 + (i * 37) % 70, 150 + (i * 53) % 90, 60, 40 + i, tone(C.ground, 0.32 - (i % 3) * 0.06)), x: -140 + i * 205 }));
+        const near = Array.from({ length: 6 }, (_, i) => ({ sp: house(250 + (i * 41) % 80, 300 + (i * 67) % 120, 100, 60 + i * 3, tone(C.ground, -0.08 + (i % 2) * 0.1)), x: -200 + i * 390 }));
+        const street = K.sprite(2600, 330, (s) => { s.fillStyle = tone(C.cream, -0.12); K.trace(s, K.cut(K.box(0, 0, 2600, 330), 71, 20)); s.fill();
+          s.fillStyle = tone(C.cream, -0.3); for (let x = 30; x < 2600; x += 160) { K.trace(s, K.cut(K.box(x, 120, 90, 8), 72 + x)); s.fill(); } }, { rim, seed: 71, lines: 'rgba(0,0,0,0.05)' });
+        // The walker: a cut coat, capsule legs and a head on a neck pivot.
+        const coat = K.sprite(120, 170, (s) => { s.fillStyle = C.accent; K.trace(s, K.cut([[30, 0], [90, 0], [120, 170], [0, 170]], 81)); s.fill(); }, { rim, seed: 81, lines: 'rgba(0,0,0,0.08)' });
+        const head = K.sprite(70, 80, (s) => { s.fillStyle = C.cream; K.trace(s, K.cut(K.oval(35, 44, 32, 36, 36), 82)); s.fill(); s.fillStyle = C.ink; K.trace(s, K.cut([[3, 40], [8, 8], [40, 0], [67, 22], [62, 30], [20, 22]], 83)); s.fill(); }, { rim, seed: 82 });
+        const leg = K.sprite(26, 120, (s) => { s.fillStyle = C.ink; s.beginPath(); s.roundRect(0, 0, 26, 120, 13); s.fill(); }, { seed: 84 });
+        // Foreground bush: leaves rise from the bottom edge and stay inside the sprite box.
+        const bush = (seed) => K.sprite(900, 500, (s) => { const r = K.rng(seed); s.fillStyle = tone(C.ground, -0.7);
+          for (let i = 0; i < 14; i++) { const x = 200 + r() * 500, a = -Math.PI / 2 + (r() - 0.5) * 1.8, l = 160 + r() * 100;
+            s.save(); s.translate(x, 500); s.rotate(a); K.trace(s, K.cut(K.oval(l / 2, 0, l / 2, 24 + r() * 14, 28), seed + i)); s.fill(); s.restore(); } }, { seed, shadow: false });
+        const leaves = [bush(91), bush(97)];
+
+        const render = (t) => {
+          const cam = { zoom: 1 + 0.14 * K.smooth(t / DUR), x: 30 * K.smooth(t / DUR), y: -10 * K.smooth(t / DUR) };
+          const pose = clk.pose(t), q = clk.q(t), b = (id) => clk.boil(id, t);
+          g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, W, H);
+          K.sheet(g, cam, 0.12, W, H, (s) => {
+            s.drawImage(sky, -190, -110);
+            K.put(s, sun, 1340 + b(1).dx, 120 + b(1).dy, { rot: b(1).rot, shadow: SH });
+            [[180, 160], [760, 90], [1500, 270]].forEach(([x, y], i) => K.put(s, clouds[i], x + q * 8 * (i + 1) + b(10 + i).dx, y + b(10 + i).dy, { rot: b(10 + i).rot, shadow: SH }));
+          });
+          K.sheet(g, cam, 0.35, W, H, (s) => K.put(s, hills, -290, 430 + b(30).dy, { shadow: SH }));
+          K.sheet(g, cam, 0.6, W, H, (s) => far.forEach((f, i) => K.put(s, f.sp, f.x + b(40 + i).dx, 640 - f.sp.h + 40 + b(40 + i).dy, { rot: b(40 + i).rot, shadow: SH })));
+          K.sheet(g, cam, 0.85, W, H, (s) => near.forEach((f, i) => K.put(s, f.sp, f.x + b(60 + i).dx, 790 - f.sp.h + 40 + b(60 + i).dy, { rot: b(60 + i).rot, shadow: SH })));
+          K.sheet(g, cam, 1, W, H, (s) => {
+            K.put(s, street, -340, 780, { shadow: SH });
+            // Walk cycle on the pose clock: 1.6 strides a second, a bob on each step.
+            const ph = q * 1.6 * K.TAU, x = 640 + q * 70, base = 830, bob = Math.abs(Math.sin(ph)) * 8, bb = b(80);
+            [[1, 0.42], [-1, 0.42]].forEach(([sgn]) => K.put(s, leg, x + 47, base - 125 - bob, { px: 13, py: 8, rot: sgn * Math.sin(ph) * 0.42, shadow: [10, 6, 0.25] }));
+            K.put(s, coat, x + bb.dx, base - 290 - bob + bb.dy, { rot: bb.rot + 0.03, shadow: SH, px: 60, py: 0 });
+            K.put(s, head, x + 25 + bb.dx, base - 368 - bob + bb.dy, { px: 35, py: 76, rot: Math.sin(ph * 0.5) * 0.06 - 0.05, shadow: SH });
+          });
+          K.sheet(g, cam, 1.35, W, H, (s) => { K.put(s, leaves[0], -420, 470); K.put(s, leaves[1], 1380, 520); });
+          const fl = clk.flicker(t); g.fillStyle = fl > 1 ? `rgba(255,240,215,${(fl - 1) * 2})` : `rgba(20,20,20,${(1 - fl) * 2})`; g.fillRect(0, 0, W, H);
+          K.grain(g, W, H, pose, 0.22);
+        };
+        const tl = gsap.timeline({ paused: true }), p = { t: 0 };
+        render(0);
+        tl.to(p, { t: DUR, duration: DUR, ease: 'none', onUpdate: () => render(p.t) }, 0);
+        window.__timelines = window.__timelines || {};
+        window.__timelines['parallax-sheets'] = tl;
+      })();
+    </script>
+  </div>
+</template>

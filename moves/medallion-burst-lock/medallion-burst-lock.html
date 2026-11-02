@@ -1,0 +1,269 @@
+<template id="medallion-burst-lock-template">
+  <div id="root" data-composition-id="medallion-burst-lock" data-width="1920" data-height="1080" data-duration="6">
+    <style>
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: #161a40;
+        --sky: #1d2152; --warm: #e8b64a; --warm2: #c98a35; --rose: #b8574e; --neon: #b8408f; --cyan: #3a9fb5; --violet: #6250c8; --core: #fff4d6; --lead: #120f24; }
+      #cv { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+    </style>
+    <canvas id="cv" width="1920" height="1080" data-layout-allow-overflow></canvas>
+    <script>
+      // ── Paper kit (inlined so the move is one file) ──
+// Paper kit: hand-cut edges, paper fibre, baked sprites with a rim of light and a contact shadow, a printed
+// backdrop, grain, parallax sheets and the stop-motion clock. Everything is seeded and baked once; draw code reads
+// only t. Written from the recipes in klsoen/opus-js-animations references/styles.md (MIT).
+(function () {
+  const TAU = Math.PI * 2;
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const smooth = (x) => { x = clamp(x); return x * x * (3 - 2 * x); };
+  const ramp = (t, a, b, ease = smooth) => ease(clamp((t - a) / (b - a)));
+  const backOut = (s = 1.7) => (x) => { x = clamp(x) - 1; return 1 + x * x * ((s + 1) * x + s); };
+  const expOut = (x) => 1 - Math.exp(-4 * clamp(x));
+
+  const rng = (seed) => {
+    let a = seed >>> 0;
+    return () => {
+      a = (a + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  };
+  const hash = (a, b = 0) => rng((Math.imul(a | 0, 73856093) ^ Math.imul(b | 0, 19349663)) >>> 0)();
+  const canvas = (w, h) => { const c = document.createElement('canvas'); c.width = Math.ceil(w); c.height = Math.ceil(h); return [c, c.getContext('2d')]; };
+
+  const rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const css = (c, a = 1) => `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${a})`;
+  // Shades mix toward the ink (k < 0) or the paper (k > 0), never toward black or white.
+  const toner = (ink, paper) => (h, k) => {
+    const c = rgb(h), to = rgb(k < 0 ? ink : paper), a = Math.abs(k);
+    return css(c.map((v, i) => v + (to[i] - v) * a));
+  };
+
+  // Hand-cut edge: subdivide every ~step px and push each point along the edge normal by noise.
+  const cut = (pts, seed, step = 12, amp = 1.1) => {
+    const r = rng(seed), out = [];
+    pts.forEach(([x0, y0], i) => {
+      const [x1, y1] = pts[(i + 1) % pts.length], L = Math.hypot(x1 - x0, y1 - y0) || 1;
+      const n = Math.max(1, Math.round(L / step)), nx = -(y1 - y0) / L, ny = (x1 - x0) / L;
+      for (let k = 0; k < n; k++) { const u = k / n, d = (r() - 0.5) * 2 * amp; out.push([x0 + (x1 - x0) * u + nx * d, y0 + (y1 - y0) * u + ny * d]); }
+    });
+    return out;
+  };
+  const oval = (cx, cy, rx, ry, n = 40) => Array.from({ length: n }, (_, i) => [cx + Math.cos((i / n) * TAU) * rx, cy + Math.sin((i / n) * TAU) * ry]);
+  const box = (x, y, w, h) => [[x, y], [x + w, y], [x + w, y + h], [x, y + h]];
+  const trace = (g, pts) => { g.beginPath(); pts.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); g.closePath(); };
+
+  // Paper fibre: a tileable 512² tile of soft blotches and short fibres around mid grey, laid on with soft-light.
+  let FIBRE;
+  const fibre = () => {
+    if (FIBRE) return FIBRE;
+    const [c, g] = canvas(512, 512), r = rng(7);
+    g.fillStyle = '#808080'; g.fillRect(0, 0, 512, 512);
+    for (let i = 0; i < 700; i++) {
+      const x = r() * 512, y = r() * 512, s = 6 + r() * 28, v = r() < 0.5 ? 40 : 230;
+      for (const [dx, dy] of [[0, 0], [512, 0], [-512, 0], [0, 512], [0, -512]]) {
+        const gr = g.createRadialGradient(x + dx, y + dy, 0, x + dx, y + dy, s);
+        gr.addColorStop(0, `rgba(${v},${v},${v},0.07)`); gr.addColorStop(1, `rgba(${v},${v},${v},0)`);
+        g.fillStyle = gr; g.fillRect(x + dx - s, y + dy - s, s * 2, s * 2);
+      }
+    }
+    g.lineCap = 'round';
+    for (let i = 0; i < 1600; i++) {
+      const x = r() * 512, y = r() * 512, a = r() * Math.PI, l = 3 + r() * 10, v = r() < 0.5 ? 50 : 235;
+      g.strokeStyle = `rgba(${v},${v},${v},${0.1 + r() * 0.14})`; g.lineWidth = 0.5 + r() * 0.8;
+      g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke();
+    }
+    return (FIBRE = c);
+  };
+  const paperize = (g, w, h, amount = 0.5, seed = 0) => {
+    const [m, mg] = canvas(g.canvas.width, g.canvas.height); mg.drawImage(g.canvas, 0, 0);
+    g.save(); g.globalCompositeOperation = 'soft-light'; g.globalAlpha = amount;
+    const p = g.createPattern(fibre(), 'repeat'); g.translate(-(seed * 131) % 512, -(seed * 71) % 512);
+    g.fillStyle = p; g.fillRect(0, 0, w + 512, h + 512); g.restore();
+    g.save(); g.globalCompositeOperation = 'destination-in'; g.drawImage(m, 0, 0); g.restore();
+  };
+
+  // A sprite: draw(g) paints the piece into a w×h box. Baked once with fibre, an optional print texture, a rim of
+  // light (the silhouette minus itself shifted away from the light, kept only on the piece) and a blurred
+  // silhouette for the contact shadow.
+  const sprite = (w, h, draw, o = {}) => {
+    const pad = o.pad ?? 24, W = w + pad * 2, H = h + pad * 2, [c, g] = canvas(W, H);
+    g.translate(pad, pad); draw(g); g.setTransform(1, 0, 0, 1, 0, 0);
+    if (o.lines) {
+      g.save(); g.globalCompositeOperation = 'source-atop'; g.strokeStyle = o.lines; g.lineWidth = 1.2; const r = rng(o.seed ?? 1);
+      for (let y = 0; y < H; y += 6) { g.beginPath(); g.moveTo(0, y); for (let x = 0; x <= W; x += 40) g.lineTo(x, y + (r() - 0.5) * 1.4); g.stroke(); }
+      g.restore();
+    }
+    paperize(g, W, H, o.fibre ?? 0.55, o.seed ?? 0);
+    if (o.rim) {
+      const [rc, rg] = canvas(W, H), [lx, ly] = o.rim.dir, k = o.rim.width ?? 3;
+      rg.drawImage(c, 0, 0); rg.globalCompositeOperation = 'source-in'; rg.fillStyle = o.rim.color; rg.fillRect(0, 0, W, H);
+      rg.globalCompositeOperation = 'destination-out'; rg.drawImage(c, -lx * k, -ly * k);
+      g.save(); g.globalCompositeOperation = 'source-atop'; g.globalAlpha = o.rim.alpha ?? 0.9; g.drawImage(rc, 0, 0); g.restore();
+    }
+    let shadow = null;
+    if (o.shadow !== false) {
+      const b = o.blur ?? 10, [sc, sg] = canvas(W + b * 4, H + b * 4);
+      sg.filter = `blur(${b}px)`; sg.drawImage(c, b * 2, b * 2); sg.filter = 'none';
+      sg.globalCompositeOperation = 'source-in'; sg.fillStyle = o.shadowColor ?? '#000'; sg.fillRect(0, 0, sc.width, sc.height);
+      shadow = { c: sc, off: pad + b * 2 };
+    }
+    return { c, w, h, pad, shadow };
+  };
+  // Draw a sprite with its top-left at (x, y) in world space, pivoting at (px, py) inside it. The shadow is offset
+  // in world space before rotating, so the light keeps one direction.
+  const put = (g, sp, x, y, o = {}) => {
+    const px = o.px ?? sp.w / 2, py = o.py ?? sp.h / 2, s = o.scale ?? 1, sx = (o.sx ?? 1) * s, sy = (o.sy ?? 1) * s, a = o.rot ?? 0;
+    g.save(); g.globalAlpha = o.alpha ?? 1;
+    if (sp.shadow && o.shadow) {
+      const [dx, dy, sa] = o.shadow; g.save(); g.globalAlpha *= sa;
+      g.translate(x + px + dx, y + py + dy); g.rotate(a); g.scale(sx, sy); g.drawImage(sp.shadow.c, -px - sp.shadow.off, -py - sp.shadow.off); g.restore();
+    }
+    g.translate(x + px, y + py); g.rotate(a); g.scale(sx, sy); g.drawImage(sp.c, -px - sp.pad, -py - sp.pad);
+    g.restore();
+  };
+
+  // Printed backdrop: a vertical gradient, two scales of mottling, faint print lines, dust, and a warm key light
+  // falling to darker corners. Baked once per size.
+  const backdrop = (w, h, top, bottom, o = {}) => {
+    const [c, g] = canvas(w, h), r = rng(o.seed ?? 3);
+    const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, top); gr.addColorStop(1, bottom); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    for (const [n, s, a] of [[60, 260, 0.06], [500, 40, 0.05]]) for (let i = 0; i < n; i++) {
+      const x = r() * w, y = r() * h, rad = s * (0.5 + r()), v = r() < 0.5 ? 0 : 255, m = g.createRadialGradient(x, y, 0, x, y, rad);
+      m.addColorStop(0, `rgba(${v},${v},${v},${a})`); m.addColorStop(1, `rgba(${v},${v},${v},0)`); g.fillStyle = m; g.fillRect(x - rad, y - rad, rad * 2, rad * 2);
+    }
+    g.strokeStyle = 'rgba(0,0,0,0.035)'; g.lineWidth = 1; for (let y = 0; y < h; y += 5) { g.beginPath(); g.moveTo(0, y + r()); g.lineTo(w, y + r()); g.stroke(); }
+    g.fillStyle = 'rgba(0,0,0,0.25)'; for (let i = 0; i < 900; i++) g.fillRect(r() * w, r() * h, 1 + r(), 1 + r());
+    const k = g.createRadialGradient(w * (o.lx ?? 0.35), h * (o.ly ?? 0.25), 0, w * 0.5, h * 0.5, Math.hypot(w, h) * 0.62);
+    k.addColorStop(0, `rgba(255,236,200,${o.glow ?? 0.18})`); k.addColorStop(0.55, 'rgba(0,0,0,0)'); k.addColorStop(1, `rgba(0,0,0,${o.corners ?? 0.32})`);
+    g.fillStyle = k; g.fillRect(0, 0, w, h);
+    paperize(g, w, h, 0.45, 9);
+    return c;
+  };
+
+  // Grain: a tile of light and dark specks, offset once per pose.
+  let GRAIN;
+  const grain = (g, w, h, pose, alpha = 0.3) => {
+    if (!GRAIN) {
+      const [c, gg] = canvas(256, 256), r = rng(11);
+      for (let i = 0; i < 2200; i++) { gg.fillStyle = r() < 0.5 ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.45)'; gg.fillRect(r() * 256, r() * 256, 1, 1); }
+      GRAIN = c;
+    }
+    g.save(); g.globalAlpha = alpha; g.fillStyle = g.createPattern(GRAIN, 'repeat');
+    const ox = (pose * 97) % 256, oy = (pose * 57) % 256; g.translate(-ox, -oy); g.fillRect(0, 0, w + 256, h + 256); g.restore();
+  };
+
+  // The stop-motion clock: poses step at `rate` a second (divide the output fps evenly: 15 or 10 at 30 fps) while
+  // the camera moves every frame. Boil and exposure flicker are re-rolled per pose.
+  const clock = (rate = 15) => ({
+    rate,
+    pose: (t) => Math.floor(t * rate + 1e-6),
+    q: (t) => Math.floor(t * rate + 1e-6) / rate,
+    boil: (id, t, px = 1, rad = 0.003) => { const p = Math.floor(t * rate + 1e-6); return { dx: (hash(id, p) - 0.5) * 2 * px, dy: (hash(id + 991, p) - 0.5) * 2 * px, rot: (hash(id + 577, p) - 0.5) * 2 * rad }; },
+    flicker: (t, amt = 0.025) => 1 + (hash(4242, Math.floor(t * rate + 1e-6)) - 0.5) * 2 * amt,
+  });
+
+  // Parallax sheets: a sheet at depth p (sky ~0.1, the subject 1, foreground > 1) scales by zoom^p around a centre
+  // that moves p times as far as the camera, so a push-in slides the sheets past each other.
+  const sheet = (g, cam, p, w, h, draw) => {
+    const s = Math.pow(cam.zoom, p), cx = w / 2 + p * (cam.x ?? 0), cy = h / 2 + p * (cam.y ?? 0);
+    g.save(); g.translate(w / 2, h / 2); g.scale(s, s); g.translate(-cx, -cy); draw(g); g.restore();
+  };
+
+  window.PaperKit = { TAU, clamp, smooth, ramp, backOut, expOut, rng, hash, canvas, rgb, css, toner, cut, oval, box, trace, fibre, paperize, sprite, put, backdrop, grain, clock, sheet };
+})();
+
+      // A medallion of 336 cut-paper inlay pieces bursts into five spiral arms around a white-gold sun, then unwinds
+      // home; each piece locks with an overshoot at a time staggered by radius and angle and lights from behind as it
+      // locks (warm on the right, neon on the left). Big blurred pieces fly past the lens in the first second.
+      // After opus-js-animations styles.md §3 (MIT); closed-form in t.
+      (function () {
+        const R = document.querySelector('[data-composition-id="medallion-burst-lock"]');
+        const cv = R.querySelector('#cv'), g = cv.getContext('2d'), W = 1920, H = 1080, DUR = 6;
+        const K = PaperKit, V = (n, d) => getComputedStyle(R).getPropertyValue('--' + n).trim() || d;
+        const C = { sky: V('sky', '#1d2152'), warm: [V('warm', '#e8b64a'), V('warm2', '#c98a35'), V('rose', '#b8574e')], neon: [V('neon', '#b8408f'), V('cyan', '#3a9fb5'), V('violet', '#6250c8')], core: V('core', '#fff4d6'), lead: V('lead', '#120f24') };
+        const tone = K.toner('#0c0e26', C.core), CX = 960, CY = 520;
+
+        // Zig-zag rings: the radius is a triangle wave in angle, shared by the bands on both sides of a ring, so the
+        // pieces tile with no gaps but the leading.
+        const RINGS = [70, 128, 186, 244, 302, 360], BANDS = [16, 32, 56, 96, 136];
+        const tri = (x) => 1 - 4 * Math.abs(((x % 1) + 1) % 1 - 0.5);
+        const ringR = (k, th) => RINGS[k] + (k === 0 ? 0 : 6 * tri((th / K.TAU) * BANDS[Math.min(k, 4)] * 2));
+        const pieces = [];
+        BANDS.forEach((n, k) => {
+          const off = k % 2 ? 0.5 : 0;
+          for (let j = 0; j < n; j++) {
+            const a0 = ((j + off) / n) * K.TAU, a1 = ((j + 1 + off) / n) * K.TAU, S = 5, pts = [];
+            for (let i = 0; i <= S; i++) { const th = a0 + ((a1 - a0) * i) / S; pts.push([Math.cos(th) * ringR(k, th), Math.sin(th) * ringR(k, th)]); }
+            for (let i = S; i >= 0; i--) { const th = a0 + ((a1 - a0) * i) / S; pts.push([Math.cos(th) * ringR(k + 1, th), Math.sin(th) * ringR(k + 1, th)]); }
+            const cx = pts.reduce((s, p) => s + p[0], 0) / pts.length, cy = pts.reduce((s, p) => s + p[1], 0) / pts.length;
+            pieces.push({ k, j, n, pts: pts.map(([x, y]) => [x - cx, y - cy]), hx: cx, hy: cy, hr: Math.hypot(cx, cy), ha: Math.atan2(cy, cx) });
+          }
+        });
+        // Bake each piece twice: unlit (dim, toward the night) and backlit (its side's colour, a rim of light).
+        pieces.forEach((p, i) => {
+          const xs = p.pts.map((q) => q[0]), ys = p.pts.map((q) => q[1]), x0 = Math.min(...xs), y0 = Math.min(...ys), w = Math.max(...xs) - x0, h = Math.max(...ys) - y0;
+          const shrink = p.pts.map(([x, y]) => { const L = Math.hypot(x, y) || 1, d = Math.min(3.6, L * 0.3); return [x - (x / L) * d - x0, y - (y / L) * d - y0]; });
+          const set = p.hx >= 0 ? C.warm : C.neon, m = (p.k * 7 + p.j) % 6, col = m < 3 ? set[0] : m < 5 ? set[1] : set[2];
+          const shape = (fill) => (s) => { s.fillStyle = fill; K.trace(s, K.cut(shrink, 100 + i, 9, 0.8)); s.fill(); };
+          p.ox = x0; p.oy = y0;
+          p.dim = K.sprite(w, h, shape(tone(col, -0.62)), { seed: i, shadow: false, pad: 8, fibre: 0.6 });
+          p.lit = K.sprite(w, h, shape(col), { seed: i, shadow: false, pad: 8, fibre: 0.5, rim: { dir: [p.hx / (p.hr || 1), p.hy / (p.hr || 1)], color: C.core, alpha: 0.85, width: 2 } });
+          // Lock time staggered by radius, then by angle; inner rings first.
+          p.lock = 1.3 + 1.9 * (p.hr / 360) + 0.35 * (((p.ha / K.TAU) + 1) % 1);
+          p.arm = Math.round(((p.ha / K.TAU + 1) % 1) * 5) / 5 * K.TAU;
+          p.spin = (K.hash(i, 3) - 0.5) * 6; p.jr = (K.hash(i, 8) - 0.5) * 160; p.ja = (K.hash(i, 9) - 0.5) * 0.5;
+        });
+        const sky = K.backdrop(1920, 1080, C.sky, tone(C.sky, -0.5), { lx: 0.5, ly: 0.48, glow: 0.05, corners: 0.5 });
+        const stars = Array.from({ length: 110 }, (_, i) => [K.hash(i, 1) * W, K.hash(i, 2) * H * 0.9, 0.6 + K.hash(i, 4) * 1.6, K.hash(i, 5)]);
+        // Lens pieces: a few big shapes, pre-blurred.
+        const lens = [3, 40, 77, 150, 210, 300].map((i) => { const p = pieces[i], s = 5.5, [c, cg] = K.canvas(p.lit.c.width * s + 80, p.lit.c.height * s + 80);
+          cg.filter = 'blur(16px)'; cg.drawImage(p.lit.c, 40, 40, p.lit.c.width * s, p.lit.c.height * s); return { c, a: (i * 2.39) % K.TAU }; });
+
+        // Where piece p is at time t: the burst pulls it out to its spiral arm (the spin grows with radius), then it
+        // eases home and locks with an ease-out-back.
+        const state = (p, t) => {
+          const out = K.expOut(t / 0.5), e = K.clamp((t - (p.lock - 1.5)) / 1.5), home = K.smooth(e), back = K.backOut(1.6)(e);
+          // Pulled most of the way to its arm, spread along it by radius, so five arms read rather than clumps.
+          const swirl = (1 - home) * (0.8 * (p.arm - p.ha) + p.ja + 2.8 * (p.hr / 360));
+          const r = (p.hr * 1.15 + 150 + p.jr) * out * (1 - home) + (p.hr + (back - e) * 22) * home, a = p.ha + swirl;
+          return { x: CX + Math.cos(a) * r, y: CY + Math.sin(a) * r, rot: swirl + (1 - home) * p.spin, lit: K.smooth((t - p.lock) / 0.45) };
+        };
+        const draw = (sp, p, s, alpha) => K.put(g, sp, s.x + p.ox, s.y + p.oy, { px: -p.ox, py: -p.oy, rot: s.rot, alpha });
+
+        const render = (t) => {
+          g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(sky, 0, 0);
+          stars.forEach(([x, y, r, k]) => { g.fillStyle = `rgba(255,244,214,${0.25 + 0.35 * (0.5 + 0.5 * Math.sin(t * 2 + k * 9))})`; g.fillRect(x, y, r, r); });
+          const zoom = 1.22 - 0.22 * K.smooth(t / 3.2);
+          g.save(); g.translate(CX, CY); g.scale(zoom, zoom); g.translate(-CX, -CY);
+          // The sun: rays, then a white-gold core.
+          const sun = K.smooth(t / 0.6), glow = 0.75 + 0.25 * K.smooth((t - 3.6) / 1.2);
+          g.save(); g.translate(CX, CY); g.rotate(t * 0.05); g.globalCompositeOperation = 'lighter';
+          for (let i = 0; i < 24; i++) { g.rotate(K.TAU / 24); g.fillStyle = `rgba(255,214,140,${0.08 * sun})`; g.beginPath(); g.moveTo(0, -10); g.lineTo(520 + (i % 2) * 140, 0); g.lineTo(0, 10); g.fill(); }
+          const core = g.createRadialGradient(0, 0, 0, 0, 0, 430); core.addColorStop(0, `rgba(255,248,226,${sun * glow})`); core.addColorStop(0.18, `rgba(255,220,150,${0.75 * sun * glow})`); core.addColorStop(0.55, `rgba(240,150,90,${0.18 * sun})`); core.addColorStop(1, 'rgba(0,0,0,0)');
+          g.fillStyle = core; g.beginPath(); g.arc(0, 0, 430, 0, K.TAU); g.fill(); g.restore();
+          // The leading: a dark disc behind the medallion, so the gaps between locked pieces read as lead.
+          g.fillStyle = C.lead; g.globalAlpha = K.smooth((t - 1.6) / 2.2); g.beginPath(); g.arc(CX, CY, 362, 0, K.TAU); g.arc(CX, CY, 70, 0, K.TAU, true); g.fill(); g.globalAlpha = 1;
+          pieces.forEach((p) => {
+            const s = state(p, t);
+            const moving = t < p.lock - 0.1;
+            // Fast pieces leave two fading copies at t - 0.025 and t - 0.05.
+            if (moving && t > 0.05) [[0.05, 0.12], [0.025, 0.25]].forEach(([dt, al]) => draw(p.dim, p, state(p, t - dt), al));
+            draw(p.dim, p, s, 1);
+            if (s.lit > 0) draw(p.lit, p, s, s.lit);
+          });
+          g.restore();
+          // Pieces past the lens, in screen space, during the first second.
+          lens.forEach((L, i) => { const u = (t - i * 0.08) / 0.9; if (u <= 0 || u >= 1) return; const d = 200 + 1500 * u * u, x = CX + Math.cos(L.a) * d, y = CY + Math.sin(L.a) * d;
+            g.save(); g.globalAlpha = Math.sin(u * Math.PI) * 0.85; g.translate(x, y); g.rotate(u * 2 + i); g.drawImage(L.c, -L.c.width / 2, -L.c.height / 2); g.restore(); });
+          const v = g.createRadialGradient(CX, CY, 300, CX, CY, 1150); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(4,4,20,0.55)'); g.fillStyle = v; g.fillRect(0, 0, W, H);
+        };
+        const tl = gsap.timeline({ paused: true }), pp = { t: 0 };
+        render(0);
+        tl.to(pp, { t: DUR, duration: DUR, ease: 'none', onUpdate: () => render(pp.t) }, 0);
+        window.__timelines = window.__timelines || {};
+        window.__timelines['medallion-burst-lock'] = tl;
+      })();
+    </script>
+  </div>
+</template>

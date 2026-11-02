@@ -1,0 +1,30 @@
+{
+  "name": "medallion-burst-lock",
+  "title": "Medallion burst and lock",
+  "summary": "A medallion of 336 cut-paper inlay pieces bursts into five spiral arms around a white-gold sun, unwinds home and locks piece by piece, lighting from behind as it locks.",
+  "tags": {
+    "role": [
+      "hook",
+      "outro",
+      "emphasis"
+    ],
+    "fits": [
+      "launch",
+      "explainer",
+      "social"
+    ],
+    "energy": "high"
+  },
+  "duration": 6,
+  "variables": {
+    "--warm / --warm2 / --rose": "the right half when lit",
+    "--neon / --cyan / --violet": "the left half when lit",
+    "--sky": "night sky",
+    "--core": "sun and rim light",
+    "--lead": "the leading between pieces"
+  },
+  "needs": [],
+  "tool": "hyperframes@0.8.191",
+  "source": "written from the recipe in klsoen/opus-js-animations skills/opus-js-animations/references/styles.md \u00a73 Paper lightbox diptych (medallion, hook); no code was copied (the source has none)",
+  "licence": "Apache-2.0 (this folder); recipe from an MIT work, see NOTICE"
+}

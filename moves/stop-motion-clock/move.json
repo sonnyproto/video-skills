@@ -1,0 +1,30 @@
+{
+  "name": "stop-motion-clock",
+  "title": "Stop-motion clock",
+  "summary": "A paper bird crouches, hops onto a cup and lands with a squash, then cut-paper letters drop in one by one: poses step 15 times a second while the camera pushes every frame.",
+  "tags": {
+    "role": [
+      "title",
+      "hook",
+      "emphasis"
+    ],
+    "fits": [
+      "explainer",
+      "launch",
+      "social"
+    ],
+    "energy": "mid"
+  },
+  "duration": 6,
+  "variables": {
+    "headline": "the letters that drop in (#fontwarm text)",
+    "--ground": "wall colour",
+    "--accent": "cup and beak",
+    "--cream": "letters, steam, cup band",
+    "--ink": "bird"
+  },
+  "needs": [],
+  "tool": "hyperframes@0.8.191",
+  "source": "written from the recipe in klsoen/opus-js-animations skills/opus-js-animations/references/styles.md \u00a72.5 The stop-motion clock; no code was copied (the source has none)",
+  "licence": "Apache-2.0 (this folder); recipe from an MIT work, see NOTICE"
+}

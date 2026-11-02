@@ -13,6 +13,8 @@ Shots are in [moves/](../moves/), the process in [workflows/](../workflows/).
 | Stills | Style | Fits | Worked example |
 |---|---|---|---|
 | <img src="paper-collage/stills/2.jpg" width="240"> | [**paper-collage**](paper-collage/) Torn paper, halftone b-roll, stamps and typed labels that land on their words | explainer | [films/explainer/paper-collage](../films/explainer/paper-collage/) |
+| <img src="cut-paper-stop-motion/stills/1.jpg" width="240"> | [**cut-paper-stop-motion**](cut-paper-stop-motion/) Printed paper cut-outs posed 15 times a second under a smooth camera | explainer, social | moves: [parallax-sheets](../moves/parallax-sheets/), [stop-motion-clock](../moves/stop-motion-clock/) |
+| <img src="paper-lightbox/stills/1.jpg" width="240"> | [**paper-lightbox**](paper-lightbox/) Backlit cut paper at night, warm on one side and neon on the other, a wet floor | explainer, social | moves: [medallion-burst-lock](../moves/medallion-burst-lock/), [wet-floor-reflection](../moves/wet-floor-reflection/) |
 
 ## Using a style
 

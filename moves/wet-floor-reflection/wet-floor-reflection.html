@@ -1,0 +1,273 @@
+<template id="wet-floor-reflection-template">
+  <div id="root" data-composition-id="wet-floor-reflection" data-width="1920" data-height="1080" data-duration="6">
+    <style>
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: #161a40;
+        --sky: #1d2152; --warm: #e8b64a; --amber: #c98a35; --neon: #d04aa0; --cyan: #3fb8d0; --core: #fff4d6; --night: #0f1030; }
+      #cv { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+      #line { position: absolute; left: 0; right: 0; bottom: 92px; text-align: center; font-family: 'Playfair Display', serif;
+        font-style: italic; font-size: 64px; color: #fff4d6; letter-spacing: 0.5px; text-shadow: 0 0 24px rgba(255, 210, 140, 0.35); }
+      #line span { display: inline-block; opacity: 0; }
+    </style>
+    <canvas id="cv" width="1920" height="1080" data-layout-allow-overflow></canvas>
+    <div id="line" data-var-text="caption"><span>Two</span> <span>ways</span> <span>to</span> <span>spend</span> <span>a</span> <span>night</span></div>
+    <script>
+      // ── Paper kit (inlined so the move is one file) ──
+// Paper kit: hand-cut edges, paper fibre, baked sprites with a rim of light and a contact shadow, a printed
+// backdrop, grain, parallax sheets and the stop-motion clock. Everything is seeded and baked once; draw code reads
+// only t. Written from the recipes in klsoen/opus-js-animations references/styles.md (MIT).
+(function () {
+  const TAU = Math.PI * 2;
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const smooth = (x) => { x = clamp(x); return x * x * (3 - 2 * x); };
+  const ramp = (t, a, b, ease = smooth) => ease(clamp((t - a) / (b - a)));
+  const backOut = (s = 1.7) => (x) => { x = clamp(x) - 1; return 1 + x * x * ((s + 1) * x + s); };
+  const expOut = (x) => 1 - Math.exp(-4 * clamp(x));
+
+  const rng = (seed) => {
+    let a = seed >>> 0;
+    return () => {
+      a = (a + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  };
+  const hash = (a, b = 0) => rng((Math.imul(a | 0, 73856093) ^ Math.imul(b | 0, 19349663)) >>> 0)();
+  const canvas = (w, h) => { const c = document.createElement('canvas'); c.width = Math.ceil(w); c.height = Math.ceil(h); return [c, c.getContext('2d')]; };
+
+  const rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const css = (c, a = 1) => `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${a})`;
+  // Shades mix toward the ink (k < 0) or the paper (k > 0), never toward black or white.
+  const toner = (ink, paper) => (h, k) => {
+    const c = rgb(h), to = rgb(k < 0 ? ink : paper), a = Math.abs(k);
+    return css(c.map((v, i) => v + (to[i] - v) * a));
+  };
+
+  // Hand-cut edge: subdivide every ~step px and push each point along the edge normal by noise.
+  const cut = (pts, seed, step = 12, amp = 1.1) => {
+    const r = rng(seed), out = [];
+    pts.forEach(([x0, y0], i) => {
+      const [x1, y1] = pts[(i + 1) % pts.length], L = Math.hypot(x1 - x0, y1 - y0) || 1;
+      const n = Math.max(1, Math.round(L / step)), nx = -(y1 - y0) / L, ny = (x1 - x0) / L;
+      for (let k = 0; k < n; k++) { const u = k / n, d = (r() - 0.5) * 2 * amp; out.push([x0 + (x1 - x0) * u + nx * d, y0 + (y1 - y0) * u + ny * d]); }
+    });
+    return out;
+  };
+  const oval = (cx, cy, rx, ry, n = 40) => Array.from({ length: n }, (_, i) => [cx + Math.cos((i / n) * TAU) * rx, cy + Math.sin((i / n) * TAU) * ry]);
+  const box = (x, y, w, h) => [[x, y], [x + w, y], [x + w, y + h], [x, y + h]];
+  const trace = (g, pts) => { g.beginPath(); pts.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); g.closePath(); };
+
+  // Paper fibre: a tileable 512² tile of soft blotches and short fibres around mid grey, laid on with soft-light.
+  let FIBRE;
+  const fibre = () => {
+    if (FIBRE) return FIBRE;
+    const [c, g] = canvas(512, 512), r = rng(7);
+    g.fillStyle = '#808080'; g.fillRect(0, 0, 512, 512);
+    for (let i = 0; i < 700; i++) {
+      const x = r() * 512, y = r() * 512, s = 6 + r() * 28, v = r() < 0.5 ? 40 : 230;
+      for (const [dx, dy] of [[0, 0], [512, 0], [-512, 0], [0, 512], [0, -512]]) {
+        const gr = g.createRadialGradient(x + dx, y + dy, 0, x + dx, y + dy, s);
+        gr.addColorStop(0, `rgba(${v},${v},${v},0.07)`); gr.addColorStop(1, `rgba(${v},${v},${v},0)`);
+        g.fillStyle = gr; g.fillRect(x + dx - s, y + dy - s, s * 2, s * 2);
+      }
+    }
+    g.lineCap = 'round';
+    for (let i = 0; i < 1600; i++) {
+      const x = r() * 512, y = r() * 512, a = r() * Math.PI, l = 3 + r() * 10, v = r() < 0.5 ? 50 : 235;
+      g.strokeStyle = `rgba(${v},${v},${v},${0.1 + r() * 0.14})`; g.lineWidth = 0.5 + r() * 0.8;
+      g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke();
+    }
+    return (FIBRE = c);
+  };
+  const paperize = (g, w, h, amount = 0.5, seed = 0) => {
+    const [m, mg] = canvas(g.canvas.width, g.canvas.height); mg.drawImage(g.canvas, 0, 0);
+    g.save(); g.globalCompositeOperation = 'soft-light'; g.globalAlpha = amount;
+    const p = g.createPattern(fibre(), 'repeat'); g.translate(-(seed * 131) % 512, -(seed * 71) % 512);
+    g.fillStyle = p; g.fillRect(0, 0, w + 512, h + 512); g.restore();
+    g.save(); g.globalCompositeOperation = 'destination-in'; g.drawImage(m, 0, 0); g.restore();
+  };
+
+  // A sprite: draw(g) paints the piece into a w×h box. Baked once with fibre, an optional print texture, a rim of
+  // light (the silhouette minus itself shifted away from the light, kept only on the piece) and a blurred
+  // silhouette for the contact shadow.
+  const sprite = (w, h, draw, o = {}) => {
+    const pad = o.pad ?? 24, W = w + pad * 2, H = h + pad * 2, [c, g] = canvas(W, H);
+    g.translate(pad, pad); draw(g); g.setTransform(1, 0, 0, 1, 0, 0);
+    if (o.lines) {
+      g.save(); g.globalCompositeOperation = 'source-atop'; g.strokeStyle = o.lines; g.lineWidth = 1.2; const r = rng(o.seed ?? 1);
+      for (let y = 0; y < H; y += 6) { g.beginPath(); g.moveTo(0, y); for (let x = 0; x <= W; x += 40) g.lineTo(x, y + (r() - 0.5) * 1.4); g.stroke(); }
+      g.restore();
+    }
+    paperize(g, W, H, o.fibre ?? 0.55, o.seed ?? 0);
+    if (o.rim) {
+      const [rc, rg] = canvas(W, H), [lx, ly] = o.rim.dir, k = o.rim.width ?? 3;
+      rg.drawImage(c, 0, 0); rg.globalCompositeOperation = 'source-in'; rg.fillStyle = o.rim.color; rg.fillRect(0, 0, W, H);
+      rg.globalCompositeOperation = 'destination-out'; rg.drawImage(c, -lx * k, -ly * k);
+      g.save(); g.globalCompositeOperation = 'source-atop'; g.globalAlpha = o.rim.alpha ?? 0.9; g.drawImage(rc, 0, 0); g.restore();
+    }
+    let shadow = null;
+    if (o.shadow !== false) {
+      const b = o.blur ?? 10, [sc, sg] = canvas(W + b * 4, H + b * 4);
+      sg.filter = `blur(${b}px)`; sg.drawImage(c, b * 2, b * 2); sg.filter = 'none';
+      sg.globalCompositeOperation = 'source-in'; sg.fillStyle = o.shadowColor ?? '#000'; sg.fillRect(0, 0, sc.width, sc.height);
+      shadow = { c: sc, off: pad + b * 2 };
+    }
+    return { c, w, h, pad, shadow };
+  };
+  // Draw a sprite with its top-left at (x, y) in world space, pivoting at (px, py) inside it. The shadow is offset
+  // in world space before rotating, so the light keeps one direction.
+  const put = (g, sp, x, y, o = {}) => {
+    const px = o.px ?? sp.w / 2, py = o.py ?? sp.h / 2, s = o.scale ?? 1, sx = (o.sx ?? 1) * s, sy = (o.sy ?? 1) * s, a = o.rot ?? 0;
+    g.save(); g.globalAlpha = o.alpha ?? 1;
+    if (sp.shadow && o.shadow) {
+      const [dx, dy, sa] = o.shadow; g.save(); g.globalAlpha *= sa;
+      g.translate(x + px + dx, y + py + dy); g.rotate(a); g.scale(sx, sy); g.drawImage(sp.shadow.c, -px - sp.shadow.off, -py - sp.shadow.off); g.restore();
+    }
+    g.translate(x + px, y + py); g.rotate(a); g.scale(sx, sy); g.drawImage(sp.c, -px - sp.pad, -py - sp.pad);
+    g.restore();
+  };
+
+  // Printed backdrop: a vertical gradient, two scales of mottling, faint print lines, dust, and a warm key light
+  // falling to darker corners. Baked once per size.
+  const backdrop = (w, h, top, bottom, o = {}) => {
+    const [c, g] = canvas(w, h), r = rng(o.seed ?? 3);
+    const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, top); gr.addColorStop(1, bottom); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    for (const [n, s, a] of [[60, 260, 0.06], [500, 40, 0.05]]) for (let i = 0; i < n; i++) {
+      const x = r() * w, y = r() * h, rad = s * (0.5 + r()), v = r() < 0.5 ? 0 : 255, m = g.createRadialGradient(x, y, 0, x, y, rad);
+      m.addColorStop(0, `rgba(${v},${v},${v},${a})`); m.addColorStop(1, `rgba(${v},${v},${v},0)`); g.fillStyle = m; g.fillRect(x - rad, y - rad, rad * 2, rad * 2);
+    }
+    g.strokeStyle = 'rgba(0,0,0,0.035)'; g.lineWidth = 1; for (let y = 0; y < h; y += 5) { g.beginPath(); g.moveTo(0, y + r()); g.lineTo(w, y + r()); g.stroke(); }
+    g.fillStyle = 'rgba(0,0,0,0.25)'; for (let i = 0; i < 900; i++) g.fillRect(r() * w, r() * h, 1 + r(), 1 + r());
+    const k = g.createRadialGradient(w * (o.lx ?? 0.35), h * (o.ly ?? 0.25), 0, w * 0.5, h * 0.5, Math.hypot(w, h) * 0.62);
+    k.addColorStop(0, `rgba(255,236,200,${o.glow ?? 0.18})`); k.addColorStop(0.55, 'rgba(0,0,0,0)'); k.addColorStop(1, `rgba(0,0,0,${o.corners ?? 0.32})`);
+    g.fillStyle = k; g.fillRect(0, 0, w, h);
+    paperize(g, w, h, 0.45, 9);
+    return c;
+  };
+
+  // Grain: a tile of light and dark specks, offset once per pose.
+  let GRAIN;
+  const grain = (g, w, h, pose, alpha = 0.3) => {
+    if (!GRAIN) {
+      const [c, gg] = canvas(256, 256), r = rng(11);
+      for (let i = 0; i < 2200; i++) { gg.fillStyle = r() < 0.5 ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.45)'; gg.fillRect(r() * 256, r() * 256, 1, 1); }
+      GRAIN = c;
+    }
+    g.save(); g.globalAlpha = alpha; g.fillStyle = g.createPattern(GRAIN, 'repeat');
+    const ox = (pose * 97) % 256, oy = (pose * 57) % 256; g.translate(-ox, -oy); g.fillRect(0, 0, w + 256, h + 256); g.restore();
+  };
+
+  // The stop-motion clock: poses step at `rate` a second (divide the output fps evenly: 15 or 10 at 30 fps) while
+  // the camera moves every frame. Boil and exposure flicker are re-rolled per pose.
+  const clock = (rate = 15) => ({
+    rate,
+    pose: (t) => Math.floor(t * rate + 1e-6),
+    q: (t) => Math.floor(t * rate + 1e-6) / rate,
+    boil: (id, t, px = 1, rad = 0.003) => { const p = Math.floor(t * rate + 1e-6); return { dx: (hash(id, p) - 0.5) * 2 * px, dy: (hash(id + 991, p) - 0.5) * 2 * px, rot: (hash(id + 577, p) - 0.5) * 2 * rad }; },
+    flicker: (t, amt = 0.025) => 1 + (hash(4242, Math.floor(t * rate + 1e-6)) - 0.5) * 2 * amt,
+  });
+
+  // Parallax sheets: a sheet at depth p (sky ~0.1, the subject 1, foreground > 1) scales by zoom^p around a centre
+  // that moves p times as far as the camera, so a push-in slides the sheets past each other.
+  const sheet = (g, cam, p, w, h, draw) => {
+    const s = Math.pow(cam.zoom, p), cx = w / 2 + p * (cam.x ?? 0), cy = h / 2 + p * (cam.y ?? 0);
+    g.save(); g.translate(w / 2, h / 2); g.scale(s, s); g.translate(-cx, -cy); draw(g); g.restore();
+  };
+
+  window.PaperKit = { TAU, clamp, smooth, ramp, backOut, expOut, rng, hash, canvas, rgb, css, toner, cut, oval, box, trace, fibre, paperize, sprite, put, backdrop, grain, clock, sheet };
+})();
+
+      // A paper lightbox at night, split down one axis: neon on the left, warm arches on the right, two faceless
+      // figures back to back, and a wet floor that mirrors both: the scene above the feet copied flipped and blurred,
+      // laid back in 6 px strips that sway, fading as (1 - d)^1.5. After opus-js-animations styles.md §3 (MIT).
+      (function () {
+        const R = document.querySelector('[data-composition-id="wet-floor-reflection"]');
+        const cv = R.querySelector('#cv'), g = cv.getContext('2d'), W = 1920, H = 1080, DUR = 6, FL = 770;
+        const K = PaperKit, V = (n, d) => getComputedStyle(R).getPropertyValue('--' + n).trim() || d;
+        const C = { sky: V('sky', '#1d2152'), warm: V('warm', '#e8b64a'), amber: V('amber', '#c98a35'), neon: V('neon', '#d04aa0'), cyan: V('cyan', '#3fb8d0'), core: V('core', '#fff4d6'), night: V('night', '#0f1030') };
+        const tone = K.toner('#07081c', C.core);
+
+        const sky = K.backdrop(2100, 900, C.sky, tone(C.sky, -0.35), { lx: 0.5, ly: 0.3, glow: 0.06, corners: 0.35 });
+        // Buildings: one flat sheet each, lights as separate additive sheets.
+        const block = (w, h, seed, fill, arches) => K.sprite(w, h, (s) => {
+          s.fillStyle = fill; const top = arches ? [[0, 40], [w * 0.5, 0], [w, 40]] : [[0, 0], [w, 0]];
+          K.trace(s, K.cut([...top, [w, h], [0, h]], seed)); s.fill();
+        }, { seed, pad: 20, fibre: 0.5, rim: { dir: arches ? [1, -0.3] : [-1, -0.3], color: arches ? C.warm : C.neon, alpha: 0.7, width: 3 }, shadow: false });
+        const R2 = K.rng(5);
+        const left = Array.from({ length: 5 }, (_, i) => ({ x: 40 + i * 170, w: 150 + R2() * 40, h: 300 + R2() * 260, i }));
+        const right = Array.from({ length: 5 }, (_, i) => ({ x: 1080 + i * 170, w: 150 + R2() * 40, h: 280 + R2() * 220, i }));
+        left.forEach((b) => (b.sp = block(b.w, b.h, 10 + b.i, tone(C.sky, -0.55), false)));
+        right.forEach((b) => (b.sp = block(b.w, b.h, 30 + b.i, tone(C.sky, -0.5), true)));
+        const disc = K.sprite(300, 300, (s) => {
+          for (const [r, k] of [[150, 0], [118, 1], [84, 2], [50, 3]]) {
+            s.fillStyle = k % 2 ? tone(C.warm, -0.15) : C.warm; s.save(); s.beginPath(); s.rect(150, 0, 150, 300); s.clip(); K.trace(s, K.cut(K.oval(150, 150, r, r, 48), 50 + k)); s.fill(); s.restore();
+            s.fillStyle = k % 2 ? tone(C.neon, -0.2) : C.cyan; s.save(); s.beginPath(); s.rect(0, 0, 150, 300); s.clip(); K.trace(s, K.cut(K.oval(150, 150, r, r, 48), 60 + k)); s.fill(); s.restore();
+          }
+        }, { seed: 50, pad: 20, shadow: false, rim: { dir: [0, -1], color: C.core, alpha: 0.8, width: 2 } });
+        const [rc, rg] = K.canvas(W, H - FL), [fc, fg] = K.canvas(320, 520);
+
+        // A faceless figure on a capsule skeleton, drawn live, with the rim of the light it faces.
+        const figure = (x, dir, light, t) => {
+          fg.setTransform(1, 0, 0, 1, 0, 0); fg.clearRect(0, 0, 320, 520); fg.fillStyle = '#0b0b1c'; fg.strokeStyle = '#0b0b1c'; fg.lineCap = 'round';
+          const breathe = Math.sin(t * 1.6 + dir) * 3, cx = 160;
+          fg.beginPath(); fg.ellipse(cx + dir * 6, 70 + breathe * 0.3, 34, 40, 0, 0, K.TAU); fg.fill();
+          fg.beginPath(); fg.roundRect(cx - 46, 120 + breathe * 0.5, 92, 190, 40); fg.fill();
+          fg.lineWidth = 30; fg.beginPath(); fg.moveTo(cx - 20, 290); fg.lineTo(cx - 26, 505); fg.moveTo(cx + 20, 290); fg.lineTo(cx + 24, 505); fg.stroke();
+          fg.lineWidth = 24; fg.beginPath(); fg.moveTo(cx + dir * 34, 150); fg.lineTo(cx + dir * 62, 250 + breathe); fg.lineTo(cx + dir * 54, 300); fg.stroke();
+          const [mc, mg] = K.canvas(320, 520); mg.drawImage(fc, 0, 0); mg.globalCompositeOperation = 'source-in'; mg.fillStyle = light; mg.fillRect(0, 0, 320, 520);
+          mg.globalCompositeOperation = 'destination-out'; mg.drawImage(fc, -dir * 5, 3);
+          fg.globalCompositeOperation = 'source-atop'; fg.drawImage(mc, 0, 0); fg.globalCompositeOperation = 'source-over';
+          g.drawImage(fc, x - 160, FL - 510);
+        };
+
+        const words = [...R.querySelectorAll('#line span')];
+        const render = (t) => {
+          const k = K.smooth(t / DUR), cam = { zoom: 1 + 0.06 * k, x: 0, y: -14 * k };
+          g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = C.night; g.fillRect(0, 0, W, H);
+          K.sheet(g, cam, 0.15, W, H, (s) => {
+            s.drawImage(sky, -90, -40);
+            const glow = (x, col, a) => { const gr = s.createRadialGradient(x, 560, 0, x, 560, 700); gr.addColorStop(0, K.css(K.rgb(col), a)); gr.addColorStop(1, 'rgba(0,0,0,0)'); s.fillStyle = gr; s.fillRect(x - 700, -140, 1400, 1400); };
+            s.save(); s.globalCompositeOperation = 'lighter'; glow(1500, C.amber, 0.32); glow(420, C.neon, 0.26); s.restore();
+            // The hero disc is lit from behind: a soft core glow, then the paper.
+            s.save(); s.globalCompositeOperation = 'lighter'; const halo = s.createRadialGradient(960, 170, 60, 960, 170, 320);
+            halo.addColorStop(0, K.css(K.rgb(C.core), 0.55)); halo.addColorStop(1, 'rgba(0,0,0,0)'); s.fillStyle = halo; s.fillRect(640, -150, 640, 640); s.restore();
+            K.put(s, disc, 810, 20, { scale: 0.8, rot: t * 0.03 });
+          });
+          K.sheet(g, cam, 0.7, W, H, (s) => {
+            left.forEach((b) => {
+              K.put(s, b.sp, b.x, FL - b.h);
+              s.save(); s.globalCompositeOperation = 'lighter';
+              const r = K.rng(70 + b.i); for (let j = 0; j < 4; j++) { const on = K.hash(b.i * 9 + j, Math.floor(t * 6)) > 0.12; if (!on) continue;
+                s.fillStyle = j % 2 ? C.cyan : C.neon; s.globalAlpha = 0.85; s.shadowColor = s.fillStyle; s.shadowBlur = 26; s.fillRect(b.x + 20 + r() * (b.w - 80), FL - b.h + 60 + r() * (b.h - 140), 40 + r() * 30, 10); }
+              s.restore();
+            });
+            right.forEach((b) => {
+              K.put(s, b.sp, b.x, FL - b.h);
+              s.save(); s.globalCompositeOperation = 'lighter'; s.fillStyle = C.warm; s.shadowColor = C.amber; s.shadowBlur = 22;
+              const cols = 2, rows = Math.floor((b.h - 120) / 110);
+              for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) { if ((i + j + b.i) % 4 === 3) continue; const x = b.x + 30 + i * (b.w / 2 - 10), y = FL - b.h + 80 + j * 110;
+                s.globalAlpha = 0.7 + 0.12 * Math.sin(t * 3 + i + j * 2 + b.i); s.beginPath(); s.moveTo(x, y + 60); s.lineTo(x, y + 20); s.arc(x + 20, y + 20, 20, Math.PI, 0); s.lineTo(x + 40, y + 60); s.fill(); }
+              s.restore();
+            });
+          });
+          K.sheet(g, cam, 1, W, H, () => { figure(890, -1, C.neon, t); figure(1030, 1, C.warm, t); });
+          // The wet floor: everything above the feet, flipped and blurred, laid back in swaying strips.
+          rg.setTransform(1, 0, 0, -1, 0, FL); rg.clearRect(0, 0, W, FL); rg.filter = 'blur(2px)'; rg.drawImage(cv, 0, 0, W, FL, 0, 0, W, FL); rg.filter = 'none';
+          g.fillStyle = tone(C.night, -0.3); g.fillRect(0, FL, W, H - FL);
+          for (let y = FL; y < H; y += 6) {
+            const d = (y - FL) / (H - FL), a = 0.62 * Math.pow(1 - d, 1.5), off = Math.sin(y * 0.05 + t * 2.2) * (2 + d * 8);
+            g.globalAlpha = a; g.drawImage(rc, 0, y - FL, W, 6, off, y, W, 6);
+          }
+          g.globalAlpha = 1;
+          const pool = g.createLinearGradient(0, FL, 0, H); pool.addColorStop(0, 'rgba(8,8,28,0)'); pool.addColorStop(1, 'rgba(8,8,28,0.65)'); g.fillStyle = pool; g.fillRect(0, FL, W, H - FL);
+          words.forEach((w, i) => { const e = K.smooth((t - 3.6 - i * 0.14) / 0.5); w.style.opacity = e; w.style.transform = `translateY(${(1 - e) * 14}px)`; w.style.filter = e < 0.999 ? `blur(${(1 - e) * 6}px)` : 'none'; });
+        };
+        const tl = gsap.timeline({ paused: true }), pp = { t: 0 };
+        render(0);
+        tl.to(pp, { t: DUR, duration: DUR, ease: 'none', onUpdate: () => render(pp.t) }, 0);
+        window.__timelines = window.__timelines || {};
+        window.__timelines['wet-floor-reflection'] = tl;
+      })();
+    </script>
+  </div>
+</template>

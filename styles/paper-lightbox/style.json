@@ -1,0 +1,90 @@
+{
+  "name": "paper-lightbox",
+  "title": "Paper lightbox",
+  "summary": "Layered cut paper lit from behind at night: an indigo sky, warm arches on one side, neon on the other, a gold inlay medallion, and a wet floor mirroring both.",
+  "look": {
+    "ground": "an indigo night sky backdrop with faint stars; a dark wet floor below the feet line",
+    "palette": [
+      {
+        "role": "sky",
+        "hex": "#1d2152",
+        "where": "sky, building sheets toned toward night"
+      },
+      {
+        "role": "warm",
+        "hex": "#e8b64a",
+        "where": "the favoured side (right): windows, medallion gold"
+      },
+      {
+        "role": "amber",
+        "hex": "#c98a35",
+        "where": "warm glow, second gold"
+      },
+      {
+        "role": "neon",
+        "hex": "#d04aa0",
+        "where": "the other side (left): signs, rims"
+      },
+      {
+        "role": "cyan",
+        "hex": "#3fb8d0",
+        "where": "second neon"
+      },
+      {
+        "role": "core",
+        "hex": "#fff4d6",
+        "where": "sun core, rim light, captions"
+      },
+      {
+        "role": "lead",
+        "hex": "#120f24",
+        "where": "leading between inlay pieces, figures"
+      }
+    ],
+    "type": "Playfair Display italic, cream, one line at a time; 16:9 at the bottom over the floor, 9:16 at the top",
+    "texture": "paper fibre on every sheet, a thin rim of light on the edge facing the light, soft vignette; no grain",
+    "light": "lit from behind: lights are separate additive sheets (windows, signs, sun); each side has its own colour of light",
+    "materials": "flat coloured paper sheets with hand-cut edges; inlay pieces with dark leading"
+  },
+  "consistency": "faceless figures on a capsule skeleton, drawn live; one hero object (a medallion) carried across the film",
+  "motion": {
+    "feel": "one continuous take; pieces burst, gather and lock",
+    "moves": [
+      "camera: one slow push or pull, sheets in parallax by depth",
+      "medallion: burst to five spiral arms in 0.5 s, lock with ease-out-back staggered by radius then angle",
+      "scatter that stays in view: ease 1 - e^(-4u), end in piles on one side",
+      "wet floor: 6 px strips swaying sin(y*0.05 + 2.2t), alpha 0.62(1-d)^1.5",
+      "words rise 14 px and unblur, 0.14 s apart"
+    ]
+  },
+  "pace": {
+    "avg_shot_s": null,
+    "events_per_10s": null,
+    "text": "a 20 s saying in one scene; one line of text per phrase"
+  },
+  "banned": [
+    "cutting between two places (split one scene down an axis instead)",
+    "a rainbow medallion (one family dominant)",
+    "pieces blown off screen",
+    "grain on the night sky"
+  ],
+  "fits": {
+    "categories": [
+      "explainer",
+      "social",
+      "launch"
+    ],
+    "methods": []
+  },
+  "made_with": {
+    "renderer": "hyperframes@0.8.191",
+    "generators": []
+  },
+  "worked_example": "",
+  "moves": [
+    "medallion-burst-lock",
+    "wet-floor-reflection"
+  ],
+  "source": "the paper lightbox recipes in an open MIT skill (klsoen/opus-js-animations, references/styles.md); no reference clip, so pace is the recipe's, not measured",
+  "licence": "MIT; stills CC BY 4.0"
+}

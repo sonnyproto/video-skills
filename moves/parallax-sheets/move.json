@@ -1,0 +1,29 @@
+{
+  "name": "parallax-sheets",
+  "title": "Parallax sheets",
+  "summary": "Six cut-paper sheets at depths 0.12 to 1.35 slide past each other on one slow push-in; a walker on the subject sheet steps at 15 poses a second.",
+  "tags": {
+    "role": [
+      "background",
+      "hook"
+    ],
+    "fits": [
+      "explainer",
+      "launch",
+      "social"
+    ],
+    "energy": "low"
+  },
+  "duration": 6,
+  "variables": {
+    "--sky": "sky colour",
+    "--ground": "mid-value ground (houses, hills)",
+    "--accent": "the one high-chroma colour, kept for the subject",
+    "--cream": "small lights: windows, clouds, sun",
+    "--ink": "smallest details and shadows"
+  },
+  "needs": [],
+  "tool": "hyperframes@0.8.191",
+  "source": "written from the recipe in klsoen/opus-js-animations skills/opus-js-animations/references/styles.md \u00a72.3 Staging; no code was copied (the source has none)",
+  "licence": "Apache-2.0 (this folder); recipe from an MIT work, see NOTICE"
+}

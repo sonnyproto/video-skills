@@ -1,0 +1,275 @@
+<template id="stop-motion-clock-template">
+  <div id="root" data-composition-id="stop-motion-clock" data-width="1920" data-height="1080" data-duration="6">
+    <style>
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: #3f807a;
+        --ground: #3f807a; --accent: #d9482b; --cream: #f3e6c8; --ink: #1f2b2e; }
+      #cv { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+      #fontwarm { position: absolute; left: 0; top: 0; opacity: 0; font-family: 'Archivo Black'; font-size: 20px; }
+    </style>
+    <canvas id="cv" width="1920" height="1080" data-layout-allow-overflow></canvas>
+    <div id="fontwarm" data-var-text="headline">MADE BY HAND</div>
+    <script>
+      // ── Paper kit (inlined so the move is one file) ──
+// Paper kit: hand-cut edges, paper fibre, baked sprites with a rim of light and a contact shadow, a printed
+// backdrop, grain, parallax sheets and the stop-motion clock. Everything is seeded and baked once; draw code reads
+// only t. Written from the recipes in klsoen/opus-js-animations references/styles.md (MIT).
+(function () {
+  const TAU = Math.PI * 2;
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const smooth = (x) => { x = clamp(x); return x * x * (3 - 2 * x); };
+  const ramp = (t, a, b, ease = smooth) => ease(clamp((t - a) / (b - a)));
+  const backOut = (s = 1.7) => (x) => { x = clamp(x) - 1; return 1 + x * x * ((s + 1) * x + s); };
+  const expOut = (x) => 1 - Math.exp(-4 * clamp(x));
+
+  const rng = (seed) => {
+    let a = seed >>> 0;
+    return () => {
+      a = (a + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  };
+  const hash = (a, b = 0) => rng((Math.imul(a | 0, 73856093) ^ Math.imul(b | 0, 19349663)) >>> 0)();
+  const canvas = (w, h) => { const c = document.createElement('canvas'); c.width = Math.ceil(w); c.height = Math.ceil(h); return [c, c.getContext('2d')]; };
+
+  const rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const css = (c, a = 1) => `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${a})`;
+  // Shades mix toward the ink (k < 0) or the paper (k > 0), never toward black or white.
+  const toner = (ink, paper) => (h, k) => {
+    const c = rgb(h), to = rgb(k < 0 ? ink : paper), a = Math.abs(k);
+    return css(c.map((v, i) => v + (to[i] - v) * a));
+  };
+
+  // Hand-cut edge: subdivide every ~step px and push each point along the edge normal by noise.
+  const cut = (pts, seed, step = 12, amp = 1.1) => {
+    const r = rng(seed), out = [];
+    pts.forEach(([x0, y0], i) => {
+      const [x1, y1] = pts[(i + 1) % pts.length], L = Math.hypot(x1 - x0, y1 - y0) || 1;
+      const n = Math.max(1, Math.round(L / step)), nx = -(y1 - y0) / L, ny = (x1 - x0) / L;
+      for (let k = 0; k < n; k++) { const u = k / n, d = (r() - 0.5) * 2 * amp; out.push([x0 + (x1 - x0) * u + nx * d, y0 + (y1 - y0) * u + ny * d]); }
+    });
+    return out;
+  };
+  const oval = (cx, cy, rx, ry, n = 40) => Array.from({ length: n }, (_, i) => [cx + Math.cos((i / n) * TAU) * rx, cy + Math.sin((i / n) * TAU) * ry]);
+  const box = (x, y, w, h) => [[x, y], [x + w, y], [x + w, y + h], [x, y + h]];
+  const trace = (g, pts) => { g.beginPath(); pts.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); g.closePath(); };
+
+  // Paper fibre: a tileable 512² tile of soft blotches and short fibres around mid grey, laid on with soft-light.
+  let FIBRE;
+  const fibre = () => {
+    if (FIBRE) return FIBRE;
+    const [c, g] = canvas(512, 512), r = rng(7);
+    g.fillStyle = '#808080'; g.fillRect(0, 0, 512, 512);
+    for (let i = 0; i < 700; i++) {
+      const x = r() * 512, y = r() * 512, s = 6 + r() * 28, v = r() < 0.5 ? 40 : 230;
+      for (const [dx, dy] of [[0, 0], [512, 0], [-512, 0], [0, 512], [0, -512]]) {
+        const gr = g.createRadialGradient(x + dx, y + dy, 0, x + dx, y + dy, s);
+        gr.addColorStop(0, `rgba(${v},${v},${v},0.07)`); gr.addColorStop(1, `rgba(${v},${v},${v},0)`);
+        g.fillStyle = gr; g.fillRect(x + dx - s, y + dy - s, s * 2, s * 2);
+      }
+    }
+    g.lineCap = 'round';
+    for (let i = 0; i < 1600; i++) {
+      const x = r() * 512, y = r() * 512, a = r() * Math.PI, l = 3 + r() * 10, v = r() < 0.5 ? 50 : 235;
+      g.strokeStyle = `rgba(${v},${v},${v},${0.1 + r() * 0.14})`; g.lineWidth = 0.5 + r() * 0.8;
+      g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke();
+    }
+    return (FIBRE = c);
+  };
+  const paperize = (g, w, h, amount = 0.5, seed = 0) => {
+    const [m, mg] = canvas(g.canvas.width, g.canvas.height); mg.drawImage(g.canvas, 0, 0);
+    g.save(); g.globalCompositeOperation = 'soft-light'; g.globalAlpha = amount;
+    const p = g.createPattern(fibre(), 'repeat'); g.translate(-(seed * 131) % 512, -(seed * 71) % 512);
+    g.fillStyle = p; g.fillRect(0, 0, w + 512, h + 512); g.restore();
+    g.save(); g.globalCompositeOperation = 'destination-in'; g.drawImage(m, 0, 0); g.restore();
+  };
+
+  // A sprite: draw(g) paints the piece into a w×h box. Baked once with fibre, an optional print texture, a rim of
+  // light (the silhouette minus itself shifted away from the light, kept only on the piece) and a blurred
+  // silhouette for the contact shadow.
+  const sprite = (w, h, draw, o = {}) => {
+    const pad = o.pad ?? 24, W = w + pad * 2, H = h + pad * 2, [c, g] = canvas(W, H);
+    g.translate(pad, pad); draw(g); g.setTransform(1, 0, 0, 1, 0, 0);
+    if (o.lines) {
+      g.save(); g.globalCompositeOperation = 'source-atop'; g.strokeStyle = o.lines; g.lineWidth = 1.2; const r = rng(o.seed ?? 1);
+      for (let y = 0; y < H; y += 6) { g.beginPath(); g.moveTo(0, y); for (let x = 0; x <= W; x += 40) g.lineTo(x, y + (r() - 0.5) * 1.4); g.stroke(); }
+      g.restore();
+    }
+    paperize(g, W, H, o.fibre ?? 0.55, o.seed ?? 0);
+    if (o.rim) {
+      const [rc, rg] = canvas(W, H), [lx, ly] = o.rim.dir, k = o.rim.width ?? 3;
+      rg.drawImage(c, 0, 0); rg.globalCompositeOperation = 'source-in'; rg.fillStyle = o.rim.color; rg.fillRect(0, 0, W, H);
+      rg.globalCompositeOperation = 'destination-out'; rg.drawImage(c, -lx * k, -ly * k);
+      g.save(); g.globalCompositeOperation = 'source-atop'; g.globalAlpha = o.rim.alpha ?? 0.9; g.drawImage(rc, 0, 0); g.restore();
+    }
+    let shadow = null;
+    if (o.shadow !== false) {
+      const b = o.blur ?? 10, [sc, sg] = canvas(W + b * 4, H + b * 4);
+      sg.filter = `blur(${b}px)`; sg.drawImage(c, b * 2, b * 2); sg.filter = 'none';
+      sg.globalCompositeOperation = 'source-in'; sg.fillStyle = o.shadowColor ?? '#000'; sg.fillRect(0, 0, sc.width, sc.height);
+      shadow = { c: sc, off: pad + b * 2 };
+    }
+    return { c, w, h, pad, shadow };
+  };
+  // Draw a sprite with its top-left at (x, y) in world space, pivoting at (px, py) inside it. The shadow is offset
+  // in world space before rotating, so the light keeps one direction.
+  const put = (g, sp, x, y, o = {}) => {
+    const px = o.px ?? sp.w / 2, py = o.py ?? sp.h / 2, s = o.scale ?? 1, sx = (o.sx ?? 1) * s, sy = (o.sy ?? 1) * s, a = o.rot ?? 0;
+    g.save(); g.globalAlpha = o.alpha ?? 1;
+    if (sp.shadow && o.shadow) {
+      const [dx, dy, sa] = o.shadow; g.save(); g.globalAlpha *= sa;
+      g.translate(x + px + dx, y + py + dy); g.rotate(a); g.scale(sx, sy); g.drawImage(sp.shadow.c, -px - sp.shadow.off, -py - sp.shadow.off); g.restore();
+    }
+    g.translate(x + px, y + py); g.rotate(a); g.scale(sx, sy); g.drawImage(sp.c, -px - sp.pad, -py - sp.pad);
+    g.restore();
+  };
+
+  // Printed backdrop: a vertical gradient, two scales of mottling, faint print lines, dust, and a warm key light
+  // falling to darker corners. Baked once per size.
+  const backdrop = (w, h, top, bottom, o = {}) => {
+    const [c, g] = canvas(w, h), r = rng(o.seed ?? 3);
+    const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, top); gr.addColorStop(1, bottom); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    for (const [n, s, a] of [[60, 260, 0.06], [500, 40, 0.05]]) for (let i = 0; i < n; i++) {
+      const x = r() * w, y = r() * h, rad = s * (0.5 + r()), v = r() < 0.5 ? 0 : 255, m = g.createRadialGradient(x, y, 0, x, y, rad);
+      m.addColorStop(0, `rgba(${v},${v},${v},${a})`); m.addColorStop(1, `rgba(${v},${v},${v},0)`); g.fillStyle = m; g.fillRect(x - rad, y - rad, rad * 2, rad * 2);
+    }
+    g.strokeStyle = 'rgba(0,0,0,0.035)'; g.lineWidth = 1; for (let y = 0; y < h; y += 5) { g.beginPath(); g.moveTo(0, y + r()); g.lineTo(w, y + r()); g.stroke(); }
+    g.fillStyle = 'rgba(0,0,0,0.25)'; for (let i = 0; i < 900; i++) g.fillRect(r() * w, r() * h, 1 + r(), 1 + r());
+    const k = g.createRadialGradient(w * (o.lx ?? 0.35), h * (o.ly ?? 0.25), 0, w * 0.5, h * 0.5, Math.hypot(w, h) * 0.62);
+    k.addColorStop(0, `rgba(255,236,200,${o.glow ?? 0.18})`); k.addColorStop(0.55, 'rgba(0,0,0,0)'); k.addColorStop(1, `rgba(0,0,0,${o.corners ?? 0.32})`);
+    g.fillStyle = k; g.fillRect(0, 0, w, h);
+    paperize(g, w, h, 0.45, 9);
+    return c;
+  };
+
+  // Grain: a tile of light and dark specks, offset once per pose.
+  let GRAIN;
+  const grain = (g, w, h, pose, alpha = 0.3) => {
+    if (!GRAIN) {
+      const [c, gg] = canvas(256, 256), r = rng(11);
+      for (let i = 0; i < 2200; i++) { gg.fillStyle = r() < 0.5 ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.45)'; gg.fillRect(r() * 256, r() * 256, 1, 1); }
+      GRAIN = c;
+    }
+    g.save(); g.globalAlpha = alpha; g.fillStyle = g.createPattern(GRAIN, 'repeat');
+    const ox = (pose * 97) % 256, oy = (pose * 57) % 256; g.translate(-ox, -oy); g.fillRect(0, 0, w + 256, h + 256); g.restore();
+  };
+
+  // The stop-motion clock: poses step at `rate` a second (divide the output fps evenly: 15 or 10 at 30 fps) while
+  // the camera moves every frame. Boil and exposure flicker are re-rolled per pose.
+  const clock = (rate = 15) => ({
+    rate,
+    pose: (t) => Math.floor(t * rate + 1e-6),
+    q: (t) => Math.floor(t * rate + 1e-6) / rate,
+    boil: (id, t, px = 1, rad = 0.003) => { const p = Math.floor(t * rate + 1e-6); return { dx: (hash(id, p) - 0.5) * 2 * px, dy: (hash(id + 991, p) - 0.5) * 2 * px, rot: (hash(id + 577, p) - 0.5) * 2 * rad }; },
+    flicker: (t, amt = 0.025) => 1 + (hash(4242, Math.floor(t * rate + 1e-6)) - 0.5) * 2 * amt,
+  });
+
+  // Parallax sheets: a sheet at depth p (sky ~0.1, the subject 1, foreground > 1) scales by zoom^p around a centre
+  // that moves p times as far as the camera, so a push-in slides the sheets past each other.
+  const sheet = (g, cam, p, w, h, draw) => {
+    const s = Math.pow(cam.zoom, p), cx = w / 2 + p * (cam.x ?? 0), cy = h / 2 + p * (cam.y ?? 0);
+    g.save(); g.translate(w / 2, h / 2); g.scale(s, s); g.translate(-cx, -cy); draw(g); g.restore();
+  };
+
+  window.PaperKit = { TAU, clamp, smooth, ramp, backOut, expOut, rng, hash, canvas, rgb, css, toner, cut, oval, box, trace, fibre, paperize, sprite, put, backdrop, grain, clock, sheet };
+})();
+
+      // Two clocks: the bird and the letters pose 15 times a second (each pose held two frames at 30 fps, re-boiled
+      // and re-exposed per pose) while the camera pushes every frame. After opus-js-animations styles.md §2.5 (MIT).
+      (function () {
+        const R = document.querySelector('[data-composition-id="stop-motion-clock"]');
+        const cv = R.querySelector('#cv'), g = cv.getContext('2d'), W = 1920, H = 1080, DUR = 6;
+        const K = PaperKit, V = (n, d) => getComputedStyle(R).getPropertyValue('--' + n).trim() || d;
+        const C = { ground: V('ground', '#3f807a'), accent: V('accent', '#d9482b'), cream: V('cream', '#f3e6c8'), ink: V('ink', '#1f2b2e') };
+        const tone = K.toner(C.ink, C.cream), clk = K.clock(15), SH = [16, 12, 0.32];
+        const rim = { dir: [-0.6, -0.8], color: C.cream, alpha: 0.55, width: 3 };
+        const TEXT = R.querySelector('#fontwarm').textContent.trim();
+
+        const wall = K.backdrop(2100, 1200, tone(C.ground, 0.08), tone(C.ground, -0.2), { lx: 0.4, ly: 0.3, glow: 0.24 });
+        const table = K.sprite(2300, 360, (s) => { s.fillStyle = tone(C.cream, -0.18); K.trace(s, K.cut(K.box(0, 0, 2300, 360), 5, 20)); s.fill(); }, { rim, seed: 5, lines: 'rgba(0,0,0,0.05)' });
+        const cup = K.sprite(300, 230, (s) => {
+          s.fillStyle = C.accent; K.trace(s, K.cut([[0, 0], [300, 0], [270, 200], [240, 230], [60, 230], [30, 200]], 6)); s.fill();
+          s.fillStyle = C.cream; K.trace(s, K.cut([[12, 70], [288, 70], [282, 110], [18, 110]], 7)); s.fill();
+        }, { rim, seed: 6, lines: 'rgba(0,0,0,0.07)' });
+        const handle = K.sprite(110, 130, (s) => { s.strokeStyle = C.accent; s.lineWidth = 26; s.beginPath(); s.ellipse(30, 65, 55, 45, 0, -1.3, 1.3); s.stroke(); }, { seed: 8 });
+        const saucer = K.sprite(460, 40, (s) => { s.fillStyle = tone(C.cream, 0.4); K.trace(s, K.cut(K.oval(230, 20, 230, 20, 48), 9)); s.fill(); }, { rim, seed: 9 });
+        // The bird: body, head, and three replacement wing drawings (up, level, down), never a rotated wing.
+        const body = K.sprite(170, 110, (s) => { s.fillStyle = C.ink; K.trace(s, K.cut([...K.oval(80, 60, 78, 48, 30).slice(0, 30), [0, 30], [-0, 20]], 11)); s.fill();
+          K.trace(s, K.cut([[20, 50], [-30, 20], [-34, 40], [10, 75]], 12)); s.fill(); }, { rim, seed: 11, pad: 50 });
+        const headS = K.sprite(80, 76, (s) => { s.fillStyle = C.ink; K.trace(s, K.cut(K.oval(38, 38, 36, 36, 30), 13)); s.fill();
+          s.fillStyle = C.accent; K.trace(s, K.cut([[66, 30], [96, 42], [66, 50]], 14)); s.fill(); }, { rim, seed: 13, pad: 40 });
+        const wingPts = [[[0, 40], [40, -60], [90, -80], [70, 10]], [[0, 30], [70, 10], [120, 30], [60, 50]], [[0, 20], [60, 60], [70, 120], [30, 60]]];
+        const wings = wingPts.map((pts, i) => K.sprite(130, 130, (s) => { s.translate(0, 70); s.fillStyle = tone(C.ink, 0.15); K.trace(s, K.cut(pts, 20 + i)); s.fill(); }, { rim, seed: 20 + i, pad: 40 }));
+        let letters = null;
+        const bakeLetters = () => {
+          const [, m] = K.canvas(10, 10); m.font = "150px 'Archivo Black'";
+          let x = 0; const out = [];
+          [...TEXT].forEach((ch, i) => {
+            const w = m.measureText(ch).width;
+            if (ch !== ' ') out.push({ x, sp: K.sprite(w + 8, 170, (s) => { s.font = "150px 'Archivo Black'"; s.textBaseline = 'top'; s.fillStyle = C.cream; s.fillText(ch, 4, 6); }, { rim: { ...rim, color: '#fff' }, seed: 40 + i }), i });
+            x += w + 6;
+          });
+          return { out, width: x };
+        };
+
+        // The flight, sampled on the pose clock: sit, crouch, a ballistic hop onto the rim, squash, settle.
+        const bird = (q) => {
+          const A = [560, 824], B = [1030, 594];
+          if (q < 0.8) return { x: A[0], y: A[1], sy: 1, wing: 1, look: q > 0.4 ? 0.25 : -0.1 };
+          if (q < 1.0) return { x: A[0], y: A[1] + 10, sy: 0.82, wing: 1, look: 0.25 };
+          if (q < 1.6) { const u = (q - 1.0) / 0.6; return { x: A[0] + (B[0] - A[0]) * u, y: A[1] + (B[1] - A[1]) * u - 4 * 230 * u * (1 - u), sy: 1.08, wing: [0, 1, 2][clk.pose(q) % 3], look: 0.1 }; }
+          if (q < 1.74) return { x: B[0], y: B[1] + 8, sy: 0.8, wing: 2, look: 0.1 };
+          return { x: B[0], y: B[1], sy: 1, wing: 1, look: [0.1, -0.25, 0.3, 0.05][Math.floor((q - 1.74) / 0.6) % 4] };
+        };
+
+        const render = (t) => {
+          if (!letters && document.fonts.check("150px 'Archivo Black'")) letters = bakeLetters();
+          const k = K.smooth(t / DUR), cam = { zoom: 1 + 0.08 * k, x: 20 * k, y: -24 * k };
+          const pose = clk.pose(t), q = clk.q(t), b = (id) => clk.boil(id, t);
+          g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, W, H);
+          K.sheet(g, cam, 0.5, W, H, (s) => s.drawImage(wall, -90, -60));
+          K.sheet(g, cam, 1, W, H, (s) => {
+            K.put(s, table, -190, 820, { shadow: SH });
+            K.put(s, saucer, 900 + b(2).dx, 810 + b(2).dy, { shadow: [10, 6, 0.3] });
+            K.put(s, handle, 1255 + b(3).dx, 600 + b(3).dy, { rot: b(3).rot, shadow: SH });
+            K.put(s, cup, 980 + b(4).dx, 590 + b(4).dy, { rot: b(4).rot, shadow: SH });
+            // Steam: three strands drawn live, swaying on the pose clock.
+            s.save(); s.lineCap = 'round'; s.strokeStyle = C.cream;
+            for (let i = 0; i < 3; i++) {
+              s.globalAlpha = 0.45 - i * 0.08; s.lineWidth = 12 - i * 2; s.beginPath();
+              for (let y = 0; y <= 260; y += 10) { const x = 1120 + i * 50 + Math.sin(y * 0.025 + q * 4 + i * 2) * (8 + y * 0.12); y ? s.lineTo(x, 570 - y) : s.moveTo(x, 570 - y); }
+              s.stroke();
+            }
+            s.restore();
+            const bd = bird(q), bb = b(30), sx = 1 / Math.sqrt(bd.sy), lift = 20 * bd.sy;
+            // Legs: two ink sticks while standing, tucked in flight.
+            if (bd.wing === 1 || bd.sy !== 1.08) { s.save(); s.strokeStyle = C.ink; s.lineWidth = 5; s.lineCap = 'round'; s.beginPath();
+              for (const dx of [-14, 8]) { s.moveTo(bd.x + dx + bb.dx, bd.y - lift - 4); s.lineTo(bd.x + dx - 4 + bb.dx, bd.y); } s.stroke(); s.restore(); }
+            bd.y -= lift;
+            K.put(s, body, bd.x - 85 + bb.dx, bd.y - 110 + bb.dy, { px: 85, py: 110, sx, sy: bd.sy, rot: bb.rot, shadow: SH });
+            K.put(s, headS, bd.x + 40 + bb.dx, bd.y - 150 * bd.sy + bb.dy, { px: 30, py: 60, rot: bd.look, shadow: SH });
+            K.put(s, wings[bd.wing], bd.x - 50 + bb.dx, bd.y - 150 * bd.sy + bb.dy, { px: 10, py: 65, shadow: SH });
+            // Letters drop in one by one: a fall, a one-pose squash, then rest at a slight tilt.
+            if (letters) {
+              const x0 = 960 - letters.width / 2;
+              letters.out.forEach((L) => {
+                const at = 3.0 + L.i * 0.1; if (q < at) return;
+                const u = (q - at) / 0.27, lb = b(50 + L.i), tilt = ((K.hash(L.i, 7) - 0.6) * 7 * Math.PI) / 180;
+                const y = u < 1 ? 160 - 380 * (1 - u * u) : 160, sy = u >= 1 && u < 1.3 ? 0.84 : 1;
+                K.put(s, L.sp, x0 + L.x + lb.dx, y + lb.dy, { py: 170, sx: 1 / Math.sqrt(sy), sy, rot: tilt + lb.rot, shadow: SH });
+              });
+            }
+          });
+          const fl = clk.flicker(t); g.fillStyle = fl > 1 ? `rgba(255,240,215,${(fl - 1) * 2})` : `rgba(20,20,20,${(1 - fl) * 2})`; g.fillRect(0, 0, W, H);
+          K.grain(g, W, H, pose, 0.22);
+        };
+        const tl = gsap.timeline({ paused: true }), p = { t: 0 };
+        render(0);
+        tl.to(p, { t: DUR, duration: DUR, ease: 'none', onUpdate: () => render(p.t) }, 0);
+        window.__timelines = window.__timelines || {};
+        window.__timelines['stop-motion-clock'] = tl;
+      })();
+    </script>
+  </div>
+</template>

@@ -5,3 +5,8 @@ Many moves in this folder are ports of shot recipes from video-shotcraft
 Changes: rewritten from Remotion (React) to HyperFrames (HTML + GSAP); system fonts mapped to bundled fonts;
 film grain removed; the original author's brand mark, name and tagline replaced by neutral placeholders;
 copy and colours exposed as variables. Each move's move.json names the exact source file it was ported from.
+
+The paper moves (parallax-sheets, stop-motion-clock, medallion-burst-lock, wet-floor-reflection) are written from
+the style recipes in opus-js-animations (https://github.com/klsoen/opus-js-animations), Copyright its contributors,
+licensed under MIT. No code was copied; the recipes (paper kit, stop-motion clock, medallion, wet floor) were
+re-implemented for HyperFrames.

@@ -25,10 +25,18 @@ transition, outro...), `fits` (launch, explainer, social...) and `energy` (low, 
 Copy `moves/<name>/<name>.html` into your project's `compositions/`, mount it from `index.html`, set its variables.
 A film that uses a move keeps its own copy, so the film still renders if the move changes here.
 
-## Status
+## Moves
 
-Empty for now. The first moves come from ports of
-[video-shotcraft](https://github.com/Vincentwei1021/video-shotcraft) (Remotion) to HyperFrames, each measured frame by frame
+| Preview | Move | Role | Energy |
+|---|---|---|---|
+| <img src="parallax-sheets/poster.jpg" width="200"> | [parallax-sheets](parallax-sheets/) | background, hook | low |
+| <img src="stop-motion-clock/poster.jpg" width="200"> | [stop-motion-clock](stop-motion-clock/) | title, hook, emphasis | mid |
+| <img src="medallion-burst-lock/poster.jpg" width="200"> | [medallion-burst-lock](medallion-burst-lock/) | hook, outro, emphasis | high |
+| <img src="wet-floor-reflection/poster.jpg" width="200"> | [wet-floor-reflection](wet-floor-reflection/) | hook, title, background | low |
+
+The first four are written from the paper style recipes in
+[opus-js-animations](https://github.com/klsoen/opus-js-animations) (MIT). Ports of
+[video-shotcraft](https://github.com/Vincentwei1021/video-shotcraft) (Remotion) follow, each measured frame by frame
 against the original preview (SSIM ≥ 0.93) before it is made swappable and added here.
 
 ## Licence

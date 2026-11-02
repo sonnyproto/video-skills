@@ -1,0 +1,30 @@
+{
+  "name": "wet-floor-reflection",
+  "title": "Wet floor reflection",
+  "summary": "A paper lightbox at night split down one axis, neon on the left and warm arches on the right, two faceless figures back to back, all mirrored in a wet floor that sways.",
+  "tags": {
+    "role": [
+      "hook",
+      "title",
+      "background"
+    ],
+    "fits": [
+      "explainer",
+      "launch",
+      "social"
+    ],
+    "energy": "low"
+  },
+  "duration": 6,
+  "variables": {
+    "caption": "the line at the bottom (#line spans)",
+    "--warm / --amber": "right side light",
+    "--neon / --cyan": "left side light",
+    "--sky / --night": "sky and floor",
+    "--core": "disc halo"
+  },
+  "needs": [],
+  "tool": "hyperframes@0.8.191",
+  "source": "written from the recipe in klsoen/opus-js-animations skills/opus-js-animations/references/styles.md \u00a73 Paper lightbox diptych (wet floor, figures, 16:9 text); no code was copied (the source has none)",
+  "licence": "Apache-2.0 (this folder); recipe from an MIT work, see NOTICE"
+}

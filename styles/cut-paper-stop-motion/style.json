@@ -1,0 +1,82 @@
+{
+  "name": "cut-paper-stop-motion",
+  "title": "Cut-paper stop-motion",
+  "summary": "Flat printed paper cut-outs with wobbly hand-cut edges and soft contact shadows on a mottled ground, posed 15 times a second under a perfectly smooth camera.",
+  "look": {
+    "ground": "a printed paper backdrop: vertical gradient, two scales of mottling, faint print lines, dust, a warm key light falling to darker corners",
+    "palette": [
+      {
+        "role": "ground",
+        "hex": "#3f807a",
+        "where": "60 %: walls, houses, hills"
+      },
+      {
+        "role": "accent",
+        "hex": "#d9482b",
+        "where": "the one thing that matters: the subject, its prop"
+      },
+      {
+        "role": "cream",
+        "hex": "#f3e6c8",
+        "where": "small lights: windows, clouds, letters, steam"
+      },
+      {
+        "role": "ink",
+        "hex": "#1f2b2e",
+        "where": "smallest details: birds, legs, hair, foreground leaves"
+      },
+      {
+        "role": "sky",
+        "hex": "#8fbdb5",
+        "where": "sky sheet only"
+      }
+    ],
+    "type": "Archivo Black capitals cut as paper sprites that drop and boil like everything else; or a clean sans on a quiet band",
+    "texture": "paper fibre on every piece (soft-light, 0.45-0.55), print lines at 5-8 % on fabric and facades, grain re-rolled per pose",
+    "light": "one warm key from the top left; a cream rim on edges that face it; contact shadows offset down-right in world space at 0.3",
+    "materials": "flat printed paper; shades mix toward the ink or the cream, never toward black or white"
+  },
+  "consistency": "characters are rigs of flat parts on pivots (a cut coat, capsule limbs, a head on a neck pivot), baked once and reused in every shot",
+  "motion": {
+    "feel": "stepped poses, smooth camera",
+    "moves": [
+      "poses at 15 a second: floor(15t)/15, two frames each at 30 fps",
+      "boil per pose: \u00b11 px, \u00b10.003 rad",
+      "exposure flicker per pose: \u00b12.5 %",
+      "camera push 1 to 1.08-1.14 over a shot, every frame",
+      "crouch before a jump, squash 0.82 on landing, one pose each",
+      "replacement drawings for wings, never a rotated wing"
+    ]
+  },
+  "pace": {
+    "avg_shot_s": null,
+    "events_per_10s": null,
+    "text": "under 30 s: one scene whose state changes on each phrase; a handoff object crosses each cut in a relay"
+  },
+  "banned": [
+    "airbrushed gradients on pieces",
+    "shading toward pure black or white",
+    "more than one accent colour",
+    "12 poses a second at 30 fps (uneven holds stutter)",
+    "a stepped camera"
+  ],
+  "fits": {
+    "categories": [
+      "explainer",
+      "social",
+      "launch"
+    ],
+    "methods": []
+  },
+  "made_with": {
+    "renderer": "hyperframes@0.8.191",
+    "generators": []
+  },
+  "worked_example": "",
+  "moves": [
+    "parallax-sheets",
+    "stop-motion-clock"
+  ],
+  "source": "the cut-paper recipes in an open MIT skill (klsoen/opus-js-animations, references/styles.md); no reference clip, so pace is the recipe's, not measured",
+  "licence": "MIT; stills CC BY 4.0"
+}
