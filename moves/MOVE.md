@@ -42,4 +42,5 @@ Every move in `moves/<name>/` has the same files, so a move can be copied into a
   explained in MOVE.md).
 - No brand, product or person that the user did not supply: placeholders are neutral ("workspace", a plain mark).
 - Self-contained: anything the move needs (helpers, textures) is inside its folder; no links to other moves.
+- No keys: a move renders from its own files. If its example media was generated, the file ships and the prompt is in MOVE.md.
 - Taste lives in MOVE.md (when to use, when not), never in a shared file.

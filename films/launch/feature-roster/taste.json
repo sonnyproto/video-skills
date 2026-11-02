@@ -16,7 +16,7 @@
       "uv (for pillow in tools/prep.py)"
     ],
     "optional": {
-      "fal ElevenLabs Music": "regenerate music"
+      "FAL_KEY (ElevenLabs Music via fal)": "regenerate music"
     }
   },
   "layers": {

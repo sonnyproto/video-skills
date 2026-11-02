@@ -25,6 +25,12 @@ step produces, and how you know it is done. Every workflow here came from a film
 A workflow is tool-agnostic where it can be; when it names a tool (HyperFrames, ElevenLabs), the step says what the tool
 is for, so another tool can take its place.
 
+## Keys and paid services
+
+A step that uses a paid API (fal, ElevenLabs, OpenAI, BytePlus Seedance...) names the environment variable it reads
+(`FAL_KEY`, `OPENAI_API_KEY`, `BYTEPLUS_API_KEY`) and what the step needs from it, so another service or a manual route
+can take its place. Keys come from the environment or a git-ignored `.env`, never from the repo.
+
 ## Licence
 
 MIT, like the rest of the repo.

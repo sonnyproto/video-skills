@@ -163,7 +163,11 @@
           }
         },
         "optional": {
-          "type": "object"
+          "type": "object",
+          "description": "API keys that are only needed to regenerate media, never to render the example. Name: the environment variable, then what it reaches, e.g. \"FAL_KEY (ElevenLabs via fal)\". Value: what it is for.",
+          "propertyNames": {
+            "pattern": "^[A-Z][A-Z0-9_]*_KEY\\b"
+          }
         }
       }
     }

@@ -82,6 +82,10 @@ Taste is never shared. Style, motion and pacing rules live in the entry (`SKILL.
 
 - **Reproducible.** `project/` renders `result.mp4` with no edits and no keys. Footage and music ship in the project (stock as
   graded segments only, with its source IDs and licence; generated media with its prompts), so the film can be remade.
+- **Keys are optional.** An API key (fal, ElevenLabs, OpenAI, BytePlus...) may be used to regenerate voice, music,
+  images or footage, never to render the example. Declare it in `requires.optional` by its environment variable, then
+  what it reaches and what for (`"FAL_KEY (ElevenLabs via fal)": "new voice lines"`); generated files ship with their
+  prompts. Keys are read from the environment or a git-ignored `.env`, never committed.
 - **Product in one file.** Copy, images, geometry, palette, fonts and music live in `film.json`. Timing, eases, holds and the
   SFX grid live in the generator. Swapping a product never means editing the generator.
 - **No reference footage.** `REFERENCE.md` describes and measures the reference; it never redistributes it. Name the entry

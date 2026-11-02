@@ -1,5 +1,5 @@
 """Check that every entry follows spec/ENTRY.md. Exit 1 on any problem. Entries live in <category>/<id>/. Usage: python3 tools/validate.py [entry-id ...]"""
-import json, sys
+import json, re, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -40,6 +40,10 @@ for eid in ids:
             bad(f"references/{shared.name} differs from {shared.relative_to(ROOT)}: copy it again")
     if t.get("layers", {}).get("category") != e.parent.name:
         bad(f"taste.json layers.category '{t.get('layers', {}).get('category')}' != category folder '{e.parent.name}'")
+    # optional keys are named by their environment variable, then what they reach: "FAL_KEY (ElevenLabs via fal)"
+    for k in t.get("requires", {}).get("optional", {}):
+        if not re.match(r"[A-Z][A-Z0-9_]*_KEY\b", k):
+            bad(f"requires.optional '{k}' must start with its environment variable, e.g. 'FAL_KEY (ElevenLabs via fal)'")
     if t.get("id") != eid:
         bad(f"taste.json id '{t.get('id')}' != folder name")
     for k in LAYERS:
