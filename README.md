@@ -85,13 +85,14 @@ Each entry is self-contained: our shared files (the floor rules, the measuring s
 | `films/tools/analyze.py <video> <out>` | cuts, shots, contact sheet, LUFS, true peak, BPM, cuts on the beat |
 | `films/tools/events.py <video> <out>` | visual change events per 10 s and still share |
 
-## Three shelves
+## Four shelves
 
 | Folder | What | Licence |
 |---|---|---|
 | [films/](films/) | whole films, one entry per film (the library above) | MIT; result films CC BY 4.0 |
+| [styles/](styles/) | looks (palette, type, texture, light, motion feel), one folder per style with three stills; any film can take any style that fits | MIT; stills CC BY 4.0 |
 | [moves/](moves/) | single shots (a crash zoom, a price slam, a logo lockup), one folder per move, found by tags | Apache-2.0 |
-| [workflows/](workflows/) | how to make a film step by step, with a pass mark per step (voice then music, scene from references, porting) | MIT |
+| [workflows/](workflows/) | how to make a film step by step, with a pass mark per step (voice then music, scene from references, style from reference, porting) | MIT |
 
 ## Requirements
 

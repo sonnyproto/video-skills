@@ -22,12 +22,13 @@ the tools and installs the HyperFrames skills if they are missing. The entry is 
 `film.json`, regenerates any media and renders.
 
 An entry pins the recipe and the quality bar, not the look. For a one-off film, choose the style per film (three
-stills, the person picks); for a recurring series, keep one. See `films/spec/ENTRY.md` "What an entry pins".
+stills from `styles/`, the person picks); for a recurring series, keep one. See `films/spec/ENTRY.md` "What an entry pins".
 
 ## Combining entries
 
 Read `films/spec/ENTRY.md` "The seven layers". One method per stretch of film; moves and craft from other entries can be added
 when they obey that method. When rules collide, floor > category > method > moves > craft > style.
 
-Single shots to drop into a film are in `moves/` (found by tag: role, fits, energy); step-by-step processes with pass marks
-(voice before music, scene from references, porting) are in `workflows/`.
+Looks are in `styles/`: a film's recipe and its look are chosen separately (`styles/README.md`). Single shots to drop
+into a film are in `moves/` (found by tag: role, fits, energy); step-by-step processes with pass marks (voice before
+music, scene from references, style from reference, porting) are in `workflows/`.

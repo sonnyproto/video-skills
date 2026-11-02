@@ -2,7 +2,7 @@
 
 **How to make a film, step by step, with a pass mark at every step.**
 
-Whole films are in [films/](../films/), single shots in [moves/](../moves/). This folder holds the process: the order of work, what each
+Whole films are in [films/](../films/), looks in [styles/](../styles/), single shots in [moves/](../moves/). This folder holds the process: the order of work, what each
 step produces, and how you know it is done. Every workflow here came from a film that went wrong first.
 
 ## Workflows
@@ -11,6 +11,7 @@ step produces, and how you know it is done. Every workflow here came from a film
 |---|---|---|
 | audio | [voiceover-then-music](audio/voiceover-then-music/WORKFLOW.md) | Lock the voice as one continuous read, then make music sized to the film |
 | modeling | [scene-from-references](modeling/scene-from-references/WORKFLOW.md) | Reference images → code model → side-by-side stills until they match → animate |
+| style | [style-from-reference](style/style-from-reference/WORKFLOW.md) | Reference clips → style card → three stills → a person picks → styles/ |
 | porting | [remotion-to-hyperframes](porting/remotion-to-hyperframes/WORKFLOW.md) | Port a Remotion component frame for frame and prove it with SSIM |
 
 ## Layout

@@ -53,7 +53,8 @@ meets picture, how facts are sourced, the mix). Its `style` (fonts, palette role
 layout, motion feel) is one worked example, the default when nothing else is asked for.
 
 - **A one-off film picks its own style.** Before building, settle the film's one idea, then make one still in each of
-  three clearly different styles and let the person choose. Compare against the last few films made with the same
+  three clearly different styles (from [styles/](../../styles/), or new ones made with
+  `workflows/style/style-from-reference`) and let the person choose. Compare against the last few films made with the same
   entry; if the new one would look like a re-skin of them, pick again. Borrow the idea of a reference, not its skin.
 - **A series locks one style.** For a recurring format (a weekly explainer for one client), sameness is the brand:
   keep the entry's style or one chosen once, and reuse it.
