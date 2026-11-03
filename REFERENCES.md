@@ -1,13 +1,14 @@
 # Video references
 
-Sorted by GitHub stars (checked 2026-10-29).
+Sorted by GitHub stars (existing entries checked 2026-10-29; additions checked 2026-11-02).
 
 - 74.9k https://github.com/heygen-com/hyperframes — HTML → video
 - 19.3k https://github.com/latent-spaces/brag — project → shareable launch video
 - 14.4k https://github.com/Vincentwei1021/video-shotcraft — Remotion shot library for product promos
 - 12.4k https://github.com/yihui-dev/awesome-opus5-5-videos — viral Opus 5.5 videos + prompts
-- 9.2k https://github.com/lemomo-ai/lemo-opuscar — 66 film styles in code, add your own
+- 9.2k https://github.com/lemomo-ai/lemo-opuscar — 66 film styles in code, add your own ([demo](https://lemomo-ai.github.io/lemo-opuscar/), [living-screencast style](https://github.com/lemomo-ai/lemo-opuscar/blob/main/styles/living-screencast/STYLE.md))
 - 5.7k https://github.com/alchaincyf/huashu-art-motion — 35 art styles + 9 explainer grammars
+- 4.5k https://github.com/Jakeschincariol/instagram-agent-skill — 13 skills for Instagram Reels, viral research, captions, and humanizing
 - 3.6k https://github.com/mexicat/pdoom-video — P(doom) music video
 - 2.7k https://github.com/JohnHeibel/PDoomVideo — P(doom) music video, another build
 - 2.5k https://github.com/Alisa0808/vox-director — Vox-style paper-collage explainer / ad
@@ -23,8 +24,11 @@ Sorted by GitHub stars (checked 2026-10-29).
 - 372 https://github.com/diggerhq/shipvideo — URL or prompt → launch video
 - 371 https://github.com/tuzhechen2005/opus-video-skills — hand-drawn animation, kinetic type reel
 - 308 https://github.com/Kianzzz/xilo-opus-video — three options + previews, then render
+- 182 https://github.com/kelano86/what-if-animation — topic → 15–25 s What If episode in SVG + Remotion, voice and sound from ElevenLabs
+- 115 https://github.com/ChetasLua/moss-keeper — one-file HTML anime short made with Fable 5.5
 - 41 https://github.com/HiAPIAI/awesome-opus-5-5-video-styles — 425 prompts in 12 styles
 - 33 https://github.com/klsoen/opus-js-animations — brief → sound → film in JavaScript
+- 29 https://github.com/Theoxmotion/story-video-studio — animated survival stories with 3D sets, 2D stickmen, and free voice
 - 27 https://github.com/Li-Evan/awesome-opus-5.5-video-prompts — 334 prompts
 - 26 https://github.com/memex-lab/product-launch-video-skill — cinematic launch videos with Remotion
 - 23 https://github.com/every-app/video-skills — "Make great videos about your product 10x faster"
