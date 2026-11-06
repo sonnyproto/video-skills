@@ -10,7 +10,7 @@
 
 ```bash
 npx skills add sonnyproto/video-skills                       # a biblioteca inteira (o agente escolhe a entrada)
-npx skills add sonnyproto/video-skills/films/launch/broll-wheel   # só este vídeo
+npx skills add sonnyproto/video-skills/categories/launch/broll-wheel   # só este vídeo
 ```
 
 Depois diga ao seu agente:
@@ -31,18 +31,22 @@ video-skills é a versão plana do primeiro, feita em aberto:
 - **Uma entrada = um vídeo.** Cada uma vem com o `result.mp4` que produziu, então você escolhe com os olhos.
 - **Reproduzível.** Cada entrada traz um projeto completo que renderiza seu vídeo sem alterações, além dos IDs de origem das imagens de banco e dos prompts de qualquer mídia gerada. Nenhuma chave de API é necessária.
 - **O mesmo formato em todo lugar.** Todas as entradas têm os mesmos arquivos e o mesmo cartão `taste.json`, então você pode compará-las
-  e os agentes podem combiná-las ([spec/ENTRY.md](films/spec/ENTRY.md)).
+  e os agentes podem combiná-las ([spec/ENTRY.md](categories/spec/ENTRY.md)).
 - **O produto num só arquivo.** Para colocar o seu produto, basta editar o `film.json` e os assets, nunca o gerador.
 
 ## Biblioteca
 
 <!-- CATALOG -->
-| Preview | Entry | Category · method | Length | Events / 10 s |
+| Preview | Entry | Category · method | Sample | Events / 10 s |
 |---|---|---|---|---|
-| <img src="films/explainer/paper-collage/result/preview.gif" width="240"> | [**paper-collage**](films/explainer/paper-collage/) Paper collage | explainer · narrated-paper-collage | 43.8 s 16:9 + 9:16 | 9.8 |
-| <img src="films/launch/broll-wheel/result/preview.gif" width="240"> | [**broll-wheel**](films/launch/broll-wheel/) B-roll wheel launch | launch · broll-under-type | 90 s 16:9 | 8.7 |
-| <img src="films/launch/feature-roster/result/preview.gif" width="240"> | [**feature-roster**](films/launch/feature-roster/) Feature roster | launch · rebuilt-ui-roster | 26.7 s 16:9 + 9:16 | 3.0 |
-| <img src="films/launch/metric-sculpture/result/preview.gif" width="240"> | [**metric-sculpture**](films/launch/metric-sculpture/) Metric sculpture | launch · screencast-to-data-sculpture | 21.6 s 16:9 | 6.9 |
+| <img src="categories/explainer/cut-paper-stop-motion/stills/1.jpg" width="240"> | [**cut-paper-stop-motion**](categories/explainer/cut-paper-stop-motion/) Cut-paper stop-motion | explainer · look only | stills |  |
+| <img src="categories/explainer/flat-cartoon/result/preview.gif" width="240"> | [**flat-cartoon**](categories/explainer/flat-cartoon/) Flat cartoon | explainer · generated-cartoon-shots | 24.1 s 16:9 | 9.1 |
+| <img src="categories/explainer/lowpoly-sim/stills/1.jpg" width="240"> | [**lowpoly-sim**](categories/explainer/lowpoly-sim/) Low-poly simulation | explainer · look only | stills | 9.0 |
+| <img src="categories/explainer/paper-collage/result/preview.gif" width="240"> | [**paper-collage**](categories/explainer/paper-collage/) Paper collage | explainer · narrated-paper-collage | 43.8 s 16:9 + 9:16 | 9.8 |
+| <img src="categories/explainer/paper-lightbox/stills/1.jpg" width="240"> | [**paper-lightbox**](categories/explainer/paper-lightbox/) Paper lightbox | explainer · look only | stills |  |
+| <img src="categories/launch/broll-wheel/result/preview.gif" width="240"> | [**broll-wheel**](categories/launch/broll-wheel/) B-roll wheel launch | launch · broll-under-type | 90 s 16:9 | 8.7 |
+| <img src="categories/launch/feature-roster/result/preview.gif" width="240"> | [**feature-roster**](categories/launch/feature-roster/) Feature roster | launch · rebuilt-ui-roster | 26.7 s 16:9 + 9:16 | 3.0 |
+| <img src="categories/launch/metric-sculpture/result/preview.gif" width="240"> | [**metric-sculpture**](categories/launch/metric-sculpture/) Metric sculpture | launch · screencast-to-data-sculpture | 21.6 s 16:9 | 6.9 |
 <!-- /CATALOG -->
 
 ## Como é uma entrada
@@ -72,18 +76,18 @@ Toda entrada é posicionada nas mesmas sete camadas:
 Camadas diferentes nunca entram em conflito. Na mesma camada: floor > category > method > moves > craft > style.
 
 Cada entrada é autossuficiente: nossos arquivos comuns (as regras do floor, os scripts de medição) são copiados para dentro dela, as ferramentas externas
-(HyperFrames, ffmpeg) são declaradas em `requires` do `taste.json`, e o gosto nunca é compartilhado. Veja [spec/ENTRY.md](films/spec/ENTRY.md).
+(HyperFrames, ffmpeg) são declaradas em `requires` do `taste.json`, e o gosto nunca é compartilhado. Veja [spec/ENTRY.md](categories/spec/ENTRY.md).
 
 ## Ferramentas
 
 | | |
 |---|---|
-| `films/tools/floor.md` | as regras comuns do floor (copiadas em `references/` de cada entrada) |
-| `films/launch/sourcing.md` | como os filmes de launch reúnem as telas, o logo e os textos reais do produto (copiado em `references/` de cada entrada de launch) |
-| `films/tools/validate.py` | confere cada entrada contra o formato e se as cópias dos arquivos comuns batem com `films/tools/` |
-| `films/tools/catalog.py` | refaz o `films/catalog.json` e a tabela acima |
-| `films/tools/analyze.py <video> <out>` | cortes, planos, folha de contato, LUFS, pico real, BPM, cortes na batida |
-| `films/tools/events.py <video> <out>` | eventos de mudança visual a cada 10 s e proporção de imagem parada |
+| `categories/tools/floor.md` | as regras comuns do floor (copiadas em `references/` de cada entrada) |
+| `categories/launch/sourcing.md` | como os filmes de launch reúnem as telas, o logo e os textos reais do produto (copiado em `references/` de cada entrada de launch) |
+| `categories/tools/validate.py` | confere cada entrada contra o formato e se as cópias dos arquivos comuns batem com `categories/tools/` |
+| `categories/tools/catalog.py` | refaz o `categories/catalog.json` e a tabela acima |
+| `categories/tools/analyze.py <video> <out>` | cortes, planos, folha de contato, LUFS, pico real, BPM, cortes na batida |
+| `categories/tools/events.py <video> <out>` | eventos de mudança visual a cada 10 s e proporção de imagem parada |
 
 ## Requisitos
 

@@ -1,0 +1,105 @@
+{
+  "id": "flat-cartoon",
+  "title": "Flat cartoon",
+  "summary": "A 24 s narrated idea explainer in a flat-vector cartoon look: one original character acts out four beats in two generated Seedance clips, one narration line per shot, captions always on.",
+  "version": "0.1.0",
+  "requires": {
+    "renderer": "hyperframes@0.8.229",
+    "skills": ["hyperframes", "hyperframes-cli"],
+    "bins": ["node>=20", "ffmpeg", "python3"],
+    "optional": {
+      "BYTEPLUS_API_KEY (Seedream 4.0 and Seedance 2.0)": "a new character still and new clips",
+      "FAL_KEY (ElevenLabs via fal)": "new narration lines"
+    }
+  },
+  "layers": {
+    "floor": "references/floor.md",
+    "category": "explainer",
+    "method": "generated-cartoon-shots",
+    "moves": ["captions"],
+    "craft": [
+      "four beats: easy case, hard case, what goes wrong, what it means for you",
+      "one narration line per shot, 15-17 plain words",
+      "captions switch at the narration's pauses",
+      "two shots per generated clip, one reference still for the character",
+      "clip sound as the bed under the voice",
+      "-14 LUFS, true peak under -1 dBTP"
+    ],
+    "style": {
+      "ground": "dark violet, coral dusk and teal night scenes, generated",
+      "type": "Inter 700 captions on a dark rounded box",
+      "accent": "mint-green character against violet and coral",
+      "banned": [
+        "characters, logos or looks taken from an existing channel",
+        "text written by the video model",
+        "code-drawn vector art standing in for illustration"
+      ],
+      "motion": "whatever the generated shots do; the edit is two hard cuts inside clips and one between them"
+    },
+    "tool": {
+      "renderer": "hyperframes@0.8.229",
+      "generators": [
+        "Seedream 4.0 (BytePlus) character still",
+        "Seedance 2.0 (BytePlus) two 12 s clips, 720p, with sound, the still as reference image",
+        "ElevenLabs multilingual v2 narration via fal, one file per line"
+      ],
+      "assets": "tools/build.py mixes the sound and writes index.html from film.json"
+    }
+  },
+  "spec": {
+    "duration_s": 24.1,
+    "ratio": ["16:9"],
+    "size": [1280, 720],
+    "fps": 30,
+    "scenes": 4,
+    "narration_words": 66,
+    "loudness_lufs": -14
+  },
+  "reference": {
+    "name": "flat-vector science channels in general; no single film",
+    "metrics": {},
+    "see": "references/REFERENCE.md"
+  },
+  "result": {
+    "video": "result/result.mp4",
+    "poster": "result/poster.jpg",
+    "sheet": "result/sheet.jpg",
+    "preview": "result/preview.gif",
+    "metrics": "result/metrics.json",
+    "example_story": "why AI improves faster at math than at taste (a draft; its script is a known weak point, see RECIPE.md)"
+  },
+  "needs": {
+    "from_story": [
+      "one idea that a character can act out in four shots",
+      "four approved narration lines before anything is generated"
+    ],
+    "generated": [
+      "one character still (tools/seedream.py)",
+      "two 12 s clips (tools/seedance.py)",
+      "four narration lines (tools/voice.py)"
+    ]
+  },
+  "fits": [
+    "short explainers of an idea, a mechanism or a trade-off",
+    "a brand's point of view told without real people",
+    "feed posts under 30 s"
+  ],
+  "avoid": [
+    "true stories about real people or events (use paper-collage)",
+    "product launches that need real screens",
+    "anything where text must appear inside the picture"
+  ],
+  "combines_with": [],
+  "conflicts_with": [],
+  "cost": {
+    "stock_clips": 0,
+    "generated_clips": 2,
+    "music_tracks": 0,
+    "render_minutes": 1
+  },
+  "licence": {
+    "code": "MIT",
+    "result_and_generated_media": "CC BY 4.0",
+    "fonts": "Inter: SIL Open Font License 1.1"
+  }
+}

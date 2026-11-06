@@ -3,7 +3,7 @@
 **Single shots for HyperFrames films: one folder per move, each with its preview, its code and its tags.**
 
 A move is one beat of a film: a crash zoom onto a card, a price that slams in, a word filled on the downbeat, a logo
-lockup. Whole films are in [films/](../films/), looks in [styles/](../styles/), how to make them in [workflows/](../workflows/). This folder holds the parts.
+lockup. Whole films and looks are in [categories/](../categories/), how to make them in [workflows/](../workflows/). This folder holds the parts.
 
 ## Layout
 

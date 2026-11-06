@@ -1,0 +1,53 @@
+{
+  "name": "paper-collage",
+  "title": "Paper collage",
+  "summary": "Pieces of paper land on a cream sheet: cut-out photos with white borders, torn clippings, red stamps and typed labels, cut against dark b-roll under a halftone screen.",
+  "look": {
+    "ground": "cream paper sheet for paper scenes; b-roll for the others",
+    "palette": [
+      { "role": "ground", "hex": "#efe9dc", "where": "paper scenes, clippings" },
+      { "role": "ink", "hex": "#141311", "where": "headlines, strips, captions box" },
+      { "role": "accent-red", "hex": "#d8402c", "where": "years, stamps, marker rings only" },
+      { "role": "accent-yellow", "hex": "#f1d23a", "where": "highlighter bars only" },
+      { "role": "muted", "hex": "#6b6255", "where": "small print, credits" }
+    ],
+    "type": "Anton capitals for names and numbers; Special Elite for typed labels; Inter for captions",
+    "texture": "paper grain over everything; b-roll desaturated to 35 %, contrast 1.18, brightness 0.7, 8 px halftone dots, soft vignette",
+    "light": "flat on paper; whatever the b-roll has, crushed dark",
+    "materials": "paper: torn edges, white sticker borders, drop shadows 0 6px 18px at low opacity"
+  },
+  "consistency": "real photos of real people and places, cut out once and reused; nothing generated that shows a person",
+  "motion": {
+    "feel": "land, never glide",
+    "moves": [
+      "slap: from 1.3-1.7x and +7 deg to 1x in 0.32 s, back.out(2.2)",
+      "rise: from below the frame and -6 deg in 0.5 s, expo.out",
+      "drop: from 120-180 px above, tilted, 0.5 s, back.out(1.5)",
+      "box stamp: 1.8x to 1x in 0.18 s, power4.in, multiplied at 0.92",
+      "typewriter: one letter per 0.025-0.04 s",
+      "every piece rests at -4 to +3 deg; every scene pushes 1.03-1.05x"
+    ]
+  },
+  "pace": {
+    "avg_shot_s": 4.87,
+    "events_per_10s": 9.8,
+    "text": "each piece lands on the word it belongs to; captions always on, a phrase at a time"
+  },
+  "banned": [
+    "generated people, or AI-altered photos of real people",
+    "clean unprocessed b-roll",
+    "glides and fades for pieces",
+    "more than two accent colours"
+  ],
+  "fits": {
+    "categories": ["explainer", "data story"],
+    "methods": ["narrated-paper-collage"]
+  },
+  "made_with": {
+    "renderer": "hyperframes@0.8.191",
+    "generators": ["Seedance 2.0 b-roll without people", "BiRefNet cut-outs of licensed photos"]
+  },
+  "worked_example": "categories/explainer/paper-collage",
+  "source": "original, after the paper-collage look common in news explainers",
+  "licence": "MIT; stills CC BY 4.0 except the photos and logos inside them"
+}

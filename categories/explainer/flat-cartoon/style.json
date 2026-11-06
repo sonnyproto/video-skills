@@ -1,0 +1,87 @@
+{
+  "name": "flat-cartoon",
+  "title": "Flat cartoon",
+  "summary": "Flat-vector cartoon scenes with saturated dusk and night colour, rim light and glow, and one round original character carried through every shot by a single reference still.",
+  "look": {
+    "ground": "generated scenes: a violet study, a coral-sunset room, a teal starry night; never a plain backdrop",
+    "palette": [
+      {
+        "role": "violet",
+        "hex": "#7f5ba4",
+        "where": "night interiors, skies"
+      },
+      {
+        "role": "coral",
+        "hex": "#d97a75",
+        "where": "dusk light, warm scenes"
+      },
+      {
+        "role": "cream",
+        "hex": "#faeacd",
+        "where": "sunlit windows, highlights"
+      },
+      {
+        "role": "teal-night",
+        "hex": "#103a44",
+        "where": "night scenes, the closing shot"
+      },
+      {
+        "role": "glow",
+        "hex": "#81d1d1",
+        "where": "glowing objects at night"
+      },
+      {
+        "role": "character",
+        "hex": "#5fd6b4",
+        "where": "the hero character only"
+      },
+      {
+        "role": "text",
+        "hex": "#fbf6f2",
+        "where": "captions on a rgba(18,10,28,.62) box"
+      }
+    ],
+    "type": "Inter 700 30 px captions at 1280×720, one sentence at a time, on a dark rounded box at the bottom; no text inside the picture",
+    "texture": "flat fills with soft gradients and a little grain; no outlines",
+    "light": "a strong rim light on every object, soft glow and bloom on light sources, dusk or night",
+    "materials": "flat vector shapes, matte, layered in depth"
+  },
+  "consistency": "one reference still (made with Seedream 4.0) passed to every Seedance generation as --reference-image; the same style block opens every prompt",
+  "motion": {
+    "feel": "bouncy, elastic character acting; whatever the video model animates",
+    "moves": [
+      "two shots per 12 s clip with a hard cut at 6 s",
+      "the closing shot ends on a slow push in"
+    ]
+  },
+  "pace": {
+    "avg_shot_s": 6.0,
+    "events_per_10s": 9.1,
+    "text": "one caption per sentence of narration, switching at the voice's pauses; captions always on"
+  },
+  "banned": [
+    "a character, logo or look taken from an existing channel",
+    "text, numbers or formulas written by the video model",
+    "code-drawn vector art in place of illustration",
+    "photoreal textures"
+  ],
+  "fits": {
+    "categories": [
+      "explainer",
+      "social"
+    ],
+    "methods": [
+      "generated-cartoon-shots"
+    ]
+  },
+  "made_with": {
+    "renderer": "hyperframes@0.8.229",
+    "generators": [
+      "Seedream 4.0 (BytePlus) character still",
+      "Seedance 2.0 (BytePlus) 12 s clips at 720p with sound"
+    ]
+  },
+  "worked_example": "categories/explainer/flat-cartoon",
+  "source": "original, after flat-vector science channels in general",
+  "licence": "MIT; stills CC BY 4.0"
+}

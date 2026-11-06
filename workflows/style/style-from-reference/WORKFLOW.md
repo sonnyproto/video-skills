@@ -1,11 +1,11 @@
 # Style from reference
 
-Turn a video or an account you like into a style card in `styles/`, with three stills that prove it can be made.
-The result is a look, not a film: it can go on any recipe in `films/` that it fits.
+Turn a video or an account you like into a look entry in `categories/<category>/<name>/`, with three stills that prove
+it can be made. The result is a look, not a film: it can go on any film recipe in `categories/` that it fits.
 
 ```
 reference clips → frames and contact sheets → style card (look, consistency, motion, pace)
-              → three stills → a person picks or rejects → styles/<name>/
+              → three stills → a person picks or rejects → categories/<category>/<name>/
 ```
 
 ## Steps
@@ -17,8 +17,8 @@ reference clips → frames and contact sheets → style card (look, consistency,
    ffmpeg -i clip.mp4 -vf "fps=2,scale=480:-1,tile=6x5" sheet_%02d.png          # contact sheets
    ffmpeg -i clip.mp4 -vf "select='gt(scene,0.3)',showinfo" -vsync vfr cut_%03d.png 2>&1 | grep pts_time   # cuts
    ```
-   `films/tools/analyze.py` and `events.py` give average shot length and events per 10 s.
-3. **Write the card** (`styles/STYLE.md` format), every field from what the frames show, as numbers where possible:
+   `categories/tools/analyze.py` and `events.py` give average shot length and events per 10 s.
+3. **Write the card** (`categories/spec/STYLE.md` format), every field from what the frames show, as numbers where possible:
    - look: sample the palette from frames (5 to 7 colours with roles), name the type, texture, light, materials;
    - consistency: how does the main character or object stay the same? A code rig, one reference image fed to every
      generation, real photos, or it does not (then say so);
@@ -33,7 +33,7 @@ reference clips → frames and contact sheets → style card (look, consistency,
 6. **Compare** each still with the nearest reference frame side by side (the scripts in
    `modeling/scene-from-references/scripts/`) and with a zero-context critic: "Same style? Score 1 to 10, name what
    differs most."
-7. **A person picks.** Yes: commit `styles/<name>/` and add its row to `styles/README.md`. No: note why in the card's
+7. **A person picks.** Yes: add a short `SKILL.md`, commit `categories/<category>/<name>/` and run `python3 categories/tools/catalog.py`. No: note why in the card's
    `banned` or drop it.
 
 ## Pass marks

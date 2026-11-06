@@ -10,7 +10,7 @@
 
 ```bash
 npx skills add sonnyproto/video-skills                       # 라이브러리 전체 (에이전트가 항목을 고름)
-npx skills add sonnyproto/video-skills/films/launch/broll-wheel   # 이 한 편만
+npx skills add sonnyproto/video-skills/categories/launch/broll-wheel   # 이 한 편만
 ```
 
 그다음 에이전트에게:
@@ -30,18 +30,22 @@ video-skills는 앞의 것을 평평하게, 그리고 공개적으로 만든 버
 
 - **항목 하나 = 영상 한 편.** 각 항목에는 그것이 만든 `result.mp4`가 들어 있어 눈으로 보고 고를 수 있습니다.
 - **재현 가능.** 모든 항목에 영상을 그대로 렌더링하는 완전한 프로젝트와, 스톡 영상의 소스 ID, 생성 미디어의 프롬프트가 들어 있습니다. API 키는 필요 없습니다.
-- **어디서나 같은 형식.** 모든 항목이 같은 파일과 같은 `taste.json` 카드를 가지므로 비교할 수 있고, 에이전트가 조합할 수 있습니다 ([spec/ENTRY.md](films/spec/ENTRY.md)).
+- **어디서나 같은 형식.** 모든 항목이 같은 파일과 같은 `taste.json` 카드를 가지므로 비교할 수 있고, 에이전트가 조합할 수 있습니다 ([spec/ENTRY.md](categories/spec/ENTRY.md)).
 - **제품은 파일 하나에.** 내 제품으로 바꾸려면 `film.json`과 에셋만 고치면 되고, 생성기는 건드리지 않습니다.
 
 ## 라이브러리
 
 <!-- CATALOG -->
-| Preview | Entry | Category · method | Length | Events / 10 s |
+| Preview | Entry | Category · method | Sample | Events / 10 s |
 |---|---|---|---|---|
-| <img src="films/explainer/paper-collage/result/preview.gif" width="240"> | [**paper-collage**](films/explainer/paper-collage/) Paper collage | explainer · narrated-paper-collage | 43.8 s 16:9 + 9:16 | 9.8 |
-| <img src="films/launch/broll-wheel/result/preview.gif" width="240"> | [**broll-wheel**](films/launch/broll-wheel/) B-roll wheel launch | launch · broll-under-type | 90 s 16:9 | 8.7 |
-| <img src="films/launch/feature-roster/result/preview.gif" width="240"> | [**feature-roster**](films/launch/feature-roster/) Feature roster | launch · rebuilt-ui-roster | 26.7 s 16:9 + 9:16 | 3.0 |
-| <img src="films/launch/metric-sculpture/result/preview.gif" width="240"> | [**metric-sculpture**](films/launch/metric-sculpture/) Metric sculpture | launch · screencast-to-data-sculpture | 21.6 s 16:9 | 6.9 |
+| <img src="categories/explainer/cut-paper-stop-motion/stills/1.jpg" width="240"> | [**cut-paper-stop-motion**](categories/explainer/cut-paper-stop-motion/) Cut-paper stop-motion | explainer · look only | stills |  |
+| <img src="categories/explainer/flat-cartoon/result/preview.gif" width="240"> | [**flat-cartoon**](categories/explainer/flat-cartoon/) Flat cartoon | explainer · generated-cartoon-shots | 24.1 s 16:9 | 9.1 |
+| <img src="categories/explainer/lowpoly-sim/stills/1.jpg" width="240"> | [**lowpoly-sim**](categories/explainer/lowpoly-sim/) Low-poly simulation | explainer · look only | stills | 9.0 |
+| <img src="categories/explainer/paper-collage/result/preview.gif" width="240"> | [**paper-collage**](categories/explainer/paper-collage/) Paper collage | explainer · narrated-paper-collage | 43.8 s 16:9 + 9:16 | 9.8 |
+| <img src="categories/explainer/paper-lightbox/stills/1.jpg" width="240"> | [**paper-lightbox**](categories/explainer/paper-lightbox/) Paper lightbox | explainer · look only | stills |  |
+| <img src="categories/launch/broll-wheel/result/preview.gif" width="240"> | [**broll-wheel**](categories/launch/broll-wheel/) B-roll wheel launch | launch · broll-under-type | 90 s 16:9 | 8.7 |
+| <img src="categories/launch/feature-roster/result/preview.gif" width="240"> | [**feature-roster**](categories/launch/feature-roster/) Feature roster | launch · rebuilt-ui-roster | 26.7 s 16:9 + 9:16 | 3.0 |
+| <img src="categories/launch/metric-sculpture/result/preview.gif" width="240"> | [**metric-sculpture**](categories/launch/metric-sculpture/) Metric sculpture | launch · screencast-to-data-sculpture | 21.6 s 16:9 | 6.9 |
 <!-- /CATALOG -->
 
 ## 항목의 구성
@@ -71,18 +75,18 @@ video-skills는 앞의 것을 평평하게, 그리고 공개적으로 만든 버
 서로 다른 레이어끼리는 충돌하지 않습니다. 같은 레이어 안에서는 floor > category > method > moves > craft > style 순으로 우선합니다.
 
 각 항목은 자기완결적입니다. 공통 파일(floor 규칙, 측정 스크립트)은 각 항목에 복사되고, 외부 도구(HyperFrames, ffmpeg)는
-`taste.json`의 `requires`에 선언만 하며, 취향은 절대 공유하지 않습니다. 자세한 내용은 [spec/ENTRY.md](films/spec/ENTRY.md).
+`taste.json`의 `requires`에 선언만 하며, 취향은 절대 공유하지 않습니다. 자세한 내용은 [spec/ENTRY.md](categories/spec/ENTRY.md).
 
 ## 도구
 
 | | |
 |---|---|
-| `films/tools/floor.md` | 공통 floor 규칙 (각 항목의 `references/`에 복사됨) |
-| `films/launch/sourcing.md` | launch용: 제품의 실제 화면, 로고, 문구를 모으는 방법 (각 launch 항목의 `references/`에 복사됨) |
-| `films/tools/validate.py` | 모든 항목을 형식에 맞춰 검사하고, 공통 파일 사본이 `films/tools/`와 같은지 확인 |
-| `films/tools/catalog.py` | `films/catalog.json`과 위의 표를 다시 만듦 |
-| `films/tools/analyze.py <video> <out>` | 컷, 샷, 콘택트 시트, LUFS, 트루 피크, BPM, 비트에 맞은 컷 |
-| `films/tools/events.py <video> <out>` | 10초당 시각 변화 이벤트 수와 정지 비율 |
+| `categories/tools/floor.md` | 공통 floor 규칙 (각 항목의 `references/`에 복사됨) |
+| `categories/launch/sourcing.md` | launch용: 제품의 실제 화면, 로고, 문구를 모으는 방법 (각 launch 항목의 `references/`에 복사됨) |
+| `categories/tools/validate.py` | 모든 항목을 형식에 맞춰 검사하고, 공통 파일 사본이 `categories/tools/`와 같은지 확인 |
+| `categories/tools/catalog.py` | `categories/catalog.json`과 위의 표를 다시 만듦 |
+| `categories/tools/analyze.py <video> <out>` | 컷, 샷, 콘택트 시트, LUFS, 트루 피크, BPM, 비트에 맞은 컷 |
+| `categories/tools/events.py <video> <out>` | 10초당 시각 변화 이벤트 수와 정지 비율 |
 
 ## 요구 사항
 

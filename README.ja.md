@@ -10,7 +10,7 @@
 
 ```bash
 npx skills add sonnyproto/video-skills                       # ライブラリ全体（エージェントがエントリを選ぶ）
-npx skills add sonnyproto/video-skills/films/launch/broll-wheel   # この 1 本だけ
+npx skills add sonnyproto/video-skills/categories/launch/broll-wheel   # この 1 本だけ
 ```
 
 あとはエージェントに：
@@ -30,18 +30,22 @@ video-skills は前者のフラット版を、オープンに作ったもので�
 
 - **1 エントリ = 1 本の映像。** それぞれ自分が生んだ `result.mp4` 付きなので、目で見て選べます。
 - **再現可能。** 各エントリには映像をそのままレンダリングできる完全なプロジェクトと、ストック素材のソース ID、生成素材のプロンプトが入っています。API キーは不要です。
-- **どこでも同じ形式。** 全エントリが同じファイル構成と同じ `taste.json` カードを持つので、比較でき、エージェントが組み合わせられます（[spec/ENTRY.md](films/spec/ENTRY.md)）。
+- **どこでも同じ形式。** 全エントリが同じファイル構成と同じ `taste.json` カードを持つので、比較でき、エージェントが組み合わせられます（[spec/ENTRY.md](categories/spec/ENTRY.md)）。
 - **プロダクトは 1 ファイルに。** 自分のプロダクトに差し替えるときは `film.json` と素材を編集するだけで、ジェネレーターには触りません。
 
 ## ライブラリ
 
 <!-- CATALOG -->
-| Preview | Entry | Category · method | Length | Events / 10 s |
+| Preview | Entry | Category · method | Sample | Events / 10 s |
 |---|---|---|---|---|
-| <img src="films/explainer/paper-collage/result/preview.gif" width="240"> | [**paper-collage**](films/explainer/paper-collage/) Paper collage | explainer · narrated-paper-collage | 43.8 s 16:9 + 9:16 | 9.8 |
-| <img src="films/launch/broll-wheel/result/preview.gif" width="240"> | [**broll-wheel**](films/launch/broll-wheel/) B-roll wheel launch | launch · broll-under-type | 90 s 16:9 | 8.7 |
-| <img src="films/launch/feature-roster/result/preview.gif" width="240"> | [**feature-roster**](films/launch/feature-roster/) Feature roster | launch · rebuilt-ui-roster | 26.7 s 16:9 + 9:16 | 3.0 |
-| <img src="films/launch/metric-sculpture/result/preview.gif" width="240"> | [**metric-sculpture**](films/launch/metric-sculpture/) Metric sculpture | launch · screencast-to-data-sculpture | 21.6 s 16:9 | 6.9 |
+| <img src="categories/explainer/cut-paper-stop-motion/stills/1.jpg" width="240"> | [**cut-paper-stop-motion**](categories/explainer/cut-paper-stop-motion/) Cut-paper stop-motion | explainer · look only | stills |  |
+| <img src="categories/explainer/flat-cartoon/result/preview.gif" width="240"> | [**flat-cartoon**](categories/explainer/flat-cartoon/) Flat cartoon | explainer · generated-cartoon-shots | 24.1 s 16:9 | 9.1 |
+| <img src="categories/explainer/lowpoly-sim/stills/1.jpg" width="240"> | [**lowpoly-sim**](categories/explainer/lowpoly-sim/) Low-poly simulation | explainer · look only | stills | 9.0 |
+| <img src="categories/explainer/paper-collage/result/preview.gif" width="240"> | [**paper-collage**](categories/explainer/paper-collage/) Paper collage | explainer · narrated-paper-collage | 43.8 s 16:9 + 9:16 | 9.8 |
+| <img src="categories/explainer/paper-lightbox/stills/1.jpg" width="240"> | [**paper-lightbox**](categories/explainer/paper-lightbox/) Paper lightbox | explainer · look only | stills |  |
+| <img src="categories/launch/broll-wheel/result/preview.gif" width="240"> | [**broll-wheel**](categories/launch/broll-wheel/) B-roll wheel launch | launch · broll-under-type | 90 s 16:9 | 8.7 |
+| <img src="categories/launch/feature-roster/result/preview.gif" width="240"> | [**feature-roster**](categories/launch/feature-roster/) Feature roster | launch · rebuilt-ui-roster | 26.7 s 16:9 + 9:16 | 3.0 |
+| <img src="categories/launch/metric-sculpture/result/preview.gif" width="240"> | [**metric-sculpture**](categories/launch/metric-sculpture/) Metric sculpture | launch · screencast-to-data-sculpture | 21.6 s 16:9 | 6.9 |
 <!-- /CATALOG -->
 
 ## エントリの構成
@@ -71,18 +75,18 @@ video-skills は前者のフラット版を、オープンに作ったもので�
 異なるレイヤー同士は衝突しません。同じレイヤー内では floor > category > method > moves > craft > style の順に優先します。
 
 各エントリは自己完結しています。共通ファイル（floor ルール、計測スクリプト）は各エントリにコピーし、外部ツール
-（HyperFrames、ffmpeg）は `taste.json` の `requires` で宣言するだけ。テイストは共有しません。詳しくは [spec/ENTRY.md](films/spec/ENTRY.md)。
+（HyperFrames、ffmpeg）は `taste.json` の `requires` で宣言するだけ。テイストは共有しません。詳しくは [spec/ENTRY.md](categories/spec/ENTRY.md)。
 
 ## ツール
 
 | | |
 |---|---|
-| `films/tools/floor.md` | 共通の floor ルール（各エントリの `references/` にコピー） |
-| `films/launch/sourcing.md` | launch 用：プロダクトの本物の画面・ロゴ・コピーの集め方（各 launch エントリの `references/` にコピー） |
-| `films/tools/validate.py` | 全エントリを形式に照らして検査し、共通ファイルのコピーが `films/tools/` と一致するか確認 |
-| `films/tools/catalog.py` | `films/catalog.json` と上の表を再生成 |
-| `films/tools/analyze.py <video> <out>` | カット、ショット、コンタクトシート、LUFS、トゥルーピーク、BPM、ビート上のカット |
-| `films/tools/events.py <video> <out>` | 10 秒あたりの視覚変化イベント数と静止率 |
+| `categories/tools/floor.md` | 共通の floor ルール（各エントリの `references/` にコピー） |
+| `categories/launch/sourcing.md` | launch 用：プロダクトの本物の画面・ロゴ・コピーの集め方（各 launch エントリの `references/` にコピー） |
+| `categories/tools/validate.py` | 全エントリを形式に照らして検査し、共通ファイルのコピーが `categories/tools/` と一致するか確認 |
+| `categories/tools/catalog.py` | `categories/catalog.json` と上の表を再生成 |
+| `categories/tools/analyze.py <video> <out>` | カット、ショット、コンタクトシート、LUFS、トゥルーピーク、BPM、ビート上のカット |
+| `categories/tools/events.py <video> <out>` | 10 秒あたりの視覚変化イベント数と静止率 |
 
 ## 必要なもの
 

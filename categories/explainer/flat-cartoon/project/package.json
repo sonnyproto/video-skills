@@ -1,0 +1,10 @@
+{
+  "name": "flat-cartoon",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx --yes hyperframes@0.8.229 preview",
+    "check": "npx --yes hyperframes@0.8.229 check",
+    "render": "npx --yes hyperframes@0.8.229 render"
+  }
+}

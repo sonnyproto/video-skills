@@ -1,0 +1,57 @@
+{
+  "name": "lowpoly-sim",
+  "title": "Low-poly simulation",
+  "summary": "A flat-shaded low-poly world rendered live in three.js: a hazy dusk city, a faceted Earth, a particle galaxy, with a big real-number counter climbing as the scale grows.",
+  "look": {
+    "ground": "a dusk city street under a pink-violet gradient sky with fog; deep space (#05040a) once the camera leaves Earth",
+    "palette": [
+      { "role": "sky-top", "hex": "#5d4a68", "where": "top of the city sky gradient" },
+      { "role": "sky-horizon", "hex": "#e9c4b2", "where": "horizon, sun glow" },
+      { "role": "fog", "hex": "#c9a3a8", "where": "distance fog in the city" },
+      { "role": "buildings", "hex": "#a8949a", "where": "building bodies (vary between #8f8290 and #c0acaa)" },
+      { "role": "windows", "hex": "#f6dcb0", "where": "lit windows, 12 % of them; the rest #4f4655 and #625868 on a #8d7c86 facade" },
+      { "role": "space", "hex": "#05040a", "where": "every space scene" },
+      { "role": "ocean", "hex": "#2f6d9c", "where": "planet seas (#4a8fb5 shallow to #23547f deep); land #5b8a4a grass, #c9a66b desert, white ice" },
+      { "role": "hot", "hex": "#ffb060", "where": "fireballs, flashes, star cores only" },
+      { "role": "text", "hex": "#fbf6f2", "where": "title, counter, captions" }
+    ],
+    "type": "EB Garamond regular for the what-if question (78 px, centred, top third); Inter 700 tracked caps for the counter label and Inter 400 96 px for the counter; Inter 700 46 px captions in a dark rounded box",
+    "texture": "none: flat facets, fog and glow sprites only; no grain, no film look",
+    "light": "dusk: a warm low key light behind the scene, a pink hemisphere fill, soft shadows; in space one hard white sun from the left",
+    "materials": "MeshStandardMaterial with flatShading, roughness 0.95, no textures except canvas window grids; low-detail icospheres for anything round"
+  },
+  "consistency": "everything is code: the person, the city and the planets are built by functions from a seeded random, so every shot of them is identical; one recurring hero figure seen from behind",
+  "motion": {
+    "feel": "a simulation that keeps escalating: steady camera, sudden physical hits",
+    "moves": [
+      "per event: object pops 1 + (0.35..1.25)·e^(-9·dt), the figure recoils sin(min(16·dt, π)) and settles, a ground ring spreads in 0.45 s, the camera nudges",
+      "milestone: white flash 0.06 s up and 0.45-1.0 s down that hides a cut, a counter jump to 1.25x and back",
+      "scale jump: the camera pulls up and out in one ease (street → rooftops → orbit → solar system → galaxy), fog far distance opening with it",
+      "break-up: an icosphere split into Voronoi chunks that fly out with spin, distance ∝ k^1.3",
+      "shake: sum of two sines per axis, amplitude set per hit and decaying linearly"
+    ]
+  },
+  "pace": {
+    "avg_shot_s": 7.5,
+    "events_per_10s": 9.0,
+    "text": "the question holds over the opening; one caption per milestone, 2.5-5 s each; the counter is always on and changes every frame"
+  },
+  "banned": [
+    "smooth shading or photo textures on models",
+    "photoreal HDRI skies or lens dirt",
+    "a static counter or a fake number: the counter must be a function of the simulated time",
+    "more than one hot accent colour in a scene",
+    "cuts without a flash or a camera move to carry them"
+  ],
+  "fits": {
+    "categories": ["explainer", "social"],
+    "methods": []
+  },
+  "made_with": {
+    "renderer": "hyperframes@0.8.229 with three@0.160.0",
+    "generators": []
+  },
+  "worked_example": "",
+  "source": "original, after first-person what-if simulation shorts",
+  "licence": "MIT; stills CC BY 4.0"
+}

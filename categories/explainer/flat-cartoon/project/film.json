@@ -1,0 +1,20 @@
+{
+  "title": "Why AI is better at math than at taste",
+  "size": [1280, 720],
+  "footage": [
+    { "src": "assets/footage/pair-1.mp4", "start": 0, "length": 12.064 },
+    { "src": "assets/footage/pair-2.mp4", "start": 12.064, "length": 12.064 }
+  ],
+  "lines": [
+    { "vo": "assets/audio/line-1.mp3", "at": 0.3,
+      "captions": [ ["A math problem has a right answer.", 0.0], ["An AI can try a million times and learn from every miss.", 2.15] ] },
+    { "vo": "assets/audio/line-2.mp3", "at": 6.3,
+      "captions": [ ["But a painting? There's no answer key.", 0.0], ["Score it an 8, and it still doesn't know what to fix.", 2.6] ] },
+    { "vo": "assets/audio/line-3.mp3", "at": 12.0,
+      "captions": [ ["So it piles on every pretty trick it knows.", 0.0], ["Nothing wrong with it. Nothing you'd watch twice.", 2.95] ] },
+    { "vo": "assets/audio/line-4.mp3", "at": 17.95,
+      "captions": [ ["AI makes making things cheap.", 0.0], ["What's scarce now is knowing what to keep, and what to throw away.", 2.1] ] }
+  ],
+  "audio": { "bed_volume": 0.28, "length": 24.1, "fade_out": 0.6 },
+  "caption_style": { "font": "Inter", "weight": 700, "size": 30, "text": "#fbf6f2", "box": "rgba(18,10,28,.62)", "bottom": 54, "side": 60 }
+}

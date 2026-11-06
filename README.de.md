@@ -10,7 +10,7 @@
 
 ```bash
 npx skills add sonnyproto/video-skills                       # die ganze Bibliothek (der Agent wählt einen Eintrag)
-npx skills add sonnyproto/video-skills/films/launch/broll-wheel   # nur dieser Film
+npx skills add sonnyproto/video-skills/categories/launch/broll-wheel   # nur dieser Film
 ```
 
 Dann sag deinem Agent:
@@ -31,18 +31,22 @@ video-skills ist die flache Version der ersten Form, offen gemacht:
 - **Ein Eintrag = ein Film.** Jeder bringt das `result.mp4` mit, das er erzeugt hat, also wählst du mit den Augen.
 - **Reproduzierbar.** Jeder Eintrag enthält ein vollständiges Projekt, das seinen Film unverändert rendert, dazu die Quell-IDs des Stock-Materials und die Prompts aller generierten Medien. Keine API-Keys nötig.
 - **Überall dasselbe Format.** Alle Einträge haben dieselben Dateien und dieselbe `taste.json`-Karte, sodass du sie vergleichen
-  und Agents sie kombinieren können ([spec/ENTRY.md](films/spec/ENTRY.md)).
+  und Agents sie kombinieren können ([spec/ENTRY.md](categories/spec/ENTRY.md)).
 - **Das Produkt in einer Datei.** Für dein Produkt änderst du `film.json` und die Assets, nie den Generator.
 
 ## Bibliothek
 
 <!-- CATALOG -->
-| Preview | Entry | Category · method | Length | Events / 10 s |
+| Preview | Entry | Category · method | Sample | Events / 10 s |
 |---|---|---|---|---|
-| <img src="films/explainer/paper-collage/result/preview.gif" width="240"> | [**paper-collage**](films/explainer/paper-collage/) Paper collage | explainer · narrated-paper-collage | 43.8 s 16:9 + 9:16 | 9.8 |
-| <img src="films/launch/broll-wheel/result/preview.gif" width="240"> | [**broll-wheel**](films/launch/broll-wheel/) B-roll wheel launch | launch · broll-under-type | 90 s 16:9 | 8.7 |
-| <img src="films/launch/feature-roster/result/preview.gif" width="240"> | [**feature-roster**](films/launch/feature-roster/) Feature roster | launch · rebuilt-ui-roster | 26.7 s 16:9 + 9:16 | 3.0 |
-| <img src="films/launch/metric-sculpture/result/preview.gif" width="240"> | [**metric-sculpture**](films/launch/metric-sculpture/) Metric sculpture | launch · screencast-to-data-sculpture | 21.6 s 16:9 | 6.9 |
+| <img src="categories/explainer/cut-paper-stop-motion/stills/1.jpg" width="240"> | [**cut-paper-stop-motion**](categories/explainer/cut-paper-stop-motion/) Cut-paper stop-motion | explainer · look only | stills |  |
+| <img src="categories/explainer/flat-cartoon/result/preview.gif" width="240"> | [**flat-cartoon**](categories/explainer/flat-cartoon/) Flat cartoon | explainer · generated-cartoon-shots | 24.1 s 16:9 | 9.1 |
+| <img src="categories/explainer/lowpoly-sim/stills/1.jpg" width="240"> | [**lowpoly-sim**](categories/explainer/lowpoly-sim/) Low-poly simulation | explainer · look only | stills | 9.0 |
+| <img src="categories/explainer/paper-collage/result/preview.gif" width="240"> | [**paper-collage**](categories/explainer/paper-collage/) Paper collage | explainer · narrated-paper-collage | 43.8 s 16:9 + 9:16 | 9.8 |
+| <img src="categories/explainer/paper-lightbox/stills/1.jpg" width="240"> | [**paper-lightbox**](categories/explainer/paper-lightbox/) Paper lightbox | explainer · look only | stills |  |
+| <img src="categories/launch/broll-wheel/result/preview.gif" width="240"> | [**broll-wheel**](categories/launch/broll-wheel/) B-roll wheel launch | launch · broll-under-type | 90 s 16:9 | 8.7 |
+| <img src="categories/launch/feature-roster/result/preview.gif" width="240"> | [**feature-roster**](categories/launch/feature-roster/) Feature roster | launch · rebuilt-ui-roster | 26.7 s 16:9 + 9:16 | 3.0 |
+| <img src="categories/launch/metric-sculpture/result/preview.gif" width="240"> | [**metric-sculpture**](categories/launch/metric-sculpture/) Metric sculpture | launch · screencast-to-data-sculpture | 21.6 s 16:9 | 6.9 |
 <!-- /CATALOG -->
 
 ## Aufbau eines Eintrags
@@ -72,18 +76,18 @@ Jeder Eintrag wird auf denselben sieben Ebenen eingeordnet:
 Verschiedene Ebenen kollidieren nie. Auf derselben Ebene gilt: floor > category > method > moves > craft > style.
 
 Jeder Eintrag ist in sich geschlossen: Unsere gemeinsamen Dateien (die floor-Regeln, die Mess-Skripte) werden hineinkopiert, externe Tools
-(HyperFrames, ffmpeg) werden in `requires` von `taste.json` deklariert, und Geschmack wird nie geteilt. Siehe [spec/ENTRY.md](films/spec/ENTRY.md).
+(HyperFrames, ffmpeg) werden in `requires` von `taste.json` deklariert, und Geschmack wird nie geteilt. Siehe [spec/ENTRY.md](categories/spec/ENTRY.md).
 
 ## Werkzeuge
 
 | | |
 |---|---|
-| `films/tools/floor.md` | die gemeinsamen floor-Regeln (in `references/` jedes Eintrags kopiert) |
-| `films/launch/sourcing.md` | wie Launch-Filme echte Screens, Logo und Texte des Produkts sammeln (in `references/` jedes Launch-Eintrags kopiert) |
-| `films/tools/validate.py` | prüft jeden Eintrag gegen das Format und ob seine Kopien der gemeinsamen Dateien mit `films/tools/` übereinstimmen |
-| `films/tools/catalog.py` | baut `films/catalog.json` und die Tabelle oben neu |
-| `films/tools/analyze.py <video> <out>` | Schnitte, Shots, Kontaktbogen, LUFS, True Peak, BPM, Schnitte auf dem Beat |
-| `films/tools/events.py <video> <out>` | visuelle Änderungen pro 10 s und Anteil stehender Bilder |
+| `categories/tools/floor.md` | die gemeinsamen floor-Regeln (in `references/` jedes Eintrags kopiert) |
+| `categories/launch/sourcing.md` | wie Launch-Filme echte Screens, Logo und Texte des Produkts sammeln (in `references/` jedes Launch-Eintrags kopiert) |
+| `categories/tools/validate.py` | prüft jeden Eintrag gegen das Format und ob seine Kopien der gemeinsamen Dateien mit `categories/tools/` übereinstimmen |
+| `categories/tools/catalog.py` | baut `categories/catalog.json` und die Tabelle oben neu |
+| `categories/tools/analyze.py <video> <out>` | Schnitte, Shots, Kontaktbogen, LUFS, True Peak, BPM, Schnitte auf dem Beat |
+| `categories/tools/events.py <video> <out>` | visuelle Änderungen pro 10 s und Anteil stehender Bilder |
 
 ## Voraussetzungen
 

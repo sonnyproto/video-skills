@@ -1,0 +1,284 @@
+[
+  {
+    "id": "cut-paper-stop-motion",
+    "kind": "look",
+    "title": "Cut-paper stop-motion",
+    "summary": "Flat printed paper cut-outs with wobbly hand-cut edges and soft contact shadows on a mottled ground, posed 15 times a second under a perfectly smooth camera.",
+    "category": "explainer",
+    "method": "look only",
+    "duration_s": null,
+    "ratio": null,
+    "events_per_10s": null,
+    "fits": {
+      "categories": [
+        "explainer",
+        "social",
+        "launch"
+      ],
+      "methods": []
+    },
+    "path": "categories/explainer/cut-paper-stop-motion",
+    "poster": "categories/explainer/cut-paper-stop-motion/stills/1.jpg",
+    "preview": "categories/explainer/cut-paper-stop-motion/stills/1.jpg",
+    "video": null
+  },
+  {
+    "id": "flat-cartoon",
+    "kind": "film",
+    "title": "Flat cartoon",
+    "summary": "A 24 s narrated idea explainer in a flat-vector cartoon look: one original character acts out four beats in two generated Seedance clips, one narration line per shot, captions always on.",
+    "category": "explainer",
+    "method": "generated-cartoon-shots",
+    "duration_s": 24.1,
+    "ratio": [
+      "16:9"
+    ],
+    "events_per_10s": 9.1,
+    "still_share": 0.52,
+    "shots": 4,
+    "needs": {
+      "from_story": [
+        "one idea that a character can act out in four shots",
+        "four approved narration lines before anything is generated"
+      ],
+      "generated": [
+        "one character still (tools/seedream.py)",
+        "two 12 s clips (tools/seedance.py)",
+        "four narration lines (tools/voice.py)"
+      ]
+    },
+    "fits": [
+      "short explainers of an idea, a mechanism or a trade-off",
+      "a brand's point of view told without real people",
+      "feed posts under 30 s"
+    ],
+    "avoid": [
+      "true stories about real people or events (use paper-collage)",
+      "product launches that need real screens",
+      "anything where text must appear inside the picture"
+    ],
+    "path": "categories/explainer/flat-cartoon",
+    "poster": "categories/explainer/flat-cartoon/result/poster.jpg",
+    "preview": "categories/explainer/flat-cartoon/result/preview.gif",
+    "video": "categories/explainer/flat-cartoon/result/result.mp4"
+  },
+  {
+    "id": "lowpoly-sim",
+    "kind": "look",
+    "title": "Low-poly simulation",
+    "summary": "A flat-shaded low-poly world rendered live in three.js: a hazy dusk city, a faceted Earth, a particle galaxy, with a big real-number counter climbing as the scale grows.",
+    "category": "explainer",
+    "method": "look only",
+    "duration_s": null,
+    "ratio": null,
+    "events_per_10s": 9.0,
+    "fits": {
+      "categories": [
+        "explainer",
+        "social"
+      ],
+      "methods": []
+    },
+    "path": "categories/explainer/lowpoly-sim",
+    "poster": "categories/explainer/lowpoly-sim/stills/1.jpg",
+    "preview": "categories/explainer/lowpoly-sim/stills/1.jpg",
+    "video": null
+  },
+  {
+    "id": "paper-collage",
+    "kind": "film",
+    "title": "Paper collage",
+    "summary": "A 40-45 s narrated explainer, 16:9 and 9:16 from one project, in the Vox-style paper-collage look: a true story one sentence per scene, real photos cut out as white-border stickers, torn paper, clippings, stamps and typed labels landing on their words, over halftone b-roll, with captions and a sources end card.",
+    "category": "explainer",
+    "method": "narrated-paper-collage",
+    "duration_s": 43.8,
+    "ratio": [
+      "16:9",
+      "9:16"
+    ],
+    "events_per_10s": 9.8,
+    "still_share": 0.52,
+    "shots": 9,
+    "needs": {
+      "from_story": [
+        "a true story that fits in eight sentences, with a source for every fact",
+        "2-3 licensed photos of the people in it (Wikimedia Commons first)",
+        "logos, a chart or a document if the story has them",
+        "one number or turn worth stamping"
+      ],
+      "generated": [
+        "narration with word timings (tools/voice.py)",
+        "one b-roll shot per b-roll scene, no people (tools/footage.md)",
+        "one music track, film length (tools/music.md)"
+      ]
+    },
+    "fits": [
+      "news explainers: an IPO, a collapse, a verdict, a deal",
+      "short biographies of founders and public figures",
+      "company histories and 'how did we get here' stories",
+      "feed posts that need 16:9 and 9:16 and play muted"
+    ],
+    "avoid": [
+      "product launches (use launch/ entries)",
+      "stories without licensed photos of the people in them",
+      "rumours or anything a source cannot back",
+      "stories that need more than about 60 s"
+    ],
+    "path": "categories/explainer/paper-collage",
+    "poster": "categories/explainer/paper-collage/result/poster.jpg",
+    "preview": "categories/explainer/paper-collage/result/preview.gif",
+    "video": "categories/explainer/paper-collage/result/result.mp4"
+  },
+  {
+    "id": "paper-lightbox",
+    "kind": "look",
+    "title": "Paper lightbox",
+    "summary": "Layered cut paper lit from behind at night: an indigo sky, warm arches on one side, neon on the other, a gold inlay medallion, and a wet floor mirroring both.",
+    "category": "explainer",
+    "method": "look only",
+    "duration_s": null,
+    "ratio": null,
+    "events_per_10s": null,
+    "fits": {
+      "categories": [
+        "explainer",
+        "social",
+        "launch"
+      ],
+      "methods": []
+    },
+    "path": "categories/explainer/paper-lightbox",
+    "poster": "categories/explainer/paper-lightbox/stills/1.jpg",
+    "preview": "categories/explainer/paper-lightbox/stills/1.jpg",
+    "video": null
+  },
+  {
+    "id": "broll-wheel",
+    "kind": "film",
+    "title": "B-roll wheel launch",
+    "summary": "A 90 s keynote-style launch: real-world b-roll under kinetic type, a 'Your [ ]' wheel between chapters, the product's real screens floating over footage, a beat montage at 35 %, One More Thing, dot-to-logo end.",
+    "category": "launch",
+    "method": "broll-under-type",
+    "duration_s": 90,
+    "ratio": "16:9",
+    "events_per_10s": 8.7,
+    "still_share": 0.54,
+    "shots": 27,
+    "needs": {
+      "from_product": [
+        "logo (square tile)",
+        "brand palette (9 roles) and two fonts",
+        "one wide illustration or hero image",
+        "one mascot or object image (square)",
+        "one full app screenshot (1500x844)",
+        "two crops of real site/app cards with their key rows",
+        "one flow diagram (5 stages)",
+        "site copy for ~20 lines"
+      ],
+      "generated": [
+        "one 90 s 120 BPM music track (prompt in project/tools/music.md)"
+      ],
+      "footage": [
+        "9 b-roll clips: stock or generated (slots in project/tools/broll-prompts.md)"
+      ]
+    },
+    "fits": [
+      "software with a real UI and a clear before/after",
+      "brands with an illustration or mascot",
+      "launches that need warmth as well as product"
+    ],
+    "avoid": [
+      "products with no screens to show",
+      "under 30 s (use a cut-down: open, one chapter, montage, end)",
+      "brands that ban real-world imagery"
+    ],
+    "path": "categories/launch/broll-wheel",
+    "poster": "categories/launch/broll-wheel/result/poster.jpg",
+    "preview": "categories/launch/broll-wheel/result/preview.gif",
+    "video": "categories/launch/broll-wheel/result/result.mp4"
+  },
+  {
+    "id": "feature-roster",
+    "kind": "film",
+    "title": "Feature roster",
+    "summary": "A 25-30 s launch film for social feeds, 16:9 and 9:16 from one project: a hook in the product's own words, the product's agents or features as a roster that flies up into a tab bar, one 3 s beat per member with a push into the real screenshot and a colour ring on the proof, then the team gathers on the logo.",
+    "category": "launch",
+    "method": "rebuilt-ui-roster",
+    "duration_s": 26.7,
+    "ratio": [
+      "16:9",
+      "9:16"
+    ],
+    "events_per_10s": 3.0,
+    "still_share": 0.83,
+    "shots": 1,
+    "needs": {
+      "from_product": [
+        "1-3 real screenshots that show every member's work",
+        "a small icon or avatar per member (cut from the screenshots)",
+        "a logo, dark on light",
+        "the product's own copy: a two-line problem, a one-line promise, a tagline, one status line per member"
+      ],
+      "generated": [
+        "one 120 BPM music track, film length (prompt in project/tools/music.md)"
+      ]
+    },
+    "fits": [
+      "AI agents or assistants with named roles",
+      "products with 3-6 distinct features, modules or plans that each have a screen",
+      "feed posts and launch threads that need 16:9 and 9:16"
+    ],
+    "avoid": [
+      "products with no screens to show",
+      "one-feature products (use a single-feature film instead)",
+      "more than 6 members (the tab bar and the length stop working)"
+    ],
+    "path": "categories/launch/feature-roster",
+    "poster": "categories/launch/feature-roster/result/poster.jpg",
+    "preview": "categories/launch/feature-roster/result/preview.gif",
+    "video": "categories/launch/feature-roster/result/result.mp4"
+  },
+  {
+    "id": "metric-sculpture",
+    "kind": "film",
+    "title": "Metric sculpture",
+    "summary": "A 21.6 s narrated launch film that proves one real growth number: the product's own app redrawn as a living screencast where a pixel mascot acts out the work (result, rewind, the request, a 60-day time-lapse), then one whip into a 3D studio where the number is built from falling plates, a hit on the verdict and the logo lockup.",
+    "category": "launch",
+    "method": "screencast-to-data-sculpture",
+    "duration_s": 21.6,
+    "ratio": "16:9",
+    "events_per_10s": 6.9,
+    "still_share": 0.58,
+    "shots": 1,
+    "needs": {
+      "from_product": [
+        "one true metric with a before, an after and a period, and its source",
+        "the real app (screenshots or a demo account) to redraw 1:1: labels, layout, colours",
+        "logo and square mark",
+        "agent or feature names, roles and portraits (2-5)",
+        "one line of what it does and a call to action"
+      ],
+      "generated": [
+        "a new pixel mascot (film.json)",
+        "five voice lines (tools/voice.py)",
+        "one 21 s music track with the hit at 15.0 (tools/music.md)",
+        "foley (tools/sfx.py, no key)"
+      ]
+    },
+    "fits": [
+      "a growth result: views, signups, revenue, leads, saved hours",
+      "AI agents or assistants that did the work from one request",
+      "case-study posts and 'we did X in N days' launches on X, LinkedIn, YouTube"
+    ],
+    "avoid": [
+      "no real number, or one that cannot be sourced",
+      "ratios above 150x at one plate size, or a before of more than 5 plates",
+      "products with no app to show",
+      "vertical-first feeds (16:9 only so far)"
+    ],
+    "path": "categories/launch/metric-sculpture",
+    "poster": "categories/launch/metric-sculpture/result/poster.jpg",
+    "preview": "categories/launch/metric-sculpture/result/preview.gif",
+    "video": "categories/launch/metric-sculpture/result/result.mp4"
+  }
+]

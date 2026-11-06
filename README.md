@@ -10,7 +10,7 @@
 
 ```bash
 npx skills add sonnyproto/video-skills                       # the whole library (the agent picks an entry)
-npx skills add sonnyproto/video-skills/films/launch/broll-wheel   # just one film
+npx skills add sonnyproto/video-skills/categories/launch/broll-wheel   # just one entry
 ```
 
 Then tell your agent:
@@ -28,27 +28,34 @@ or mix them. Others are deep open toolkits, each with its own format, so nothing
 
 video-skills is the flat version of the first, done in the open:
 
-- **One entry = one film.** Each comes with the `result.mp4` it produced, so you choose with your eyes.
+- **One entry = one look and its sample, grouped by category.** Film entries come with the `result.mp4` they produced,
+  look entries with three stills, so you choose with your eyes.
 - **Reproducible.** Every entry ships a complete project that renders its film unchanged, plus the source IDs for stock footage and the prompts for any generated media. No API keys needed.
 - **Same format everywhere.** Every entry has the same files and the same `taste.json` card, so you can compare entries,
-  and agents can combine them ([spec/ENTRY.md](films/spec/ENTRY.md)).
+  and agents can combine them ([spec/ENTRY.md](categories/spec/ENTRY.md)).
 - **Product in one file.** Swapping in your product means editing `film.json` and the assets, never the generator.
 
 ## Library
 
 <!-- CATALOG -->
-| Preview | Entry | Category · method | Length | Events / 10 s |
+| Preview | Entry | Category · method | Sample | Events / 10 s |
 |---|---|---|---|---|
-| <img src="films/explainer/paper-collage/result/preview.gif" width="240"> | [**paper-collage**](films/explainer/paper-collage/) Paper collage | explainer · narrated-paper-collage | 43.8 s 16:9 + 9:16 | 9.8 |
-| <img src="films/launch/broll-wheel/result/preview.gif" width="240"> | [**broll-wheel**](films/launch/broll-wheel/) B-roll wheel launch | launch · broll-under-type | 90 s 16:9 | 8.7 |
-| <img src="films/launch/feature-roster/result/preview.gif" width="240"> | [**feature-roster**](films/launch/feature-roster/) Feature roster | launch · rebuilt-ui-roster | 26.7 s 16:9 + 9:16 | 3.0 |
-| <img src="films/launch/metric-sculpture/result/preview.gif" width="240"> | [**metric-sculpture**](films/launch/metric-sculpture/) Metric sculpture | launch · screencast-to-data-sculpture | 21.6 s 16:9 | 6.9 |
+| <img src="categories/explainer/cut-paper-stop-motion/stills/1.jpg" width="240"> | [**cut-paper-stop-motion**](categories/explainer/cut-paper-stop-motion/) Cut-paper stop-motion | explainer · look only | stills |  |
+| <img src="categories/explainer/flat-cartoon/result/preview.gif" width="240"> | [**flat-cartoon**](categories/explainer/flat-cartoon/) Flat cartoon | explainer · generated-cartoon-shots | 24.1 s 16:9 | 9.1 |
+| <img src="categories/explainer/lowpoly-sim/stills/1.jpg" width="240"> | [**lowpoly-sim**](categories/explainer/lowpoly-sim/) Low-poly simulation | explainer · look only | stills | 9.0 |
+| <img src="categories/explainer/paper-collage/result/preview.gif" width="240"> | [**paper-collage**](categories/explainer/paper-collage/) Paper collage | explainer · narrated-paper-collage | 43.8 s 16:9 + 9:16 | 9.8 |
+| <img src="categories/explainer/paper-lightbox/stills/1.jpg" width="240"> | [**paper-lightbox**](categories/explainer/paper-lightbox/) Paper lightbox | explainer · look only | stills |  |
+| <img src="categories/launch/broll-wheel/result/preview.gif" width="240"> | [**broll-wheel**](categories/launch/broll-wheel/) B-roll wheel launch | launch · broll-under-type | 90 s 16:9 | 8.7 |
+| <img src="categories/launch/feature-roster/result/preview.gif" width="240"> | [**feature-roster**](categories/launch/feature-roster/) Feature roster | launch · rebuilt-ui-roster | 26.7 s 16:9 + 9:16 | 3.0 |
+| <img src="categories/launch/metric-sculpture/result/preview.gif" width="240"> | [**metric-sculpture**](categories/launch/metric-sculpture/) Metric sculpture | launch · screencast-to-data-sculpture | 21.6 s 16:9 | 6.9 |
 <!-- /CATALOG -->
 
 ## How an entry is built
 
+A film entry:
+
 ```
-<category>/<id>/
+categories/<category>/<id>/
 ├── SKILL.md       load this and make the film
 ├── taste.json     the card: requirements, seven layers, specs, metrics, what it needs, what it fits
 ├── references/    floor.md (shared rules), sourcing.md (launch, explainer: real material), RECIPE.md (shot by shot), SWAP.md (your product in), REFERENCE.md
@@ -56,6 +63,9 @@ video-skills is the flat version of the first, done in the open:
 ├── result/        result.mp4, poster, contact sheet, preview, metrics.json
 └── project/       a renderable project: film.json, tools/, assets/
 ```
+
+A look entry is `SKILL.md`, `style.json` (palette, type, texture, light, consistency, motion, pace), `STYLE.md` (how each
+element is made) and `stills/` ([spec/STYLE.md](categories/spec/STYLE.md)). A film entry can carry a look too.
 
 Every entry is placed on the same seven layers:
 
@@ -72,25 +82,24 @@ Every entry is placed on the same seven layers:
 Different layers never conflict. On the same layer: floor > category > method > moves > craft > style.
 
 Each entry is self-contained: our shared files (the floor rules, the measuring scripts) are copied into it, external tools
-(HyperFrames, ffmpeg) are declared in `taste.json` `requires`, and taste is never shared. See [spec/ENTRY.md](films/spec/ENTRY.md).
+(HyperFrames, ffmpeg) are declared in `taste.json` `requires`, and taste is never shared. See [spec/ENTRY.md](categories/spec/ENTRY.md).
 
 ## Tools
 
 | | |
 |---|---|
-| `films/tools/floor.md` | the shared floor rules (copied into every entry's `references/`) |
-| `films/launch/sourcing.md` | how launch films collect the product's real screens, logo and copy (copied into every launch entry's `references/`) |
-| `films/tools/validate.py` | checks every entry against the format, and that its copies of the shared files match `films/tools/` |
-| `films/tools/catalog.py` | rebuilds `films/catalog.json` and the table above |
-| `films/tools/analyze.py <video> <out>` | cuts, shots, contact sheet, LUFS, true peak, BPM, cuts on the beat |
-| `films/tools/events.py <video> <out>` | visual change events per 10 s and still share |
+| `categories/tools/floor.md` | the shared floor rules (copied into every entry's `references/`) |
+| `categories/launch/sourcing.md` | how launch films collect the product's real screens, logo and copy (copied into every launch entry's `references/`) |
+| `categories/tools/validate.py` | checks every entry against the format, and that its copies of the shared files match `categories/tools/` |
+| `categories/tools/catalog.py` | rebuilds `categories/catalog.json` and the table above |
+| `categories/tools/analyze.py <video> <out>` | cuts, shots, contact sheet, LUFS, true peak, BPM, cuts on the beat |
+| `categories/tools/events.py <video> <out>` | visual change events per 10 s and still share |
 
-## Four shelves
+## Three shelves
 
 | Folder | What | Licence |
 |---|---|---|
-| [films/](films/) | whole films, one entry per film (the library above) | MIT; result films CC BY 4.0 |
-| [styles/](styles/) | looks (palette, type, texture, light, motion feel), one folder per style with three stills; any film can take any style that fits | MIT; stills CC BY 4.0 |
+| [categories/](categories/) | the library above: one folder per category, one entry per film or look, each with its sample | MIT; result films and stills CC BY 4.0 |
 | [moves/](moves/) | single shots (a crash zoom, a price slam, a logo lockup), one folder per move, found by tags | Apache-2.0 |
 | [workflows/](workflows/) | how to make a film step by step, with a pass mark per step (voice then music, scene from references, style from reference, porting) | MIT |
 
