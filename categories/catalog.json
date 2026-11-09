@@ -26,36 +26,35 @@
     "id": "flat-cartoon",
     "kind": "film",
     "title": "Flat cartoon",
-    "summary": "A 24 s narrated idea explainer in a flat-vector cartoon look: one original character acts out four beats in two generated Seedance clips, one narration line per shot, captions always on.",
+    "summary": "A 10 s science explainer sample in a flat-vector cartoon look: generated scenery plates in three depths under a code-drawn key light, sky, labels and an original character rig that acts out the consequence.",
     "category": "explainer",
-    "method": "generated-cartoon-shots",
-    "duration_s": 24.1,
+    "method": "code-rig-over-generated-plates",
+    "duration_s": 10.0,
     "ratio": [
       "16:9"
     ],
-    "events_per_10s": 9.1,
-    "still_share": 0.52,
-    "shots": 4,
+    "events_per_10s": 2.0,
+    "still_share": 0.86,
+    "shots": 2,
     "needs": {
       "from_story": [
-        "one idea that a character can act out in four shots",
-        "four approved narration lines before anything is generated"
+        "one question, one event and one consequence a character can react to",
+        "every number with a source, approved before anything is generated"
       ],
       "generated": [
-        "one character still (tools/seedream.py)",
-        "two 12 s clips (tools/seedance.py)",
-        "four narration lines (tools/voice.py)"
+        "three transparent scenery plates per ground scene (tools/layers.md)",
+        "the sound (tools/sound.py, no key)"
       ]
     },
     "fits": [
-      "short explainers of an idea, a mechanism or a trade-off",
-      "a brand's point of view told without real people",
-      "feed posts under 30 s"
+      "science and what-if explainers built on one fact or scale",
+      "intros and social posts under 30 s",
+      "series that need the same character and light in every episode"
     ],
     "avoid": [
       "true stories about real people or events (use paper-collage)",
       "product launches that need real screens",
-      "anything where text must appear inside the picture"
+      "long narrated scripts (this sample has no narration yet)"
     ],
     "path": "categories/explainer/flat-cartoon",
     "poster": "categories/explainer/flat-cartoon/result/poster.jpg",

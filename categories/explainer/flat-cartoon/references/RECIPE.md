@@ -1,37 +1,27 @@
 # Recipe
 
-A 24 s idea explainer: one claim, four beats, a cartoon character acting each beat out. Everything you see is generated;
-the craft is in the order of the beats, one narration line per shot, and captions that change where the voice pauses.
+The film, beat by beat. The shape is what you keep; the story is what you swap (`SWAP.md`).
 
-## Beat by beat
+| Time | Scene | What happens | Move | Sound |
+|---|---|---|---|---|
+| 0.0 | space | The question is already on screen (frame 0 is the thumbnail). Key light left, planet right, moon, nebula | title settles 1.04 → 1; camera push 1 → 1.06 over the shot | pad |
+| 1.0 | space | Labels pop: star, planet | label pop, 0.1 s stagger | |
+| 1.6 | space | A dashed line draws from light to planet; the distance label pops | scaleX 0 → 1, 0.6 s | |
+| 2.75 | space | The event: the light swells (anticipation) | scale 1 → 1.12, 0.4 s | riser |
+| 3.15 | space | ...and collapses; halos, rays and dust fade; flash bloom at 3.45 | back.in(2.2), 0.3 s | thump, crack |
+| 3.5 | space | The twist: the planet stays lit. A glowing front keeps travelling along the line with the travel-time label | linear, 1.9 s | shimmer |
+| 5.4 | ground | Hard cut to a dusk hilltop: three generated plates, code sky, low key light, character watching it | parallax plates, camera push 1 → 1.08 | pad, warmer |
+| 5.6 | ground | Caption line 1 | fade-up 0.6 s | |
+| 6.9 | ground | The light goes out: glow shrinks, sky crossfades to night, plates darken far-first, warm rims die, cool rim appears, stars and nebula come in | 0.8-1.6 s eases, staggered | wind |
+| 7.15 | ground | Caption line 2 | fade-up 0.45 s | |
+| 7.4 | ground | The character's take: squash, stretch, head up, brows up, mouth O, arms out (left first) | elastic settle | pop |
+| 8.6 | ground | The consequence, without words: frost sparkles on the ground, two breath puffs, a shiver, arms in | back.out pops, 0.05 s shiver | tinkles, breath |
+| 9.5-10 | ground | Hold the reaction; one blink | | |
 
-| Time | Shot | Line (example) | What the shot shows |
-|---|---|---|---|
-| 0-6 | 1 | A math problem has a right answer. An AI can try a million times and learn from every miss. | the character at a chalkboard; every attempt gets a check or a cross |
-| 6-12 | 2 | But a painting? There's no answer key. Score it an 8, and it still doesn't know what to fix. | the character paints; judges hold up identical scores; it looks lost |
-| 12-18 | 3 | So it piles on every pretty trick it knows. Nothing wrong with it. Nothing you'd watch twice. | the canvas buried in glitter and ribbons; the audience yawns |
-| 18-24 | 4 | AI makes making things cheap. What's scarce now is knowing what to keep, and what to throw away. | a machine prints hundreds of cards; one hand keeps one; the rest dissolve |
+## Known weak point
 
-The shape: **easy case → hard case → what goes wrong → what that means for you.** Shot 1 sets up a rule the viewer
-can see (a check mark), shot 2 breaks it, shot 3 shows the result as a joke, shot 4 lands on a person.
-
-## Rules this film keeps
-
-- One line of narration per shot, 15-17 words, read in 5-6 s. The line starts 0.3 s into its shot.
-- Two shots per generated clip, cut in the middle of the clip, so a 24 s film needs two generations.
-- Captions always on, one sentence at a time, switching where the narration pauses (`tools/voice.py` prints the pauses).
-- The clips' own sound sits at 28 % under the voice. No music: the clip sound carries the gaps.
-- -14 LUFS target, true peak under -1.5 dBTP (`tools/build.py` normalises the mix).
-
-## What the example got wrong (fix it in your film)
-
-The example's script was rejected by the person it was made for. Keep the structure; write the words better:
-
-- **Every "so" must be a real cause.** Line 3 says "so it piles on" right after "it doesn't know what to fix". That
-  is not why it piles on. Say the actual mechanism in plain words.
-- **No clipped triples or slogans.** "Nothing wrong with it. Nothing you'd watch twice." and "AI makes making things
-  cheap" are filler that sounds clever. A ten-year-old should understand every line on first hearing.
-- **Open with a question or a contrast the viewer cares about**, not a flat statement ("AI keeps getting better at
-  math and code. But not at writing. Why?").
-- **End on something the viewer can do**, not on a general truth.
-- **Show the script before spending.** Generation cannot be cancelled once it runs; get the words approved first.
+The generated plates are lit by a warm sunset from the left. After the light goes out the plates are darkened by filter,
+but their baked warm rim (the big tree's orange edge) is still faintly visible. Fix for the next film: generate a night
+version of each plate from the day plate as reference ("same scene, same composition, no warm light, cool moonlight from
+the right") and crossfade it in at 6.9 s. The character rig is also plainer than the plates; give it more shadow shapes
+(cloth folds, hair highlight) before a long film.

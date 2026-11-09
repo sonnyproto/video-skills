@@ -1,87 +1,50 @@
 {
   "name": "flat-cartoon",
   "title": "Flat cartoon",
-  "summary": "Flat-vector cartoon scenes with saturated dusk and night colour, rim light and glow, and one round original character carried through every shot by a single reference still.",
+  "summary": "Flat-vector science explainer look: deep violet grounds, one glowing key light, four-layer cel shading with rim light and grain, generated scenery plates under a code-drawn, code-animated character and light.",
   "look": {
-    "ground": "generated scenes: a violet study, a coral-sunset room, a teal starry night; never a plain backdrop",
+    "ground": "vertical violet gradients (space, dusk, night); never black",
     "palette": [
-      {
-        "role": "violet",
-        "hex": "#7f5ba4",
-        "where": "night interiors, skies"
-      },
-      {
-        "role": "coral",
-        "hex": "#d97a75",
-        "where": "dusk light, warm scenes"
-      },
-      {
-        "role": "cream",
-        "hex": "#faeacd",
-        "where": "sunlit windows, highlights"
-      },
-      {
-        "role": "teal-night",
-        "hex": "#103a44",
-        "where": "night scenes, the closing shot"
-      },
-      {
-        "role": "glow",
-        "hex": "#81d1d1",
-        "where": "glowing objects at night"
-      },
-      {
-        "role": "character",
-        "hex": "#5fd6b4",
-        "where": "the hero character only"
-      },
-      {
-        "role": "text",
-        "hex": "#fbf6f2",
-        "where": "captions on a rgba(18,10,28,.62) box"
-      }
+      { "role": "ground-deep", "hex": "#0a0628", "where": "top of every sky, darkest colour" },
+      { "role": "ground-mid", "hex": "#1d1160", "where": "mid sky" },
+      { "role": "ground-glow", "hex": "#5a2177", "where": "horizon, nebula" },
+      { "role": "key-light", "hex": "#ffd84a", "where": "the light source, title accent" },
+      { "role": "hot", "hex": "#fff6d6", "where": "light core, highlights" },
+      { "role": "ember", "hex": "#ff7a45", "where": "dusk, warm rims" },
+      { "role": "rose", "hex": "#f0476a", "where": "labels, emphasis" },
+      { "role": "mint", "hex": "#2fc0ae", "where": "the character" },
+      { "role": "violet", "hex": "#a26cf0", "where": "secondary labels" },
+      { "role": "cool-rim", "hex": "#9ab8ff", "where": "night rim light" },
+      { "role": "text", "hex": "#f7f3ff", "where": "titles, captions" }
     ],
-    "type": "Inter 700 30 px captions at 1280×720, one sentence at a time, on a dark rounded box at the bottom; no text inside the picture",
-    "texture": "flat fills with soft gradients and a little grain; no outlines",
-    "light": "a strong rim light on every object, soft glow and bloom on light sources, dusk or night",
-    "materials": "flat vector shapes, matte, layered in depth"
+    "type": "Montserrat 800 titles and captions; Nunito 800 in pill labels",
+    "texture": "animated film grain at 6 %, violet vignette",
+    "light": "one key light per scene, usually in frame; low and from the left in the example; soft blurred halos and ray wedges",
+    "materials": "flat cel shading: base, shadow crescent shifted away from the light, blurred highlight, warm rim; no outlines"
   },
-  "consistency": "one reference still (made with Seedream 4.0) passed to every Seedance generation as --reference-image; the same style block opens every prompt",
+  "consistency": "the character is one SVG rig reused in every shot; scenery plates are generated per depth with one shared style block and the same light direction; light, sky and stars are code so they match across plates",
   "motion": {
-    "feel": "bouncy, elastic character acting; whatever the video model animates",
+    "feel": "slow continuous camera drift with elastic pops for new information",
     "moves": [
-      "two shots per 12 s clip with a hard cut at 6 s",
-      "the closing shot ends on a slow push in"
+      "camera push: scale 1 → 1.06-1.08 over the shot, sine.inOut",
+      "label pop: scale 0 → 1 in 0.42 s, back.out(1.8), 0.1 s stagger",
+      "event: anticipation swell 1 → 1.12 in 0.4 s, collapse to 0 in 0.3 s back.in(2.2), flash bloom",
+      "character take: squash 0.95 → stretch 1.05 → elastic.out settle, head leads by 0.06 s",
+      "parallax: far +16 px, mid +6 px, near -8 px, foreground -40 px over the shot"
     ]
   },
-  "pace": {
-    "avg_shot_s": 6.0,
-    "events_per_10s": 9.1,
-    "text": "one caption per sentence of narration, switching at the voice's pauses; captions always on"
-  },
+  "pace": { "avg_shot_s": 5.0, "events_per_10s": 2.0, "text": "a new element every 1-3 s inside each shot; labels ≥ 0.8 s, captions held to the end of the shot" },
   "banned": [
-    "a character, logo or look taken from an existing channel",
-    "text, numbers or formulas written by the video model",
-    "code-drawn vector art in place of illustration",
-    "photoreal textures"
+    "pure black, neutral grey, black outlines",
+    "hard-edged concentric glow rings",
+    "rectangular darkening overlays",
+    "characters or text inside generated plates",
+    "warm baked rim light after the light goes out",
+    "characters, logos or looks taken from an existing channel"
   ],
-  "fits": {
-    "categories": [
-      "explainer",
-      "social"
-    ],
-    "methods": [
-      "generated-cartoon-shots"
-    ]
-  },
-  "made_with": {
-    "renderer": "hyperframes@0.8.229",
-    "generators": [
-      "Seedream 4.0 (BytePlus) character still",
-      "Seedance 2.0 (BytePlus) 12 s clips at 720p with sound"
-    ]
-  },
+  "fits": { "categories": ["explainer", "social"], "methods": ["code-rig-over-generated-plates"] },
+  "made_with": { "renderer": "hyperframes@0.9.23", "generators": ["GPT Image 2.6 (Higgsfield), three transparent 16:9 plates, prompts in project/tools/layers.md", "tools/sound.py (synthesised sound)"] },
   "worked_example": "categories/explainer/flat-cartoon",
-  "source": "original, after flat-vector science channels in general",
+  "source": "studied from the general look of flat-vector science channels (frames analysed, none used)",
   "licence": "MIT; stills CC BY 4.0"
 }

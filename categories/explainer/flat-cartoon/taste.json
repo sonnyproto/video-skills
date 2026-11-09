@@ -1,63 +1,63 @@
 {
   "id": "flat-cartoon",
   "title": "Flat cartoon",
-  "summary": "A 24 s narrated idea explainer in a flat-vector cartoon look: one original character acts out four beats in two generated Seedance clips, one narration line per shot, captions always on.",
-  "version": "0.1.0",
+  "summary": "A 10 s science explainer sample in a flat-vector cartoon look: generated scenery plates in three depths under a code-drawn key light, sky, labels and an original character rig that acts out the consequence.",
+  "version": "0.2.0",
   "requires": {
-    "renderer": "hyperframes@0.8.229",
+    "renderer": "hyperframes@0.9.23",
     "skills": ["hyperframes", "hyperframes-cli"],
     "bins": ["node>=20", "ffmpeg", "python3"],
     "optional": {
-      "BYTEPLUS_API_KEY (Seedream 4.0 and Seedance 2.0)": "a new character still and new clips",
-      "FAL_KEY (ElevenLabs via fal)": "new narration lines"
+      "OPENAI_API_KEY (GPT Image via the OpenAI API; the example used GPT Image 2.6 through the Higgsfield MCP)": "new transparent scenery plates"
     }
   },
   "layers": {
     "floor": "references/floor.md",
     "category": "explainer",
-    "method": "generated-cartoon-shots",
-    "moves": ["captions"],
+    "method": "code-rig-over-generated-plates",
+    "moves": ["label-pop", "light-collapse", "parallax-plates", "character-take", "travelling-light"],
     "craft": [
-      "four beats: easy case, hard case, what goes wrong, what it means for you",
-      "one narration line per shot, 15-17 plain words",
-      "captions switch at the narration's pauses",
-      "two shots per generated clip, one reference still for the character",
-      "clip sound as the bed under the voice",
+      "frame 0 already shows the question",
+      "a new element every 1-3 s; the camera never stops",
+      "one key light per scene decides every shadow and rim",
+      "every code object has base, shadow, highlight and rim",
+      "the consequence is felt by a character, not written",
+      "every number on screen has a source in film.json",
       "-14 LUFS, true peak under -1 dBTP"
     ],
     "style": {
-      "ground": "dark violet, coral dusk and teal night scenes, generated",
-      "type": "Inter 700 captions on a dark rounded box",
-      "accent": "mint-green character against violet and coral",
+      "ground": "violet space, dusk and night gradients drawn in code",
+      "type": "Montserrat 800 titles and captions, Nunito 800 pill labels",
+      "accent": "key-light gold and rose labels against violet; mint character",
       "banned": [
-        "characters, logos or looks taken from an existing channel",
-        "text written by the video model",
-        "code-drawn vector art standing in for illustration"
+        "pure black, grey or black outlines",
+        "hard-edged glow rings",
+        "characters or text in generated plates",
+        "characters, logos or looks taken from an existing channel"
       ],
-      "motion": "whatever the generated shots do; the edit is two hard cuts inside clips and one between them"
+      "motion": "slow camera drift, elastic pops for information, squash-stretch acting"
     },
     "tool": {
-      "renderer": "hyperframes@0.8.229",
+      "renderer": "hyperframes@0.9.23",
       "generators": [
-        "Seedream 4.0 (BytePlus) character still",
-        "Seedance 2.0 (BytePlus) two 12 s clips, 720p, with sound, the still as reference image",
-        "ElevenLabs multilingual v2 narration via fal, one file per line"
+        "GPT Image 2.6 via Higgsfield: three transparent 16:9 scenery plates (far, mid, near), high quality, 2k",
+        "tools/sound.py: synthesised sound, mastered with ffmpeg loudnorm"
       ],
-      "assets": "tools/build.py mixes the sound and writes index.html from film.json"
+      "assets": "tools/build.py fills tools/templates/ from film.json and writes index.html and compositions/"
     }
   },
   "spec": {
-    "duration_s": 24.1,
+    "duration_s": 10.0,
     "ratio": ["16:9"],
-    "size": [1280, 720],
+    "size": [1920, 1080],
     "fps": 30,
-    "scenes": 4,
-    "narration_words": 66,
+    "scenes": 2,
+    "narration_words": 0,
     "loudness_lufs": -14
   },
   "reference": {
     "name": "flat-vector science channels in general; no single film",
-    "metrics": {},
+    "metrics": { "avg_hard_cut_interval_s": "8-15", "new_element_every_s": "2-3" },
     "see": "references/REFERENCE.md"
   },
   "result": {
@@ -66,40 +66,40 @@
     "sheet": "result/sheet.jpg",
     "preview": "result/preview.gif",
     "metrics": "result/metrics.json",
-    "example_story": "why AI improves faster at math than at taste (a draft; its script is a known weak point, see RECIPE.md)"
+    "example_story": "what if the Sun disappeared: Earth stays lit for 8 min 20 s, then the lights go out"
   },
   "needs": {
     "from_story": [
-      "one idea that a character can act out in four shots",
-      "four approved narration lines before anything is generated"
+      "one question, one event and one consequence a character can react to",
+      "every number with a source, approved before anything is generated"
     ],
     "generated": [
-      "one character still (tools/seedream.py)",
-      "two 12 s clips (tools/seedance.py)",
-      "four narration lines (tools/voice.py)"
+      "three transparent scenery plates per ground scene (tools/layers.md)",
+      "the sound (tools/sound.py, no key)"
     ]
   },
   "fits": [
-    "short explainers of an idea, a mechanism or a trade-off",
-    "a brand's point of view told without real people",
-    "feed posts under 30 s"
+    "science and what-if explainers built on one fact or scale",
+    "intros and social posts under 30 s",
+    "series that need the same character and light in every episode"
   ],
   "avoid": [
     "true stories about real people or events (use paper-collage)",
     "product launches that need real screens",
-    "anything where text must appear inside the picture"
+    "long narrated scripts (this sample has no narration yet)"
   ],
   "combines_with": [],
   "conflicts_with": [],
   "cost": {
     "stock_clips": 0,
-    "generated_clips": 2,
+    "generated_clips": 0,
+    "generated_images": 3,
     "music_tracks": 0,
     "render_minutes": 1
   },
   "licence": {
     "code": "MIT",
     "result_and_generated_media": "CC BY 4.0",
-    "fonts": "Inter: SIL Open Font License 1.1"
+    "fonts": "Montserrat, Nunito: SIL Open Font License 1.1"
   }
 }

@@ -1,20 +1,58 @@
 {
-  "title": "Why AI is better at math than at taste",
-  "size": [1280, 720],
-  "footage": [
-    { "src": "assets/footage/pair-1.mp4", "start": 0, "length": 12.064 },
-    { "src": "assets/footage/pair-2.mp4", "start": 12.064, "length": 12.064 }
+  "title": "What if the Sun disappeared?",
+  "note": "Everything that is the story lives here. Timing, eases, light and the character rig live in tools/templates/ and never change for a new story.",
+  "copy": {
+    "title_before": "What if the ",
+    "title_accent": "Sun",
+    "title_after": " disappeared?",
+    "label_star": "Sun",
+    "label_planet": "Earth",
+    "label_distance": "150,000,000 km",
+    "label_travel": "8 min 20 s away",
+    "caption_1": "8 minutes and 20 seconds later…",
+    "caption_2": "the lights go out."
+  },
+  "sources": {
+    "150,000,000 km: 1 au = 149,597,870,700 m, fixed by IAU 2012 Resolution B2": "https://en.wikipedia.org/wiki/Astronomical_unit",
+    "8 min 20 s: 149,597,870,700 m / 299,792,458 m/s (c, SI definition) = 499 s = 8 min 19 s, rounded": "https://www.bipm.org/en/publications/si-brochure"
+  },
+  "palette": {
+    "title_accent": "#ffd84a",
+    "label_a": "#e0531c",
+    "label_b": "#2f8fe6",
+    "label_c": "#a26cf0",
+    "label_d": "#f0476a",
+    "character_main": "#2fc0ae",
+    "character_shadow": "#1f7f95"
+  },
+  "images": {
+    "far": {
+      "src": "assets/bg/far.png",
+      "made_with": "GPT Image 2.6 via Higgsfield, prompt in tools/layers.md"
+    },
+    "mid": {
+      "src": "assets/bg/mid.png",
+      "made_with": "GPT Image 2.6 via Higgsfield, prompt in tools/layers.md"
+    },
+    "near": {
+      "src": "assets/bg/near.png",
+      "made_with": "GPT Image 2.6 via Higgsfield, prompt in tools/layers.md"
+    }
+  },
+  "scenes": [
+    {
+      "id": "space",
+      "template": "space.html",
+      "duration": 5.4
+    },
+    {
+      "id": "ground",
+      "template": "ground.html",
+      "duration": 4.6
+    }
   ],
-  "lines": [
-    { "vo": "assets/audio/line-1.mp3", "at": 0.3,
-      "captions": [ ["A math problem has a right answer.", 0.0], ["An AI can try a million times and learn from every miss.", 2.15] ] },
-    { "vo": "assets/audio/line-2.mp3", "at": 6.3,
-      "captions": [ ["But a painting? There's no answer key.", 0.0], ["Score it an 8, and it still doesn't know what to fix.", 2.6] ] },
-    { "vo": "assets/audio/line-3.mp3", "at": 12.0,
-      "captions": [ ["So it piles on every pretty trick it knows.", 0.0], ["Nothing wrong with it. Nothing you'd watch twice.", 2.95] ] },
-    { "vo": "assets/audio/line-4.mp3", "at": 17.95,
-      "captions": [ ["AI makes making things cheap.", 0.0], ["What's scarce now is knowing what to keep, and what to throw away.", 2.1] ] }
-  ],
-  "audio": { "bed_volume": 0.28, "length": 24.1, "fade_out": 0.6 },
-  "caption_style": { "font": "Inter", "weight": 700, "size": 30, "text": "#fbf6f2", "box": "rgba(18,10,28,.62)", "bottom": 54, "side": 60 }
+  "sound": {
+    "src": "assets/audio/sound.mp3",
+    "made_with": "tools/sound.py (synthesised, no samples), mastered to -14 LUFS"
+  }
 }

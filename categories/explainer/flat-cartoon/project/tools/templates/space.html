@@ -1,0 +1,230 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; background: #0a0628; font-family: "Montserrat", sans-serif; }
+    #a-cam { position: absolute; inset: 0; }
+    #a-svg, #a-fx { position: absolute; inset: 0; width: 100%; height: 100%; }
+    #a-fx { pointer-events: none; }
+    #a-title {
+      position: absolute; left: 0; right: 0; top: 96px; text-align: center;
+      color: #f7f3ff; font-weight: 800; font-size: 66px; letter-spacing: -0.01em;
+      text-shadow: 0 6px 30px rgba(10, 6, 40, 0.7);
+    }
+    #a-title span { color: {{palette.title_accent}}; }
+    .a-pill {
+      position: absolute; padding: 10px 22px; border-radius: 999px;
+      font-family: "Nunito", sans-serif; font-weight: 800; font-size: 34px; color: #fff;
+      box-shadow: 0 8px 24px rgba(10, 6, 40, 0.45); white-space: nowrap;
+    }
+    #a-pSun { left: 262px; top: 760px; background: {{palette.label_a}}; }
+    #a-pEarth { left: 1284px; top: 772px; background: {{palette.label_b}}; }
+    #a-pDist { left: 700px; top: 470px; background: {{palette.label_c}}; font-size: 30px; }
+    #a-pLight { left: 520px; top: 590px; background: {{palette.label_d}}; font-size: 32px; }
+  </style>
+  <div id="root" data-composition-id="space" data-width="1920" data-height="1080">
+    <div id="a-cam">
+      <svg id="a-svg" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="a-bg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#0a0628" />
+            <stop offset="0.55" stop-color="#1d1160" />
+            <stop offset="1" stop-color="#5a2177" />
+          </linearGradient>
+          <radialGradient id="a-suncore" cx="45%" cy="42%" r="60%">
+            <stop offset="0" stop-color="#fff6d6" />
+            <stop offset="0.5" stop-color="#ffd84a" />
+            <stop offset="1" stop-color="#ff9a3c" />
+          </radialGradient>
+          <radialGradient id="a-ray" cx="0" cy="0.5" r="1">
+            <stop offset="0" stop-color="#ffe9a0" stop-opacity="0.55" />
+            <stop offset="1" stop-color="#ffb347" stop-opacity="0" />
+          </radialGradient>
+          <filter id="a-b80" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="80" /></filter>
+          <filter id="a-b40" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="40" /></filter>
+          <filter id="a-b14" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14" /></filter>
+          <filter id="a-b5" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5" /></filter>
+          <filter id="a-b2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2" /></filter>
+          <clipPath id="a-ec"><circle cx="0" cy="0" r="190" /></clipPath>
+          <clipPath id="a-mc"><circle cx="0" cy="0" r="40" /></clipPath>
+        </defs>
+
+        <rect width="1920" height="1080" fill="url(#a-bg)" />
+        <!-- nebula -->
+        <g id="a-neb" opacity="0.5">
+          <ellipse cx="1500" cy="880" rx="420" ry="160" fill="#a2318f" filter="url(#a-b80)" opacity="0.55" />
+          <ellipse cx="1100" cy="180" rx="380" ry="120" fill="#3b2aa8" filter="url(#a-b80)" opacity="0.6" />
+          <ellipse cx="300" cy="960" rx="360" ry="140" fill="#7a2a86" filter="url(#a-b80)" opacity="0.5" />
+        </g>
+        <g id="a-stars"></g>
+        <g id="a-sparks"></g>
+
+        <!-- SUN: key light -->
+        <g transform="translate(330 520)">
+          <g id="a-sunall">
+            <g id="a-rays" opacity="0.8">
+              <path d="M0 -30 L900 -150 L900 120 L0 30 Z" fill="url(#a-ray)" filter="url(#a-b14)" />
+              <path d="M0 -30 L760 -420 L860 -300 L0 30 Z" fill="url(#a-ray)" filter="url(#a-b14)" opacity="0.7" />
+              <path d="M0 -30 L860 300 L760 430 L0 30 Z" fill="url(#a-ray)" filter="url(#a-b14)" opacity="0.7" />
+              <path d="M0 -30 L-300 -900 L-120 -900 L0 30 Z" fill="url(#a-ray)" filter="url(#a-b14)" opacity="0.5" />
+              <path d="M0 -30 L-120 900 L-300 900 L0 30 Z" fill="url(#a-ray)" filter="url(#a-b14)" opacity="0.5" />
+            </g>
+            <circle id="a-glow3" r="430" fill="#ff7a45" opacity="0.28" filter="url(#a-b80)" />
+            <circle id="a-glow2" r="260" fill="#ffb347" opacity="0.55" filter="url(#a-b40)" />
+            <g id="a-core">
+              <circle r="160" fill="#ffd84a" opacity="0.9" filter="url(#a-b14)" />
+              <circle r="150" fill="url(#a-suncore)" />
+              <circle r="150" fill="none" stroke="#fff6d6" stroke-width="4" opacity="0.6" filter="url(#a-b2)" />
+              <ellipse cx="-44" cy="-50" rx="62" ry="44" fill="#fffbe9" opacity="0.5" filter="url(#a-b14)" />
+            </g>
+          </g>
+          <circle id="a-flash" r="220" fill="#fff6d6" opacity="0" filter="url(#a-b40)" />
+          <g id="a-dust"></g>
+        </g>
+
+        <!-- light path -->
+        <g transform="translate(520 540)">
+          <g id="a-path">
+            <line x1="0" y1="0" x2="610" y2="0" stroke="#f7f3ff" stroke-width="4" stroke-dasharray="4 16" stroke-linecap="round" opacity="0.7" />
+            <circle cx="610" cy="0" r="7" fill="#f7f3ff" opacity="0.8" />
+          </g>
+          <g id="a-front" opacity="0">
+            <ellipse rx="70" ry="16" fill="#ffd84a" opacity="0.7" filter="url(#a-b14)" />
+            <ellipse rx="26" ry="6" fill="#fff6d6" />
+          </g>
+        </g>
+
+        <!-- EARTH: base / shadow crescent / highlight / rim -->
+        <g transform="translate(1350 540)">
+          <g id="a-earth">
+            <circle r="236" fill="#6fe3ff" opacity="0.18" filter="url(#a-b40)" />
+            <circle r="190" fill="#2f8fe6" />
+            <g clip-path="url(#a-ec)">
+              <g id="a-land">
+                <path d="M-170 -90 C-140 -150 -60 -160 -30 -120 C0 -80 -40 -40 -10 0 C20 40 -20 90 -70 80 C-120 70 -110 20 -150 0 C-190 -20 -195 -50 -170 -90 Z" fill="#49c27a" />
+                <path d="M-165 -88 C-140 -140 -70 -150 -44 -118 C-80 -128 -130 -118 -158 -70 Z" fill="#8ff0a6" opacity="0.7" />
+                <path d="M40 -170 C90 -190 150 -150 140 -100 C130 -60 80 -70 60 -30 C40 10 10 -20 20 -70 C25 -110 0 -150 40 -170 Z" fill="#49c27a" />
+                <path d="M60 60 C110 30 190 60 180 120 C170 170 100 190 70 160 C40 130 20 90 60 60 Z" fill="#49c27a" />
+                <path d="M-330 -60 C-300 -110 -240 -90 -250 -40 C-260 0 -310 10 -330 -60 Z" fill="#49c27a" />
+                <path d="M-120 110 C-90 90 -40 110 -50 140 C-60 170 -110 165 -120 110 Z" fill="#f2f6ff" opacity="0.9" />
+              </g>
+              <g id="a-clouds" fill="#f7f3ff" opacity="0.9">
+                <rect x="-210" y="-150" width="130" height="28" rx="14" />
+                <rect x="-50" y="24" width="160" height="26" rx="13" />
+                <rect x="-170" y="60" width="96" height="22" rx="11" />
+                <rect x="40" y="-66" width="100" height="22" rx="11" />
+                <rect x="-440" y="10" width="130" height="26" rx="13" />
+              </g>
+              <!-- highlight (toward sun, up-left) -->
+              <circle cx="-120" cy="-90" r="150" fill="#bff1ff" opacity="0.22" filter="url(#a-b40)" />
+              <!-- shadow crescent: same circle shifted away from the light -->
+              <circle id="a-eshadow" cx="175" cy="60" r="190" fill="#1a1a7a" opacity="0.72" />
+              <circle cx="235" cy="85" r="180" fill="#0d0a40" opacity="0.5" />
+            </g>
+            <!-- rim light on the sun side -->
+            <path id="a-erim" d="M-40 -186 A190 190 0 0 0 -60 180" fill="none" stroke="#fff1b0" stroke-width="7" stroke-linecap="round" filter="url(#a-b2)" />
+            <path d="M-40 -186 A190 190 0 0 0 -60 180" fill="none" stroke="#ffd84a" stroke-width="18" opacity="0.35" filter="url(#a-b5)" id="a-erim2" />
+            <circle r="196" fill="none" stroke="#6fe3ff" stroke-width="5" opacity="0.45" filter="url(#a-b2)" />
+          </g>
+        </g>
+
+        <!-- MOON -->
+        <g id="a-moon">
+          <g transform="translate(1720 300)">
+            <circle r="40" fill="#d9d2f2" />
+            <g clip-path="url(#a-mc)">
+              <circle cx="-10" cy="-8" r="8" fill="#b8addf" />
+              <circle cx="12" cy="12" r="6" fill="#b8addf" />
+              <circle cx="20" cy="8" r="40" fill="#5f4fa8" opacity="0.75" />
+            </g>
+            <path d="M-12 -38 A40 40 0 0 0 -20 34" fill="none" stroke="#fff1b0" stroke-width="3" opacity="0.8" />
+          </g>
+        </g>
+      </svg>
+      <div id="a-pSun" class="a-pill">{{copy.label_star}}</div>
+      <div id="a-pEarth" class="a-pill">{{copy.label_planet}}</div>
+      <div id="a-pDist" class="a-pill">{{copy.label_distance}}</div>
+      <div id="a-pLight" class="a-pill">{{copy.label_travel}}</div>
+    </div>
+    <svg id="a-fx" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="a-grain"><feTurbulence id="a-turb" type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="3" /><feColorMatrix type="saturate" values="0" /></filter>
+        <radialGradient id="a-vig" cx="50%" cy="50%" r="75%">
+          <stop offset="0.55" stop-color="#05021d" stop-opacity="0" />
+          <stop offset="1" stop-color="#05021d" stop-opacity="0.65" />
+        </radialGradient>
+      </defs>
+      <rect width="1920" height="1080" fill="url(#a-vig)" />
+      <rect width="1920" height="1080" filter="url(#a-grain)" opacity="0.06" style="mix-blend-mode: overlay" />
+    </svg>
+    <div id="a-title">{{copy.title_before}}<span>{{copy.title_accent}}</span>{{copy.title_after}}</div>
+  </div>
+  <script>
+    (function () {
+      let s = 11;
+      const rnd = () => { s = (s * 1664525 + 1013904223) % 4294967296; return s / 4294967296; };
+      const ns = 'http://www.w3.org/2000/svg';
+      const mk = (tag, attrs, parent) => { const e = document.createElementNS(ns, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+      const tints = ['#ffffff', '#ffffff', '#d9c8ff', '#bfe9ff', '#ffe7c2'];
+      const sg = document.querySelector('#a-stars');
+      const stars = [];
+      for (let i = 0; i < 260; i++) {
+        stars.push(mk('circle', { cx: (rnd() * 1920).toFixed(1), cy: (rnd() * 1080).toFixed(1), r: (0.5 + rnd() * rnd() * 2.6).toFixed(2), fill: tints[Math.floor(rnd() * tints.length)], opacity: (0.3 + rnd() * 0.6).toFixed(2) }, sg));
+      }
+      // a few 4-point sparkle stars
+      const sp = document.querySelector('#a-sparks');
+      const sparks = [[640, 180, 1], [1560, 760, 0.8], [1040, 880, 0.7], [180, 160, 0.6], [1840, 520, 0.7]].map(([x, y, k]) => {
+        const g = mk('g', { transform: `translate(${x} ${y})` }, sp);
+        const inner = mk('g', {}, g);
+        mk('path', { d: `M0 ${-18 * k} Q${3 * k} ${-3 * k} ${18 * k} 0 Q${3 * k} ${3 * k} 0 ${18 * k} Q${-3 * k} ${3 * k} ${-18 * k} 0 Q${-3 * k} ${-3 * k} 0 ${-18 * k} Z`, fill: '#fff6d6' }, inner);
+        return inner;
+      });
+      // dust particles near the sun
+      const dg = document.querySelector('#a-dust');
+      const dust = [];
+      for (let i = 0; i < 26; i++) {
+        const a = rnd() * Math.PI * 2, d = 180 + rnd() * 260;
+        dust.push(mk('circle', { cx: (Math.cos(a) * d).toFixed(1), cy: (Math.sin(a) * d).toFixed(1), r: (1.5 + rnd() * 3.5).toFixed(1), fill: rnd() > 0.5 ? '#ffe9a0' : '#ffb347', opacity: (0.4 + rnd() * 0.5).toFixed(2) }, dg));
+      }
+
+      const tl = gsap.timeline({ paused: true });
+      const E = 'sine.inOut';
+      // camera: slow push + drift
+      tl.fromTo('#a-cam', { scale: 1.0, x: 0, y: 0 }, { scale: 1.06, x: -24, y: -6, duration: 5.4, ease: E, transformOrigin: '50% 50%' }, 0);
+      tl.fromTo('#a-neb', { x: 0 }, { x: -40, duration: 5.4, ease: 'none' }, 0);
+      // ambient: twinkles, sparkles, dust, rays, earth spin, moon
+      stars.forEach((st, i) => { if (i % 7) return; tl.fromTo(st, { opacity: 0.2 }, { opacity: 1, duration: 0.5 + (i % 5) * 0.12, yoyo: true, repeat: 3, ease: E }, (i % 11) * 0.14); });
+      sparks.forEach((g, i) => tl.fromTo(g, { scale: 0.4, rotation: 0, opacity: 0.4, transformOrigin: '50% 50%' }, { scale: 1, rotation: 45, opacity: 1, duration: 1.2, yoyo: true, repeat: 1, ease: E }, i * 0.35));
+      dust.forEach((p, i) => tl.fromTo(p, { x: 0, y: 0 }, { x: (i % 2 ? 1 : -1) * (8 + (i % 4) * 6), y: -(30 + (i % 5) * 14), duration: 5.4, ease: 'none' }, 0));
+      tl.fromTo('#a-rays', { rotation: -4 }, { rotation: 4, svgOrigin: '0 0', duration: 5.4, ease: E }, 0);
+      tl.fromTo('#a-glow2', { scale: 0.96, transformOrigin: '50% 50%' }, { scale: 1.05, duration: 1.5, yoyo: true, repeat: 1, ease: E }, 0);
+      tl.fromTo('#a-land', { x: -10 }, { x: 34, duration: 5.4, ease: 'none' }, 0);
+      tl.fromTo('#a-clouds', { x: -20 }, { x: 60, duration: 5.4, ease: 'none' }, 0);
+      tl.fromTo('#a-moon', { rotation: 0 }, { rotation: -10, svgOrigin: '1350 540', duration: 5.4, ease: 'none' }, 0);
+      tl.fromTo('#a-turb', { attr: { seed: 1 } }, { attr: { seed: 150 }, duration: 5.4, ease: 'none' }, 0);
+
+      // beat 1: title
+      // frame 0 is the thumbnail: the title is already on screen, it only settles
+      tl.fromTo('#a-title', { opacity: 1, scale: 1.04 }, { opacity: 1, scale: 1, duration: 0.8, ease: 'power3.out' }, 0);
+      tl.to('#a-title', { opacity: 0, y: -16, duration: 0.3, ease: 'power2.in' }, 1.85);
+      // beat 2: labels pop
+      const pop = (sel, t) => tl.fromTo(sel, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.42, ease: 'back.out(1.8)', transformOrigin: '50% 50%' }, t);
+      pop('#a-pSun', 1.0); pop('#a-pEarth', 1.1);
+      // beat 3: light path + distance
+      tl.fromTo('#a-path', { scaleX: 0, transformOrigin: '0% 50%' }, { scaleX: 1, duration: 0.6, ease: 'power2.inOut' }, 1.6);
+      pop('#a-pDist', 1.95);
+      // beat 4: the Sun vanishes (anticipation swell, collapse, flash)
+      tl.fromTo('#a-core', { scale: 1, transformOrigin: '50% 50%' }, { scale: 1.12, duration: 0.4, ease: 'power2.out' }, 2.75);
+      tl.to('#a-core', { scale: 0, duration: 0.3, ease: 'back.in(2.2)' }, 3.15);
+      tl.to(['#a-glow2', '#a-glow3', '#a-rays', '#a-dust'], { opacity: 0, duration: 0.45, ease: 'power2.in' }, 3.17);
+      tl.to('#a-pSun', { scale: 0, opacity: 0, duration: 0.22, ease: 'power2.in' }, 3.10);
+      tl.fromTo('#a-flash', { scale: 0.2, opacity: 0, transformOrigin: '50% 50%' }, { scale: 1.6, opacity: 0.9, duration: 0.12, ease: 'power2.out' }, 3.45);
+      tl.to('#a-flash', { scale: 2.6, opacity: 0, duration: 0.6, ease: 'power2.out' }, 3.57);
+      // beat 5: the last light keeps travelling — Earth stays lit for now
+      tl.to('#a-pDist', { opacity: 0, scale: 0.8, duration: 0.2 }, 3.50);
+      tl.fromTo('#a-front', { opacity: 0 }, { opacity: 1, duration: 0.15 }, 3.47);
+      tl.fromTo('#a-front', { x: 0 }, { x: 340, duration: 1.9, ease: 'none', immediateRender: false }, 3.50);
+      tl.fromTo('#a-pLight', { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(1.8)', transformOrigin: '50% 50%' }, 3.70);
+      tl.fromTo('#a-pLight', { x: 0 }, { x: 200, duration: 1.7, ease: 'none', immediateRender: false }, 3.70);
+      window.__timelines['space'] = tl;
+    })();
+  </script>
+</template>

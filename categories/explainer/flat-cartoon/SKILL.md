@@ -1,47 +1,50 @@
 ---
 name: flat-cartoon
-description: Make a 24 s narrated idea explainer (16:9, 720p) in a flat-vector cartoon look - one original character acts out four beats (easy case, hard case, what goes wrong, what it means for you), two generated Seedance clips of two shots each, one narration line per shot, captions always on. Use when the user asks for this entry by name, wants a short cartoon explainer of an idea rather than a true story with real people, or wants a film that looks like its result/result.mp4. Ships a complete HyperFrames project that renders the example film as is.
+description: Make a short science explainer (10 s sample, 16:9, 1080p) in a flat-vector cartoon look - deep violet grounds, one glowing key light, layered cel shading with rim light, grain - where image-model background plates give the illustration detail and code draws and animates everything that moves (light, sky, stars, labels, an original character rig). Use when the user asks for this entry by name, wants a flat-vector science-channel-style explainer of a fact or mechanism, or wants a film that looks like its result/result.mp4. Ships a complete HyperFrames project that renders the example film as is.
 ---
 
 # flat-cartoon
 
-This folder reproduces one film. `result/result.mp4` is what you will get; `project/` renders it unchanged. To explain
-another idea you change `project/film.json` and `project/assets/`, and nothing else.
+This folder reproduces one film. `result/result.mp4` is what you will get; `project/` renders it unchanged with no keys.
+To explain something else you change `project/film.json` and `project/assets/`, and nothing in `project/tools/templates/`.
 
 Read before you start, in this order:
 - `taste.json`: what it needs, what it fits, what it requires
 - `references/floor.md`: the rules every film keeps
-- `references/sourcing.md`: if the idea has facts in it, where they must come from
-- `references/RECIPE.md`: the four beats, and what the example's script got wrong
-- `references/SWAP.md`: the slots in `film.json`, and what never changes
+- `references/sourcing.md`: every number on screen needs a source
+- `STYLE.md`: the look, element by element (palette, light, the four shading layers, texture, pace)
+- `references/RECIPE.md`: the film beat by beat
+- `references/SWAP.md`: the slots in `film.json`, how to make new layers, what never changes
 
 ## 0. Requirements and fit
 
 - Run `bash scripts/setup.sh` first, yourself. It checks Node 20+, ffmpeg and Python 3 and installs the HyperFrames skills.
-- The renderer is pinned and fetched by npx: `hyperframes@0.8.229`.
-- No keys are needed to render the example. A new film needs `BYTEPLUS_API_KEY` (Seedream still, Seedance clips) and
-  `FAL_KEY` (ElevenLabs narration). Read them from the environment or `project/.env`; never print them.
-- Fits an idea that can be acted out by a character in four shots. Does not fit a true story about real people (use
-  `paper-collage`), a product launch, or anything that needs real screens.
+- The renderer is pinned and fetched by npx: `hyperframes@0.9.23`.
+- No keys are needed to render the example. New background plates need an image model that can output transparent PNGs
+  (`OPENAI_API_KEY` for GPT Image; the example used GPT Image 2.6 through the Higgsfield MCP). The sound is synthesised
+  by `tools/sound.py` and needs nothing.
+- Fits a fact, a mechanism or a what-if that can be shown with one light source, a few objects, labels and one reacting
+  character. Does not fit a true story about real people (use `paper-collage`), a product launch, or long talking scripts.
 
 ## 1. Run the example first
 
 ```bash
 cd project
 python3 tools/build.py
-npx --yes hyperframes@0.8.229 check
-npx --yes hyperframes@0.8.229 render -o renders/film.mp4
+npx --yes hyperframes@0.9.23 check
+npx --yes hyperframes@0.9.23 render -o renders/film.mp4
 ```
 
 ## 2. Write, show, then spend
 
-Write the four lines and the four shot descriptions, and show them to the person before any generation. Seedance jobs
-cannot be cancelled once they start. Then follow `references/SWAP.md` and `project/tools/footage.md`.
+Write the beats (RECIPE.md shape: question → setup with labels → the event → the consequence, felt by the character)
+and the facts with their sources, and show them before generating any plate. Then follow `references/SWAP.md`.
 
 ## 3. Look, render, measure
 
-Pull a frame from each shot and read it: look for fake text the model wrote, a character that drifted, a caption over
-the action. Then render and measure:
+`npx hyperframes snapshot --at <every beat>` and read each frame against `STYLE.md` "Banned". Typical failures: a baked
+warm rim light that survives the light going out, a plate whose horizon does not meet the character's feet, a label
+under 28 px. Then render and measure:
 
 ```bash
 uv run --with librosa --with numpy --with pillow python -I scripts/analyze.py project/renders/film.mp4 /tmp/m
@@ -50,13 +53,17 @@ uv run --with numpy python -I scripts/events.py project/renders/film.mp4 /tmp/m
 
 ## 4. Deliver
 
-Report the file, the script, which media was generated and with what, the metrics, and what you could not judge from
-stills (the voice and the mix). Do not post it anywhere unless the user asks.
+Report the file, the beats, the facts and their sources, which plates were generated and with what prompt, the metrics,
+and what you could not judge from stills (the sound, motion feel). Show generated plates for sign-off before shipping.
+Do not post it anywhere unless the user asks.
 
 ## This film's style rules
 
-These are this entry's taste, not universal rules.
-- One original character in every shot, fixed by one reference still. Never a character or look from an existing channel.
-- Saturated colour on dark or dusk grounds, rim light and glow, flat shapes, no outlines.
-- No text inside the picture; all words are captions.
-- A plain sentence per caption in Inter 700 on a dark rounded box at the bottom.
+These are this entry's taste, not universal rules (full recipe in `STYLE.md`).
+- Never pure black, grey or black outlines; the darkest colour is an inky violet.
+- One key light per scene, usually inside the frame; it decides every shadow side and rim.
+- Every object has base, shadow shape, highlight and rim; glows are blurred, never hard rings.
+- Generated plates hold the scenery only (no characters, no text, transparent above the ridge); the character, light,
+  sky, stars and labels are code, so they can act, change light and stay consistent.
+- Something new every 2-3 s; the camera never stops moving.
+- Original characters only; never a character, logo or look lifted from an existing channel.

@@ -1,37 +1,50 @@
-# Tell another idea
+# Explain something else
 
-Everything you change is `project/film.json` and `project/assets/`. Nothing in `tools/build.py` changes.
+Everything you change is `project/film.json` and `project/assets/`. Nothing in `project/tools/templates/` or
+`project/tools/build.py` changes.
 
-## 1. Write four lines (show them before generating anything)
+## 1. Facts and beats first (show them before generating anything)
 
-One idea, four beats (references/RECIPE.md): easy case, hard case, what goes wrong, what it means for the viewer.
-15-17 words a line, everyday words, one point a line. Show the four lines and the four shot descriptions to the person
-and wait for a yes: the next steps cost money and cannot be undone.
+One question, one event, one consequence the character feels. Every number on screen goes into `film.json` `sources`
+with a URL (`references/sourcing.md`). Show the beats and sources and wait for a yes.
 
-## 2. Character and footage (tools/footage.md)
+## 2. The slots in film.json
 
-1. One character still with `tools/seedream.py` (or the person's own art). Original characters only: never a
-   character, logo or look lifted from an existing channel.
-2. Two Seedance clips, two shots each, the still as `--reference-image`, the same style block in both prompts.
-3. Put the files in `assets/footage/` and list them in `film.json` `footage` with their start times.
+| Slot | What |
+|---|---|
+| `copy.title_before / title_accent / title_after` | the question; the accent word takes the key-light colour |
+| `copy.label_*` | the four pills (≤ 3 words each) |
+| `copy.caption_1 / caption_2` | the ground-scene captions |
+| `palette.*` | label fills (white text must reach 3:1), title accent, the character's main and shadow colour |
+| `images.far / mid / near` | the three scenery plates |
+| `scenes[].duration` | shot lengths (keep the sum, or re-time the templates' beats) |
+| `sound.src` | the mastered sound file |
 
-## 3. Narrate
+## 3. New scenery plates (tools/layers.md)
+
+Three transparent 16:9 plates (far, mid, near), the style block from `tools/layers.md` in every prompt, the light from
+the same side as the code key light, no characters, no text. Generate two candidates each, pick, and show them for
+sign-off. Put them in `assets/bg/` (2304 px wide is enough) and line their ridges up with `top` in the ground template
+only if the horizon moves.
+
+## 4. Sound
+
+Edit the cue times at the top of each block in `tools/sound.py` if beats moved, then:
 
 ```bash
-python3 tools/voice.py script.txt     # one line per narration line; writes assets/audio/line-N.mp3
+python3 tools/sound.py /tmp/raw.wav
+ffmpeg -y -i /tmp/raw.wav -af loudnorm=I=-14:TP=-1.5:LRA=7 -ar 48000 -b:a 192k assets/audio/sound.mp3
 ```
 
-Put each file in `film.json` `lines`, `at` 0.3 s into its shot. Split each line into two captions at the pause it prints.
-If a line runs past its shot, shorten the words rather than speeding the voice.
-
-## 4. Build and render
+## 5. Build and render
 
 ```bash
 python3 tools/build.py
-npx --yes hyperframes@0.8.229 check
-npx --yes hyperframes@0.8.229 render -o renders/film.mp4
+npx --yes hyperframes@0.9.23 check
+npx --yes hyperframes@0.9.23 render -o renders/film.mp4
 ```
 
 ## What never changes
 
-The four-beat order, one line per shot, captions always on, the clip sound under the voice, and the loudness target.
+One key light per scene and the four shading layers; a new element every 1-3 s; the camera always moving; frame 0 shows
+the question; the consequence is acted, not written; plates hold scenery only; -14 LUFS.
