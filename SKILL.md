@@ -6,7 +6,7 @@ description: Pick and reproduce a reference film or look from the video-skills l
 # video-skills
 
 A library of films and looks, one folder per category (`categories/launch/`, `categories/explainer/`, later
-`social/`...). Every entry under `categories/<category>/<id>/` carries its look and a sample. There are two kinds:
+`artistic/`, `social/`...). Every entry under `categories/<category>/<id>/` carries its look and a sample. There are two kinds:
 
 - **A film** (`taste.json`, `project/`, `result/`): one film you can reproduce almost exactly, recipe and look together.
 - **A look** (`style.json`, `STYLE.md`, `stills/`): how a film looks, with three stills, to put on any recipe that fits.
@@ -17,7 +17,7 @@ Some entries are both (paper-collage, flat-cartoon). The formats are `categories
 ## Choosing an entry
 
 1. Read `categories/catalog.json` (one line per entry: id, kind, category, method, length, what it needs, fits, avoid).
-2. Match on **category** first (launch, explainer, social cut...), then on **method** (how the picture is made) against what
+2. Match on **category** first (launch, explainer, artistic, social cut...), then on **method** (how the picture is made) against what
    the product actually has: a method that needs real screens is wrong for a product with none.
 3. Offer the user one or two entries with their poster or first still and one line each on why. If they named one, skip this.
 

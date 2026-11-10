@@ -37,6 +37,11 @@ video-skills 是前一种的开源平铺版：
 <!-- CATALOG -->
 | Preview | Entry | Category · method | Sample | Events / 10 s |
 |---|---|---|---|---|
+| <img src="categories/artistic/engraving/stills/1.jpg" width="240"> | [**engraving**](categories/artistic/engraving/) Copperplate engraving | artistic · look only | stills | 9.8 |
+| <img src="categories/artistic/ink-wash/stills/1.jpg" width="240"> | [**ink-wash**](categories/artistic/ink-wash/) Chinese ink wash | artistic · look only | stills | 10.0 |
+| <img src="categories/artistic/silent-film/stills/1.jpg" width="240"> | [**silent-film**](categories/artistic/silent-film/) 1920s silent film | artistic · look only | stills | 8.5 |
+| <img src="categories/artistic/tilt-shift/stills/1.jpg" width="240"> | [**tilt-shift**](categories/artistic/tilt-shift/) Tilt-shift miniature | artistic · look only | stills | 9.2 |
+| <img src="categories/artistic/white-model/stills/1.jpg" width="240"> | [**white-model**](categories/artistic/white-model/) Projection on white model | artistic · look only | stills | 10.8 |
 | <img src="categories/explainer/cut-paper-stop-motion/stills/1.jpg" width="240"> | [**cut-paper-stop-motion**](categories/explainer/cut-paper-stop-motion/) Cut-paper stop-motion | explainer · look only | stills |  |
 | <img src="categories/explainer/flat-cartoon/result/preview.gif" width="240"> | [**flat-cartoon**](categories/explainer/flat-cartoon/) Flat cartoon | explainer · code-rig-over-generated-plates | 10.0 s 16:9 | 2.0 |
 | <img src="categories/explainer/lowpoly-sim/stills/1.jpg" width="240"> | [**lowpoly-sim**](categories/explainer/lowpoly-sim/) Low-poly simulation | explainer · look only | stills | 9.0 |

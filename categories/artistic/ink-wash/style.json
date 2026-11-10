@@ -1,0 +1,76 @@
+{
+  "name": "ink-wash",
+  "title": "Chinese ink wash",
+  "summary": "Xieyi ink painting on rice paper, painted while you watch: blank paper is space, one brushstroke is a mountain, a wave, a gesture or a cut.",
+  "look": {
+    "ground": "warm procedural rice paper (about #F2ECDE), 60-80 % of every frame left empty",
+    "palette": [
+      {
+        "role": "paper",
+        "hex": "#f2ecde",
+        "where": "the ground, water, sky, mist"
+      },
+      {
+        "role": "clear",
+        "hex": "#c6bfb0",
+        "where": "far mountains, faces, mist (ink ~0.16)"
+      },
+      {
+        "role": "light",
+        "hex": "#5d5850",
+        "where": "mountain bodies, robes (ink ~0.34-0.6)"
+      },
+      {
+        "role": "burnt",
+        "hex": "#1a1814",
+        "where": "calligraphy, contours, moss dots (ink ~0.82-0.96)"
+      },
+      {
+        "role": "vermilion",
+        "hex": "#b02e22",
+        "where": "the seal and at most one tiny accent in the story"
+      }
+    ],
+    "type": "inscriptions: Cormorant Garamond italic in ink colour, no box, in each shot's empty paper; titles written vertically on the painting with a code-drawn seal",
+    "texture": "paper fibres and flecks; ink bleed, edge pigment and granulation on wet strokes; flying white on dry ones",
+    "light": "none: depth by value, far pale and soft, near dark and textured",
+    "materials": "loaded brushstrokes whose dark edge is the contour, wet washes, dry bristle tracks; no outlines, no flat fills"
+  },
+  "consistency": "xieyi figures from one pale mass and two loaded strokes; strokes seeded by index so they never crawl",
+  "motion": {
+    "feel": "painted into existence: stillness, then one stroke crosses the frame in a few frames",
+    "moves": [
+      "strokes appear in drawing order",
+      "right-to-left handscroll pan through one long painting",
+      "ink-bloom transition: the next scene grows inside a spreading drop",
+      "flying-white stroke out of a silence"
+    ]
+  },
+  "pace": {
+    "avg_shot_s": 16.0,
+    "events_per_10s": 10.0,
+    "text": "few calm lines like colophons, at most two lines, held at least max(1.8 s, speech + 0.6 s)"
+  },
+  "banned": [
+    "colour washes other than the one vermilion",
+    "vector outlines or flat fills",
+    "generic dissolves or wipes",
+    "red type or a red wash",
+    "a busy frame (remove ink rather than add tone)"
+  ],
+  "fits": {
+    "categories": [
+      "artistic",
+      "explainer"
+    ],
+    "methods": []
+  },
+  "made_with": {
+    "renderer": "2D canvas brush engine with a WebGL rice-paper compositor",
+    "generators": []
+  },
+  "worked_example": "",
+  "moves": [],
+  "source": "LemoLab's Chinese Ink Wash style in lemomo-ai/lemo-opuscar at 9eb7739; pace measured with analyze.py and events.py on its demo film \"The Swordsman and the River\"",
+  "licence": "STYLE.md MIT (LemoLab, see LICENSE-lemo-opuscar); stills CC BY 4.0 (LemoLab), frames from the demo film, resized"
+}

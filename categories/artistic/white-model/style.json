@@ -1,0 +1,76 @@
+{
+  "name": "white-model",
+  "title": "Projection on white model",
+  "summary": "A white massing model of a real place on a plinth in a dark room, and a projector painting data onto it one layer of light at a time.",
+  "look": {
+    "ground": "a dark room and a dark satin plinth; the model on a thin base plate, water as a darker inlay",
+    "palette": [
+      {
+        "role": "model",
+        "hex": "#d1cdc8",
+        "where": "the white model in house light"
+      },
+      {
+        "role": "room",
+        "hex": "#090d12",
+        "where": "the dark room, projector black"
+      },
+      {
+        "role": "old",
+        "hex": "#e8913a",
+        "where": "one categorical accent for the exception (e.g. what was built before)"
+      },
+      {
+        "role": "ramp",
+        "hex": "#4a6cf0",
+        "where": "a sequential ramp for continuous data (blue to cyan to white)"
+      },
+      {
+        "role": "sun",
+        "hex": "#a79b91",
+        "where": "warm sun on the model; shade projected deep blue"
+      }
+    ],
+    "type": "a light grotesk for the one figure (Inter Tight 200, 120-140 px), a sans for labels (Noto Sans SC), a monospace for years and coordinates (IBM Plex Mono); readout in the left third",
+    "texture": "physical depth of field on close shots, bloom only on projection highlights, vignette, light grain",
+    "light": "house light (one soft key) or projection added in the shader, facing-dependent with a soft throw edge; a real sun from the place's latitude and date",
+    "materials": "matte white massing (roughness ~0.9) from real open building data; colour is never painted into the material"
+  },
+  "consistency": "the model never changes, only the light on it; a colour returns only with the same meaning",
+  "motion": {
+    "feel": "slow continuous camera; light is the actor",
+    "moves": [
+      "a wash spreading from the projector axis",
+      "buildings switching on one by one with a short flash",
+      "a level climbing every facade",
+      "house lights cut fast (0.25 s) and return slowly (1 s)"
+    ]
+  },
+  "pace": {
+    "avg_shot_s": 40.0,
+    "events_per_10s": 10.8,
+    "text": "one readout per layer (index, figure, label, source); subtitles held at least max(1.8 s, speech + 0.6 s)"
+  },
+  "banned": [
+    "invented buildings or a generated image of the place",
+    "colour painted on the model",
+    "wireframes, scan lines or icons",
+    "more than two layer palettes on screen",
+    "a number not computed from the same data as the model"
+  ],
+  "fits": {
+    "categories": [
+      "artistic",
+      "explainer"
+    ],
+    "methods": []
+  },
+  "made_with": {
+    "renderer": "three.js (WebGL) with a 2D canvas overlay",
+    "generators": []
+  },
+  "worked_example": "",
+  "moves": [],
+  "source": "LemoLab's Projection on White Model style in lemomo-ai/lemo-opuscar at 9eb7739; pace measured with analyze.py and events.py on its demo film \"How a Flattened City Grew Back\"",
+  "licence": "STYLE.md MIT (LemoLab, see LICENSE-lemo-opuscar); stills CC BY 4.0 (LemoLab), frames from the demo film, resized"
+}

@@ -3,7 +3,7 @@
 1. Make the film first. A film entry starts from a finished film someone would want to copy, not from a template. A look
    with no finished film yet goes in as a look entry: `SKILL.md`, `style.json`, `STYLE.md` and three stills
    ([spec/STYLE.md](categories/spec/STYLE.md)), in the category folder it fits first.
-2. Copy the shape of an existing entry: `categories/<category>/<new-id>/` (category folders: `categories/launch/`, `categories/explainer/`, `tutorial/`, `data/`, `social/`, `sting/`; make one if yours is new) with the files listed in [spec/ENTRY.md](categories/spec/ENTRY.md).
+2. Copy the shape of an existing entry: `categories/<category>/<new-id>/` (category folders: `categories/launch/`, `categories/explainer/`, `categories/artistic/`, `tutorial/`, `data/`, `social/`, `sting/`; make one if yours is new) with the files listed in [spec/ENTRY.md](categories/spec/ENTRY.md).
    Name it by its method and look (`broll-wheel`), never by another company's brand.
    Copy `categories/tools/floor.md` to `references/floor.md` and `categories/tools/{analyze,events}.py` and `categories/tools/setup.sh` to `scripts/`; do not edit the copies.
    Declare external tools in `taste.json` `requires`. Put the film's own taste in its `SKILL.md` and `RECIPE.md`, not in floor.md.

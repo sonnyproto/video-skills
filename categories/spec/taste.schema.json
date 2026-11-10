@@ -49,14 +49,13 @@
         },
         "category": {
           "enum": [
-            "launch-film",
-            "feature-film",
+            "launch",
             "explainer",
+            "artistic",
             "tutorial",
-            "data-story",
-            "social-cut",
-            "sting",
-            "brand-film"
+            "data",
+            "social",
+            "sting"
           ]
         },
         "method": {

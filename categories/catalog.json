@@ -1,5 +1,116 @@
 [
   {
+    "id": "engraving",
+    "kind": "look",
+    "title": "Copperplate engraving",
+    "summary": "A natural-history plate that engraves itself: swelling burin lines build a figure by hatching, labels are cut letter by letter, and a hand-laid wash brings it to colour.",
+    "category": "artistic",
+    "method": "look only",
+    "duration_s": null,
+    "ratio": null,
+    "events_per_10s": 9.8,
+    "fits": {
+      "categories": [
+        "artistic",
+        "explainer"
+      ],
+      "methods": []
+    },
+    "path": "categories/artistic/engraving",
+    "poster": "categories/artistic/engraving/stills/1.jpg",
+    "preview": "categories/artistic/engraving/stills/1.jpg",
+    "video": null
+  },
+  {
+    "id": "ink-wash",
+    "kind": "look",
+    "title": "Chinese ink wash",
+    "summary": "Xieyi ink painting on rice paper, painted while you watch: blank paper is space, one brushstroke is a mountain, a wave, a gesture or a cut.",
+    "category": "artistic",
+    "method": "look only",
+    "duration_s": null,
+    "ratio": null,
+    "events_per_10s": 10.0,
+    "fits": {
+      "categories": [
+        "artistic",
+        "explainer"
+      ],
+      "methods": []
+    },
+    "path": "categories/artistic/ink-wash",
+    "poster": "categories/artistic/ink-wash/stills/1.jpg",
+    "preview": "categories/artistic/ink-wash/stills/1.jpg",
+    "video": null
+  },
+  {
+    "id": "silent-film",
+    "kind": "look",
+    "title": "1920s silent film",
+    "summary": "An inked, hatched silent film projected in a picture house: a 4:3 print that flickers and weaves between velvet curtains, intertitles instead of voices, a pianist on every beat.",
+    "category": "artistic",
+    "method": "look only",
+    "duration_s": null,
+    "ratio": null,
+    "events_per_10s": 8.5,
+    "fits": {
+      "categories": [
+        "artistic",
+        "social"
+      ],
+      "methods": []
+    },
+    "path": "categories/artistic/silent-film",
+    "poster": "categories/artistic/silent-film/stills/1.jpg",
+    "preview": "categories/artistic/silent-film/stills/1.jpg",
+    "video": null
+  },
+  {
+    "id": "tilt-shift",
+    "kind": "look",
+    "title": "Tilt-shift miniature",
+    "summary": "A real-looking town seen from high above through a tilted lens and a time-lapse clock, so the whole world reads as a tabletop model.",
+    "category": "artistic",
+    "method": "look only",
+    "duration_s": null,
+    "ratio": null,
+    "events_per_10s": 9.2,
+    "fits": {
+      "categories": [
+        "artistic",
+        "explainer",
+        "launch"
+      ],
+      "methods": []
+    },
+    "path": "categories/artistic/tilt-shift",
+    "poster": "categories/artistic/tilt-shift/stills/1.jpg",
+    "preview": "categories/artistic/tilt-shift/stills/1.jpg",
+    "video": null
+  },
+  {
+    "id": "white-model",
+    "kind": "look",
+    "title": "Projection on white model",
+    "summary": "A white massing model of a real place on a plinth in a dark room, and a projector painting data onto it one layer of light at a time.",
+    "category": "artistic",
+    "method": "look only",
+    "duration_s": null,
+    "ratio": null,
+    "events_per_10s": 10.8,
+    "fits": {
+      "categories": [
+        "artistic",
+        "explainer"
+      ],
+      "methods": []
+    },
+    "path": "categories/artistic/white-model",
+    "poster": "categories/artistic/white-model/stills/1.jpg",
+    "preview": "categories/artistic/white-model/stills/1.jpg",
+    "video": null
+  },
+  {
     "id": "cut-paper-stop-motion",
     "kind": "look",
     "title": "Cut-paper stop-motion",

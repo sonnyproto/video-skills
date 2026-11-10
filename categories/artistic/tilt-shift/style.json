@@ -1,0 +1,77 @@
+{
+  "name": "tilt-shift",
+  "title": "Tilt-shift miniature",
+  "summary": "A real-looking town seen from high above through a tilted lens and a time-lapse clock, so the whole world reads as a tabletop model.",
+  "look": {
+    "ground": "a town or landscape seen from 100-200 m, oblique 45-55 degrees or straight down",
+    "palette": [
+      {
+        "role": "ground",
+        "hex": "#ead9cb",
+        "where": "pale warm facades"
+      },
+      {
+        "role": "asphalt",
+        "hex": "#2e445a",
+        "where": "streets and squares, dark so markings pop"
+      },
+      {
+        "role": "green",
+        "hex": "#31706b",
+        "where": "trees and parks, very saturated in daylight"
+      },
+      {
+        "role": "accent",
+        "hex": "#8f2836",
+        "where": "candy roofs, vehicles, the one subject to find"
+      },
+      {
+        "role": "night",
+        "hex": "#21223e",
+        "where": "dawn and night states, the only low-saturation ones"
+      }
+    ],
+    "type": "the place's own signage: an open highway-sign font (Overpass) on sign-coloured panels inside the lower blur band; a monospace time-lapse clock with a speed readout",
+    "texture": "a horizontal sharp band, everything above and below melting into depth-of-field blur; vignette",
+    "light": "a hard sun with sharp blue shadows, the azimuth cheated per shot to front-light the facades; low warm ground bounce",
+    "materials": "photoreal but model-like: varied window bays, grime, glossy vehicles, people as small colour capsules"
+  },
+  "consistency": "one place built once and revisited at different hours; hero actors 20-30 % larger than real so they read",
+  "motion": {
+    "feel": "time-lapse stutter: the world steps at ~8 Hz on the beat while the camera stays smooth",
+    "moves": [
+      "world updates held for several frames (8 Hz = 3 frames at 24 fps), camera smooth on every frame",
+      "the sharp band slides to follow one subject",
+      "dive from high to actor height with a speed ramp, stutter vanishing below about x2",
+      "vertical rise with logarithmic height for a summary"
+    ]
+  },
+  "pace": {
+    "avg_shot_s": 6.33,
+    "events_per_10s": 9.2,
+    "text": "signage subtitles held at least max(1.8 s, speech + 0.6 s); a clock readout whenever speed changes"
+  },
+  "banned": [
+    "street-level shots except one deliberate close-up",
+    "flat game shading or UI",
+    "dissolves that reveal the fake lens",
+    "a fixed sun that leaves half the film backlit",
+    "real landmarks, brands or logos"
+  ],
+  "fits": {
+    "categories": [
+      "artistic",
+      "explainer",
+      "launch"
+    ],
+    "methods": []
+  },
+  "made_with": {
+    "renderer": "three.js (WebGL) with a 2D canvas overlay",
+    "generators": []
+  },
+  "worked_example": "",
+  "moves": [],
+  "source": "LemoLab's Tilt-Shift Miniature style in lemomo-ai/lemo-opuscar at 9eb7739; pace measured with analyze.py and events.py on its demo film \"Toy Town Rush Hour\"",
+  "licence": "STYLE.md MIT (LemoLab, see LICENSE-lemo-opuscar); stills CC BY 4.0 (LemoLab), frames from the demo film, resized"
+}

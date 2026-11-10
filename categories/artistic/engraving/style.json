@@ -1,0 +1,71 @@
+{
+  "name": "engraving",
+  "title": "Copperplate engraving",
+  "summary": "A natural-history plate that engraves itself: swelling burin lines build a figure by hatching, labels are cut letter by letter, and a hand-laid wash brings it to colour.",
+  "look": {
+    "ground": "laid cream paper with a pressed plate mark and a ruled border; the sheet is the world",
+    "palette": [
+      {
+        "role": "paper",
+        "hex": "#f1e8d2",
+        "where": "bare paper is light"
+      },
+      {
+        "role": "paper-shade",
+        "hex": "#dcceab",
+        "where": "paper in the vignette and foxing"
+      },
+      {
+        "role": "ink",
+        "hex": "#1c1510",
+        "where": "one warm near-black for every line"
+      },
+      {
+        "role": "wash",
+        "hex": "#c08a3a",
+        "where": "transparent earth or mineral wash, one stronger pigment at most"
+      }
+    ],
+    "type": "roman capitals (Bodoni Moda) cut glyph by glyph for titles and labels, italics for scientific names, Pinyon Script written in one stroke for notes and subtitles on a deckled slip",
+    "texture": "all tone is line density: swelling and tapering hatch lines in up to three crossing families; no grey fill",
+    "light": "one light from the upper left for the whole film; tone from the shape, never from texture",
+    "materials": "intaglio ink on paper; copper and burin when the making is shown"
+  },
+  "consistency": "one subject on one plate, built up and then annotated with numbered roundels",
+  "motion": {
+    "feel": "cutting order is the animation: outline, hatching, crossing, darks; colour blooms last",
+    "moves": [
+      "burin-speed line cutting, dozens of hatch lines at once",
+      "roundels fly in on an eased arc and grow to size",
+      "lettering cut glyph by glyph, script written left to right",
+      "watercolour blooms from one point with a drying wet rim"
+    ]
+  },
+  "pace": {
+    "avg_shot_s": 40.0,
+    "events_per_10s": 9.8,
+    "text": "script subtitles on a paper slip, at most two lines; an engraved note stays chars/12 + 1 s"
+  },
+  "banned": [
+    "grey fills or uniform-width lines",
+    "fades or UI slides",
+    "opaque colour or colour on lettering",
+    "a sepia filter",
+    "copying a real plate, pose or border"
+  ],
+  "fits": {
+    "categories": [
+      "artistic",
+      "explainer"
+    ],
+    "methods": []
+  },
+  "made_with": {
+    "renderer": "2D canvas",
+    "generators": []
+  },
+  "worked_example": "",
+  "moves": [],
+  "source": "LemoLab's Copperplate Engraving style in lemomo-ai/lemo-opuscar at 9eb7739; pace measured with analyze.py and events.py on its demo film \"The Honeybee, Plate VII\"",
+  "licence": "STYLE.md MIT (LemoLab, see LICENSE-lemo-opuscar); stills CC BY 4.0 (LemoLab), frames from the demo film, resized"
+}

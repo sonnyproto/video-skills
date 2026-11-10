@@ -35,7 +35,7 @@ Each `taste.json` places the entry on the same seven layers. A layer answers one
 | Layer | Question | Combines how |
 |---|---|---|
 | `floor` | What is never up for negotiation? | Not merged. The user's rules and the brand win over everything below |
-| `category` | What kind of film is it? (launch, explainer, tutorial, data story, social cut, sting) | One per film |
+| `category` | What kind of film is it? (launch, explainer, artistic, tutorial, data story, social cut, sting) | One per film |
 | `method` | How does the picture get made, and how does the spine run? (b-roll under type, one shape never cut, beat montage, 3D UI space, hand-drawn, rebuilt UI) | One per stretch; different stretches can use different methods |
 | `moves` | Which concrete moves fill it? (wheel divider, word blur-in, marker sweep, card push-in, anchor montage, pill morph...) | Mix freely, as long as each obeys the method |
 | `craft` | What makes the moves look expensive? (hook in 3 s, burst at 30-60 %, holds land on something, hits on landings, -14 LUFS) | Stack all of them |

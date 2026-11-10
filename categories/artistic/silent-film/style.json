@@ -1,0 +1,76 @@
+{
+  "name": "silent-film",
+  "title": "1920s silent film",
+  "summary": "An inked, hatched silent film projected in a picture house: a 4:3 print that flickers and weaves between velvet curtains, intertitles instead of voices, a pianist on every beat.",
+  "look": {
+    "ground": "a 4:3 print (1440x1080) in a rounded gate, velvet drapes lit by the screen at the sides of 16:9",
+    "palette": [
+      {
+        "role": "print-black",
+        "hex": "#0e0706",
+        "where": "ink, darkest clothes, intertitle cards"
+      },
+      {
+        "role": "cloth",
+        "hex": "#4d4842",
+        "where": "dark cloth, interiors"
+      },
+      {
+        "role": "mid",
+        "hex": "#837d77",
+        "where": "wood, stone, mid wash"
+      },
+      {
+        "role": "light",
+        "hex": "#aeaaa5",
+        "where": "skin, walls"
+      },
+      {
+        "role": "print-white",
+        "hex": "#d8d5cf",
+        "where": "linen, highlights, card text"
+      }
+    ],
+    "type": "intertitles as subtitles: small-caps display serif (Playfair Display SC) for titles and shouts, italic old-style serif (Old Standard TT) for narration, on black cards with deco borders",
+    "texture": "a print pass: silver tone with 0.1-0.36 sepia, flicker, gate weave, scratches, dust, edge burn, two-octave grain",
+    "light": "tonal painting in grey values with soft gradients; tint and damage set per section as mood (colder and harsher when things go wrong)",
+    "materials": "ink line, washed greys and 45 degree hatching redrawn every two frames"
+  },
+  "consistency": "realistic-proportion figures on a 2.5D rig, identified by a silhouette mark (a hat, a garment, a tool)",
+  "motion": {
+    "feel": "hand-cranked: figures and camera sampled at 16 fps, print damage every frame; deadpan faces, bodies act",
+    "moves": [
+      "locked-off wide where the whole gag plays out",
+      "iris in and out, or held half-open for a look to camera",
+      "undercranked chase: speed and damage rise together",
+      "the curtain opens and closes the film"
+    ]
+  },
+  "pace": {
+    "avg_shot_s": 7.74,
+    "events_per_10s": 8.5,
+    "text": "three to five cards in a short film, a few words each, held 2.5-3.75 s; a card never explains what the picture shows"
+  },
+  "banned": [
+    "voices or foley",
+    "dissolves within a scene or modern whip pans",
+    "a sepia filter over modern animation",
+    "the Tramp look or any real film's gags",
+    "big close-ups of rigged faces"
+  ],
+  "fits": {
+    "categories": [
+      "artistic",
+      "social"
+    ],
+    "methods": []
+  },
+  "made_with": {
+    "renderer": "2D canvas with a WebGL2 ink and print pass",
+    "generators": []
+  },
+  "worked_example": "",
+  "moves": [],
+  "source": "LemoLab's 1920s Silent Film style in lemomo-ai/lemo-opuscar at 9eb7739; pace measured with analyze.py and events.py on its demo film \"The Runaway Loaf\"",
+  "licence": "STYLE.md MIT (LemoLab, see LICENSE-lemo-opuscar); stills CC BY 4.0 (LemoLab), frames from the demo film, resized"
+}
