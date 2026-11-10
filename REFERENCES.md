@@ -1,6 +1,6 @@
 # Video references
 
-Sorted by GitHub stars (existing entries checked 2026-10-29; additions checked 2026-11-02).
+Sorted by GitHub stars (existing entries checked 2026-10-29; additions checked 2026-11-02 and 2026-11-10).
 
 - 74.9k https://github.com/heygen-com/hyperframes — HTML → video
 - 19.3k https://github.com/latent-spaces/brag — project → shareable launch video
@@ -13,6 +13,7 @@ Sorted by GitHub stars (existing entries checked 2026-10-29; additions checked 2
 - 2.7k https://github.com/JohnHeibel/PDoomVideo — P(doom) music video, another build
 - 2.5k https://github.com/Alisa0808/vox-director — Vox-style paper-collage explainer / ad
 - 2.3k https://github.com/JohnHeibel/ClaudeAnimationBase — hand-painted cartoon starter (p5.brush, Clawd)
+- 2.0k https://github.com/sarpstar/cinecode — idea → short film, ad, music video or explainer in three.js / Canvas; named camera and transition vocabulary, AI-wording check, licence log
 - 1.9k https://github.com/alchaincyf/huashu-motion — launch films, 12 templates incl. vox-collage
 - 1.2k https://github.com/zhuyansen/awesome-claude-video-skills — skills by type
 - 883 https://github.com/op7418/guizang-product-video-skill — 归藏: software-update films from real product components
